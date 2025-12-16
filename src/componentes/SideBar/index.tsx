@@ -7,13 +7,12 @@ import { ClipboardCheckIcon } from "lucide-react";
 import { ClipboardClockIcon } from "lucide-react";
 import { ClockAlertIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import SidebarLink from "../SidebarLink";
+
 
 export function SideBar() {
-  const styleLink = "flex items-center font-bold bg-[#D9D9D9] p-4 rounded-xl gap-2";
-
   return (
-    <aside className="w-80 bg-white border-r">
+    <aside className="w-80 bg-white">
       <div className="min-h-50">
         <Image
           src="/TaskinzSemFundo.png"
@@ -26,24 +25,24 @@ export function SideBar() {
       </div>
       <div className="flex">
         <nav className="flex flex-1 flex-col gap-2 mx-2">
-          <Link className={styleLink} href="/">
+          <SidebarLink href="/">
             <ClipboardListIcon /> Todas as tarefas
-          </Link>
-          <Link className={styleLink} href="/Adicionar-tarefa">
+          </SidebarLink>
+          <SidebarLink href="/adicionar-tarefa">
             <ClipboardPlusIcon/> Adicionar tarefa
-          </Link>
-          <Link className={styleLink} href="/Concluidas">
+          </SidebarLink>
+          <SidebarLink href="/concluidas">
             <ClipboardCheckIcon/> Concluídas
-          </Link>
-          <Link className={styleLink} href="/Em-andamento">
+          </SidebarLink>
+          <SidebarLink href="/em-andamento">
             <ClipboardClockIcon/> Em andamento
-          </Link>
-          <Link className={styleLink} href="/Pendentes">
+          </SidebarLink>
+          <SidebarLink href="/pendentes">
             <ClockAlertIcon/> Pendentes
-          </Link>
-          <Link className={styleLink} href="/">
+          </SidebarLink>
+          <SidebarLink href="/logout">
             <LogOutIcon /> Sair
-          </Link>
+          </SidebarLink>
         </nav>
       </div>
     </aside>
