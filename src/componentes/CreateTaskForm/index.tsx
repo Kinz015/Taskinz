@@ -71,95 +71,100 @@ export default function CreateTaskForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Título */}
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Título
-        </label>
-        <input
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+    <div className="w-full max-w-xl rounded-lg bg-white p-6 shadow-md m-auto">
+        <h2 className="mb-6 text-center text-xl font-semibold text-gray-800">
+          Criar nova task
+        </h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Título */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Título
+          </label>
+          <input
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                          focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
 
-      {/* Descrição */}
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Descrição
-        </label>
-        <textarea
-          className="w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm
+        {/* Descrição */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Descrição
+          </label>
+          <textarea
+            className="w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm
                          focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={3}
-        />
-      </div>
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+          />
+        </div>
 
-      {/* Responsável */}
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Responsável
-        </label>
-        <select
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+        {/* Responsável */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Responsável
+          </label>
+          <select
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                          focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          value={assigneeId}
-          onChange={(e) => setAssigneeId(e.target.value)}
-        >
-          <option value="">— Sem responsável —</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name || user.email}
-            </option>
-          ))}
-        </select>
-      </div>
+            value={assigneeId}
+            onChange={(e) => setAssigneeId(e.target.value)}
+          >
+            <option value="">— Sem responsável —</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name || user.email}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      {/* Prazo */}
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Prazo
-        </label>
-        <input
-          type="datetime-local"
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+        {/* Prazo */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Prazo
+          </label>
+          <input
+            type="datetime-local"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                          focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          value={dueAt}
-          onChange={(e) => setDueAt(e.target.value)}
-        />
-      </div>
+            value={dueAt}
+            onChange={(e) => setDueAt(e.target.value)}
+          />
+        </div>
 
-      {/* Status */}
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Status
-        </label>
-        <select
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+        {/* Status */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Status
+          </label>
+          <select
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                          focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option value="pending">Pendente</option>
-          <option value="in_progress">Em andamento</option>
-          <option value="completed">Concluída</option>
-        </select>
-      </div>
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="pending">Pendente</option>
+            <option value="in_progress">Em andamento</option>
+            <option value="completed">Concluída</option>
+          </select>
+        </div>
 
-      {/* Botão */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="mt-4 w-full rounded-md bg-indigo-600 py-2 text-sm font-medium text-white
+        {/* Botão */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-4 w-full rounded-md bg-indigo-600 py-2 text-sm font-medium text-white
                        transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-400"
-      >
-        {loading ? "Criando..." : "Criar task"}
-      </button>
+        >
+          {loading ? "Criando..." : "Criar task"}
+        </button>
+      </form>
       {error && (
         <p className="mt-4 text-center text-sm text-red-600">{error}</p>
       )}
@@ -169,6 +174,6 @@ export default function CreateTaskForm() {
           Task criada com sucesso
         </p>
       )}
-    </form>
+    </div>
   );
 }

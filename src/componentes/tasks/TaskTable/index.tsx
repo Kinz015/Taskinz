@@ -8,7 +8,7 @@ type TasksTableProps = {
 
 export default function TasksTable({ tasks }: TasksTableProps) {
   return (
-    <div className="flex flex-1 flex-col bg-[#2a2a2a]">
+    <div className="flex flex-1 flex-col">
       <HeaderTasksTable />
       <BodyTasksTable tasks={tasks} />
     </div>

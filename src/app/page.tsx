@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Todas as tarefas" />
-      <main className="flex flex-1 flex-col bg-amber-200">
+      <main className="flex flex-1 flex-col bg-[#2a2a2a]">
         <TasksTable tasks={mockTasks}/>
       </main>
     </div>
