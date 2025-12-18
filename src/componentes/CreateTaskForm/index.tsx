@@ -12,7 +12,7 @@ export default function CreateTaskForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueAt, setDueAt] = useState("");
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("");
   const [assigneeId, setAssigneeId] = useState<string | "">("");
 
   const [users, setUsers] = useState<User[]>([]);
@@ -65,7 +65,7 @@ export default function CreateTaskForm() {
     setTitle("");
     setDescription("");
     setDueAt("");
-    setStatus("pending");
+    setStatus("");
     setAssigneeId("");
     setLoading(false);
   }

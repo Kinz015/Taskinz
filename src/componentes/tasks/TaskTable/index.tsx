@@ -1,10 +1,10 @@
-import { Task } from "@/lib/mockTasks";
+import { TaskDTO } from "@/types/task";
 import BodyTasksTable from "../BodyTasksTable";
 import HeaderTasksTable from "../HeaderTasksTable";
 
 type TasksTableProps = {
-  tasks: Task[];
-};
+  tasks: TaskDTO[]
+}
 
 export default function TasksTable({ tasks }: TasksTableProps) {
   return (

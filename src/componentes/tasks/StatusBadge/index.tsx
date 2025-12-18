@@ -1,17 +1,35 @@
-import { TaskStatus } from "@/lib/mockTasks";
+import { TaskStatus } from "@/types/task"
 
-const statusStyles: Record<TaskStatus, string> = {
-  Concluída: "bg-[#2DA135]",
-  "Em andamento": "bg-[#D97706]",
-  Pendente: "bg-[#A12D2F]",
-};
+const statusMap: Record<
+  TaskStatus,
+  { label: string; className: string }
+> = {
+  pending: {
+    label: "Pendente",
+    className: "bg-[#A12D2F]"
+  },
+  in_progress: {
+    label: "Em andamento",
+    className: "bg-[#D97706]"
+  },
+  completed: {
+    label: "Concluída",
+    className: "bg-[#2DA135]"
+  }
+}
 
-export function StatusBadge({ status }: { status: TaskStatus }) {
+type StatusBadgeProps = {
+  status: TaskStatus
+}
+
+export function StatusBadge({ status }: StatusBadgeProps) {
+  const { label, className } = statusMap[status]
+
   return (
     <span
-      className={`rounded-md px-3 py-2 font-medium text-white ${statusStyles[status]}`}
+      className={`rounded-md px-3 py-2 font-medium text-white ${className}`}
     >
-      {status}
+      {label}
     </span>
   );
 }

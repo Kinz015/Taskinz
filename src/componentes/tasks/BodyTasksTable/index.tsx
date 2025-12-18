@@ -1,9 +1,9 @@
-import { Task } from "@/lib/mockTasks";
+import { TaskDTO } from "@/types/task";
 import { StatusBadge } from "../StatusBadge";
 
 type BodyTasksTableProps = {
-  tasks: Task[];
-};
+  tasks: TaskDTO[]
+}
 
 export default function BodyTasksTable({ tasks }: BodyTasksTableProps) {
   return (
@@ -31,10 +31,18 @@ export default function BodyTasksTable({ tasks }: BodyTasksTableProps) {
               <StatusBadge status={task.status} />
             </td>
 
-            <td className="p-4 text-center">{task.owner}</td>
-            <td className="p-4 text-center">{task.deadline}</td>
-            <td className="p-4 text-center">{task.startDate}</td>
-            <td className="p-4 text-center">{task.updatedAt}</td>
+            <td className="p-4 text-center">
+              {task.author.name ?? task.author.email}
+            </td>
+            <td className="p-4 text-center">
+              {task.dueAt ? new Date(task.dueAt).toLocaleDateString() : "-"}
+            </td>
+            <td className="p-4 text-center">
+              {new Date(task.createdAt).toLocaleDateString()}
+            </td>
+            <td className="p-4 text-center">
+              {new Date(task.updatedAt).toLocaleDateString()}
+            </td>
 
             <td className="rounded-r-lg p-4 text-right">
               <button className="rounded-l-lg px-2 hover:bg-gray-300">

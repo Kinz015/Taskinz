@@ -11,14 +11,14 @@ export async function POST(req: Request) {
   try {
     const userId = getCurrentUserId(req);
 
-    console.log("USER ID RECEBIDO:", userId)
+    console.log("USER ID RECEBIDO:", userId);
 
     if (!userId) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { title, description, dueAt, assigneeId } = body;
+    const { title, description, dueAt, status, assigneeId } = body;
 
     if (!title) {
       return NextResponse.json(
@@ -27,12 +27,16 @@ export async function POST(req: Request) {
       );
     }
 
+    const validStatus = Object.values(TaskStatus).includes(status)
+      ? status
+      : TaskStatus.pending;
+
     const task = await prisma.task.create({
       data: {
         title,
         description,
         dueAt: dueAt ? new Date(dueAt) : null,
-        status: TaskStatus.pending,
+        status: validStatus,
 
         author: {
           connect: { id: userId },
@@ -51,4 +55,30 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json({ error: "Erro ao criar task" }, { status: 500 });
   }
+}
+
+export async function GET() {
+  const tasks = await prisma.task.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      assignee: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return NextResponse.json(tasks);
 }
