@@ -32,7 +32,7 @@ export default function BodyTasksTable({ tasks }: BodyTasksTableProps) {
             </td>
 
             <td className="p-4 text-center">
-              {task.author.name ?? task.author.email}
+              {task.assignee ? task.assignee.name : "Sem responsável"}
             </td>
             <td className="p-4 text-center">
               {task.dueAt ? new Date(task.dueAt).toLocaleDateString() : "-"}
