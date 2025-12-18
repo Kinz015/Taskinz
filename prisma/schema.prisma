@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  completed
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  status      TaskStatus @default(pending)
+
+  dueAt DateTime?
+
+  authorId String
+  author   User @relation("TaskAuthor", fields: [authorId], references: [id])
+
+  assigneeId String?
+  assignee   User? @relation("TaskAssignee", fields: [assigneeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("tasks")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  authoredTasks Task[] @relation("TaskAuthor")
+  assignedTasks Task[] @relation("TaskAssignee")
+  @@map("users")
+}
