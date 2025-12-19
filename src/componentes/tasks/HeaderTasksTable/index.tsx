@@ -1,26 +1,26 @@
 export default function HeaderTasksTable() {
   return (
-    <table className="w-full">
+    <table className="px-2 w-full">
       <colgroup>
-        <col className="w-[60]" />
-        <col className="w-[320]" />
-        <col className="w-[140]" />
+        <col className="w-[54]" />
+        <col className="w-[500]" />
         <col className="w-[200]" />
-        <col className="w-[120]" />
-        <col className="w-[140]" />
-        <col className="w-[160]" />
-        <col className="w-[80]" />
+        <col className="w-[200]" />
+        <col className="w-[200]" />
+        <col className="w-[200]" />
+        <col className="w-[200]" />
+        <col className="w-[77]" />
       </colgroup>
       <thead>
         <tr className="bg-[#1b1b1f] text-white">
-          <th className="p-4 text-start">Nº</th>
-          <th className="p-4 text-start">Título</th>
-          <th className="p-4 text-center">Status</th>
-          <th className="p-4 text-center">Responsável</th>
-          <th className="p-4 text-center">Prazo</th>
-          <th className="p-4 text-center">Data inicial</th>
-          <th className="p-4 text-center">Última alteração</th>
-          <th className="p-4 text-right">Ações</th>
+          <th className="py-4 pl-2 text-center">Nº</th>
+          <th className="py-4 text-start">Título</th>
+          <th className="py-4 text-center">Status</th>
+          <th className="py-4 text-center">Responsável</th>
+          <th className="py-4 text-center">Prazo</th>
+          <th className="py-4 text-center">Data inicial</th>
+          <th className="py-4 text-center">Última alteração</th>
+          <th className="py-4 pr-2 text-center">Ações</th>
         </tr>
       </thead>
     </table>
