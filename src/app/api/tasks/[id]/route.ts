@@ -22,10 +22,7 @@ export async function GET(
   });
 
   if (!task) {
-    return NextResponse.json(
-      { error: "Task não encontrada" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Task não encontrada" }, { status: 404 });
   }
 
   return NextResponse.json(task);
@@ -37,22 +34,41 @@ export async function GET(
  */
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const body = await req.json();
+  try {
+    const { id } = await context.params; // ✅ AQUI está a correção
+    const numericId = Number(id);
 
-  const task = await prisma.task.update({
-    where: { id: Number(params.id) },
-    data: {
-      title: body.title,
-      description: body.description,
-      status: body.status,
-      dueAt: body.dueAt ? new Date(body.dueAt) : null,
-      assigneeId: body.assigneeId ?? null,
-    },
-  });
+    if (isNaN(numericId)) {
+      return NextResponse.json(
+        { message: "ID inválido" },
+        { status: 400 }
+      );
+    }
 
-  return NextResponse.json(task);
+    const body = await req.json();
+
+    const task = await prisma.task.update({
+      where: { id: numericId },
+      data: {
+        title: body.title,
+        description: body.description,
+        status: body.status,
+        dueAt: body.dueAt ? new Date(body.dueAt) : null,
+        assigneeId: body.assigneeId ?? null,
+      },
+    });
+
+    return NextResponse.json(task);
+  } catch (error) {
+    console.error("PUT /api/tasks/[id] erro:", error);
+
+    return NextResponse.json(
+      { message: "Erro interno ao atualizar task" },
+      { status: 500 }
+    );
+  }
 }
 
 /**

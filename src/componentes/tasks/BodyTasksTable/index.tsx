@@ -72,21 +72,18 @@ export default function BodyTasksTable({ tasks }: BodyTasksTableProps) {
                     Abrir tarefa
                   </Link>
 
-                  <button
-                    onClick={() => {
-                      console.log("Editar", task.id);
-                      setOpenMenuId(null);
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 hover:cursor-pointer"
+                  <Link
+                    href={`/tasks/${task.id}/edit`}
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 hover:cursor-pointer"
                   >
                     Editar tarefa
-                  </button>
+                  </Link>
                   <button
                     onClick={() => {
                       console.log("Editar", task.id);
                       setOpenMenuId(null);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-md hover:cursor-pointer"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-md hover:cursor-pointer"
                   >
                     Fechar
                   </button>
