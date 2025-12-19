@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TaskStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client"
 
 function getCurrentUserId(req: Request): string | null {
   // depois: cookie / session / auth
@@ -58,37 +59,46 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const status = searchParams.get("status")
+  const { searchParams } = new URL(req.url);
+  const status = searchParams.get("status");
 
   const where =
     status && Object.values(TaskStatus).includes(status as TaskStatus)
       ? { status: status as TaskStatus }
-      : {}
+      : {};
+
+  const sort = searchParams.get("sort");
+  const rawOrder = searchParams.get("order");
+
+  const order: Prisma.SortOrder = rawOrder === "asc" ? "asc" : "desc";
+
+  const orderBy: Prisma.TaskOrderByWithRelationInput =
+    sort === "dueAt"
+      ? { dueAt: order }
+      : sort === "updatedAt"
+      ? { updatedAt: order }
+      : { createdAt: order };
 
   const tasks = await prisma.task.findMany({
     where,
-    orderBy: {
-      createdAt: "desc"
-    },
+    orderBy,
     include: {
       author: {
         select: {
           id: true,
           name: true,
-          email: true
-        }
+          email: true,
+        },
       },
       assignee: {
         select: {
           id: true,
           name: true,
-          email: true
-        }
-      }
-    }
-  })
+          email: true,
+        },
+      },
+    },
+  });
 
-  return NextResponse.json(tasks)
+  return NextResponse.json(tasks);
 }
-
