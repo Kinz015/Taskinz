@@ -1,6 +1,7 @@
 import { TaskDTO } from "@/types/task";
 import { StatusBadge } from "../StatusBadge";
 import { EllipsisIcon } from "lucide-react";
+import Link from "next/link";
 
 type BodyTasksTableProps = {
   tasks: TaskDTO[];
@@ -26,9 +27,7 @@ export default function BodyTasksTable({ tasks }: BodyTasksTableProps) {
               {index + 1}
             </td>
 
-            <td className="py-4 text-left">
-              {task.title}
-            </td>
+            <td className="py-4 text-left">{task.title}</td>
 
             <td className="py-4 text-center">
               <StatusBadge status={task.status} />
@@ -48,9 +47,12 @@ export default function BodyTasksTable({ tasks }: BodyTasksTableProps) {
             </td>
 
             <td className="rounded-r-lg">
-              <button className="w-full h-full flex justify-center py-4 hover:bg-gray-300 hover:cursor-pointer rounded-r-lg">
+              <Link
+                href={`/tasks/${task.id}`}
+                className="w-full h-full flex justify-center py-4 hover:bg-gray-300 hover:cursor-pointer rounded-r-lg"
+              >
                 <EllipsisIcon />
-              </button>
+              </Link>
             </td>
           </tr>
         ))}
