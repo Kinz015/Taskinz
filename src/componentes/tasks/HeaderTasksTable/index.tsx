@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { ChevronDownIcon } from "lucide-react";
+import {
+  CircleChevronDownIcon,
+  CircleChevronUpIcon,
+  CircleEqualIcon,
+} from "lucide-react";
 
 type SortField = "dueAt" | "createdAt" | "updatedAt";
 type SortOrder = "asc" | "desc";
@@ -23,20 +27,31 @@ export default function HeaderTasksTable({
   order,
 }: HeaderTasksTableProps) {
   function SortableHeader(label: string, field: SortField) {
+    const isActive = sort === field;
     const nextOrder = getNextOrder(sort, field, order);
 
     return (
       <Link
         href={`?sort=${field}&order=${nextOrder}`}
-        className="inline-flex items-center gap-1 hover:underline"
+        className="inline-flex items-center gap-1 justify-center cursor-pointer select-none hover:underline"
       >
-        {label}
-        {sort === field && (
-          <span className="text-xs">{order === "asc" ? "▲" : "▼"}</span>
-        )}
+        <span>{label}</span>
+
+        <span>
+          {isActive ? (
+            order === "asc" ? (
+              <CircleChevronUpIcon size={17} />
+            ) : (
+              <CircleChevronDownIcon size={17} />
+            )
+          ) : (
+            <CircleEqualIcon size={17} />
+          )}
+        </span>
       </Link>
     );
   }
+
   return (
     <table className="px-2 w-full">
       <colgroup>
