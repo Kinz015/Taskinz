@@ -57,28 +57,38 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const status = searchParams.get("status")
+
+  const where =
+    status && Object.values(TaskStatus).includes(status as TaskStatus)
+      ? { status: status as TaskStatus }
+      : {}
+
   const tasks = await prisma.task.findMany({
+    where,
     orderBy: {
-      createdAt: "desc",
+      createdAt: "desc"
     },
     include: {
       author: {
         select: {
           id: true,
           name: true,
-          email: true,
-        },
+          email: true
+        }
       },
       assignee: {
         select: {
           id: true,
           name: true,
-          email: true,
-        },
-      },
-    },
-  });
+          email: true
+        }
+      }
+    }
+  })
 
-  return NextResponse.json(tasks);
+  return NextResponse.json(tasks)
 }
+
