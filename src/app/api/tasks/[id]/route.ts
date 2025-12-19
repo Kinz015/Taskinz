@@ -41,10 +41,7 @@ export async function PUT(
     const numericId = Number(id);
 
     if (isNaN(numericId)) {
-      return NextResponse.json(
-        { message: "ID inválido" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "ID inválido" }, { status: 400 });
     }
 
     const body = await req.json();
@@ -77,11 +74,26 @@ export async function PUT(
  */
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  await prisma.task.delete({
-    where: { id: Number(params.id) },
-  });
+  try {
+    const { id } = await context.params;
+    const taskId = Number(id);
 
-  return NextResponse.json({ success: true });
+    if (isNaN(taskId)) {
+      return NextResponse.json({ message: "ID inválido" }, { status: 400 });
+    }
+
+    await prisma.task.delete({
+      where: { id: taskId },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("DELETE /tasks error:", error);
+    return NextResponse.json(
+      { message: "Erro ao excluir task" },
+      { status: 500 }
+    );
+  }
 }

@@ -1,7 +1,9 @@
 "use client";
 
+import { useDeleteTask } from "@/hooks/useDeleteTask";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toastSuccess, toastError } from "@/utils/toast";
 
 type EditTaskFormProps = {
   task: {
@@ -20,6 +22,7 @@ type EditTaskFormProps = {
 };
 
 export function EditTaskForm({ task, users }: EditTaskFormProps) {
+  const { deleteTask } = useDeleteTask();
   const router = useRouter();
 
   const [title, setTitle] = useState(task.title);
@@ -47,19 +50,16 @@ export function EditTaskForm({ task, users }: EditTaskFormProps) {
       }),
     });
 
-    const text = await res.text();
-
-    console.log("STATUS:", res.status);
-    console.log("BODY:", text);
-
+    // ✅ TOAST DE SUCESSO
     if (!res.ok) {
-      alert("Erro ao salvar task");
+      toastError("Erro ao salvar a task");
       return;
     }
 
     router.push(`/tasks/${task.id}`);
     router.refresh();
 
+    toastSuccess("Tarefa atualizada com sucesso")
     setLoading(false);
   }
   return (
@@ -166,7 +166,7 @@ export function EditTaskForm({ task, users }: EditTaskFormProps) {
           disabled={loading}
           className="
         rounded-md bg-green-600 px-5 py-2 text-sm font-medium text-white
-        hover:bg-green-700
+        hover:bg-green-700 hover:cursor-pointer
         disabled:cursor-not-allowed disabled:opacity-50
       "
         >
@@ -178,10 +178,21 @@ export function EditTaskForm({ task, users }: EditTaskFormProps) {
           onClick={() => router.back()}
           className="
         rounded-md bg-gray-600 px-5 py-2 text-sm font-medium text-white
-        hover:bg-gray-700
+        hover:bg-gray-700 hover:cursor-pointer
       "
         >
           Cancelar
+        </button>
+        <button
+          type="button"
+          className="
+        rounded-md bg-red-700 px-5 py-2 text-sm font-medium text-white
+        hover:bg-red-800 hover:cursor-pointer
+        disabled:cursor-not-allowed disabled:opacity-50
+      "
+          onClick={() => deleteTask({ id: task.id, title: task.title })}
+        >
+          Excluir task
         </button>
       </div>
     </form>

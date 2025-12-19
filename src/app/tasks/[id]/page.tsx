@@ -84,7 +84,15 @@ export default async function TaskPage({ params }: TaskPageProps) {
               </div>
 
               <div>
-                <Link href={`/tasks/${task.id}/edit`}>Editar task</Link>
+                <Link
+                  href={`/tasks/${task.id}/edit`}
+                  className="
+        rounded-md bg-gray-600 px-5 py-2 text-sm font-medium text-white
+        hover:bg-gray-700 hover:cursor-pointer
+      "
+                >
+                  Editar task
+                </Link>
               </div>
             </div>
           </div>
