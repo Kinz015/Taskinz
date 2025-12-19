@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { loginSchema, registerSchema } from "@/lib/validatros/auth";
 
 type AuthMode = "login" | "register";
 
@@ -25,24 +26,33 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setLoading(true);
     setError(null);
 
+    const schema = mode === "login" ? loginSchema : registerSchema;
+
+    const payload =
+      mode === "login" ? { email, password } : { name, email, password };
+
+    const parsed = schema.safeParse(payload);
+
+    if (!parsed.success) {
+      setError(parsed.error.issues[0].message);
+      setLoading(false);
+      return;
+    }
+
     const endpoint =
       mode === "login" ? "/api/auth/login" : "/api/auth/register";
-
-    const body =
-      mode === "login" ? { email, password } : { name, email, password };
 
     try {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(parsed.data),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
         setError(data.error || "Erro na autenticação");
-        setLoading(false);
         return;
       }
 
