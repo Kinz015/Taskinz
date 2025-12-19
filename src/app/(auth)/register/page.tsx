@@ -1,0 +1,12 @@
+import RegisterForm from "@/componentes/Auth/RegisterForm";
+
+export default function RegisterPage() {
+  return (
+    <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-md">
+      <h1 className="mb-8 pt-4 text-center text-2xl font-semibold text-gray-900">
+        Criar conta
+      </h1>
+      <RegisterForm/>
+    </div>
+  );
+}

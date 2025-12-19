@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SideBar } from "@/componentes/SideBar";
 import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
@@ -16,7 +15,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="flex">
-        <SideBar />
         <main className="flex-1">
           {children}
           <ToastContainer position="top-center" />
