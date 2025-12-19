@@ -47,6 +47,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
+        credentials: "include", // 🔥 ESSENCIAL
       });
 
       const data = await response.json();
@@ -57,7 +58,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
       }
 
       if (mode === "login") {
-        localStorage.setItem("token", data.token);
         router.push("/");
       } else {
         router.push("/login");
@@ -84,54 +84,44 @@ export default function AuthForm({ mode }: AuthFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-       focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+            focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
           />
         </div>
       )}
 
-      {/* Email */}
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
           E-mail
         </label>
         <input
           type="email"
-          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
-          title="Informe um e-mail válido"
-          placeholder="seu@email.com"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-           focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+          focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
         />
       </div>
 
-      {/* Senha */}
       <div>
         <label className="mb-1 block text-sm font-medium text-gray-700">
           Senha
         </label>
         <input
           type="password"
-          placeholder="••••••••"
-          pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,}$"
-          title="A senha deve ter no mínimo 8 caracteres, incluindo letra, número e caractere especial"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-           focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+          focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
         />
       </div>
 
-      {/* Botão */}
       <button
         type="submit"
         disabled={loading}
         className="mt-2 w-full rounded-md bg-green-600 py-2 text-sm font-semibold text-white
-        transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600/30
-        disabled:opacity-50 hover:cursor-pointer"
+        transition hover:bg-green-700 disabled:opacity-50"
       >
         {loading
           ? mode === "login"
@@ -142,10 +132,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
           : "Cadastrar"}
       </button>
 
-      {/* Erro inline */}
       {error && <p className="text-center text-sm text-red-600">{error}</p>}
 
-      {/* Links */}
       <div className="text-center text-sm">
         {mode === "login" ? (
           <Link href="/register">Não tem conta? Criar agora</Link>

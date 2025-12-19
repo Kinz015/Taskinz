@@ -1,19 +1,15 @@
-import type { Metadata } from "next";
 import { SideBar } from "@/componentes/SideBar";
+import { getLoggedUser } from "@/lib/auth";
 
-export const metadata: Metadata = {
-  title: "Desafio Técnico Full Stack",
-  description: "",
-};
-
-export default function RootLayout({
+export default async function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getLoggedUser();
   return (
     <div className="flex min-h-screen">
-      <SideBar />
+      <SideBar user={user} />
       <main className="flex-1 bg-[#2a2a2a]">{children}</main>
     </div>
   );

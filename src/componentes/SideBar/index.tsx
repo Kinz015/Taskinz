@@ -12,18 +12,26 @@ import Image from "next/image";
 import SidebarLink from "../SidebarLink";
 import { useRouter } from "next/navigation";
 import { toastConfirmLogout } from "@/hooks/useDeleteTask";
-import { getLoggedUser } from "@/lib/auth";
+import { AuthUser } from "@/types/auth";
 
-export function SideBar() {
+type SideBarProps = {
+  user: AuthUser | null;
+};
+
+export function SideBar({ user }: SideBarProps) {
   const router = useRouter();
-  const user = getLoggedUser();
 
-  function handleLogout() {
+  async function handleLogout() {
     toastConfirmLogout({
       userName: user?.email || "usuário",
-      onConfirm: () => {
-        localStorage.removeItem("token");
+      onConfirm: async () => {
+        await fetch("/api/auth/logout", {
+          method: "POST",
+          credentials: "include",
+        });
+
         router.push("/login");
+        router.refresh();
       },
     });
   }
