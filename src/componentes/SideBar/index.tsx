@@ -1,16 +1,33 @@
 "use client";
 
-import { LogOutIcon } from "lucide-react";
-import { ClipboardListIcon } from "lucide-react";
-import { ClipboardPlusIcon } from "lucide-react";
-import { ClipboardCheckIcon } from "lucide-react";
-import { ClipboardClockIcon } from "lucide-react";
-import { ClockAlertIcon } from "lucide-react";
+import {
+  LogOutIcon,
+  ClipboardListIcon,
+  ClipboardPlusIcon,
+  ClipboardCheckIcon,
+  ClipboardClockIcon,
+  ClockAlertIcon,
+} from "lucide-react";
 import Image from "next/image";
 import SidebarLink from "../SidebarLink";
-
+import { useRouter } from "next/navigation";
+import { toastConfirmLogout } from "@/hooks/useDeleteTask";
+import { getLoggedUser } from "@/lib/auth";
 
 export function SideBar() {
+  const router = useRouter();
+  const user = getLoggedUser();
+
+  function handleLogout() {
+    toastConfirmLogout({
+      userName: user?.email || "usuário",
+      onConfirm: () => {
+        localStorage.removeItem("token");
+        router.push("/login");
+      },
+    });
+  }
+
   return (
     <aside className="w-80 bg-white">
       <div className="min-h-50">
@@ -29,18 +46,18 @@ export function SideBar() {
             <ClipboardListIcon /> Todas as tarefas
           </SidebarLink>
           <SidebarLink href="/adicionar-tarefa">
-            <ClipboardPlusIcon/> Adicionar tarefa
+            <ClipboardPlusIcon /> Adicionar tarefa
           </SidebarLink>
           <SidebarLink href="/concluidas">
-            <ClipboardCheckIcon/> Concluídas
+            <ClipboardCheckIcon /> Concluídas
           </SidebarLink>
           <SidebarLink href="/em-andamento">
-            <ClipboardClockIcon/> Em andamento
+            <ClipboardClockIcon /> Em andamento
           </SidebarLink>
           <SidebarLink href="/pendentes">
-            <ClockAlertIcon/> Pendentes
+            <ClockAlertIcon /> Pendentes
           </SidebarLink>
-          <SidebarLink href="/logout">
+          <SidebarLink onClick={handleLogout}>
             <LogOutIcon /> Sair
           </SidebarLink>
         </nav>

@@ -1,18 +1,32 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TaskStatus } from "@prisma/client";
-import { Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
 function getCurrentUserId(req: Request): string | null {
-  // depois: cookie / session / auth
-  return req.headers.get("x-user-id");
+  const authHeader = req.headers.get("authorization");
+
+  if (!authHeader) return null;
+
+  const token = authHeader.replace("Bearer ", "");
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
+      sub: string;
+    };
+
+    return payload.sub;
+  } catch {
+    return null;
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const userId = getCurrentUserId(req);
 
-    console.log("USER ID RECEBIDO:", userId);
+    console.log("USER ID (JWT):", userId);
 
     if (!userId) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
@@ -39,10 +53,12 @@ export async function POST(req: Request) {
         dueAt: dueAt ? new Date(dueAt) : null,
         status: validStatus,
 
+        // ✅ autor vem do token
         author: {
           connect: { id: userId },
         },
 
+        // ✅ assignee opcional
         ...(assigneeId && {
           assignee: {
             connect: { id: assigneeId },

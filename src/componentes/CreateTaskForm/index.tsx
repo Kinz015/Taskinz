@@ -37,12 +37,13 @@ export default function CreateTaskForm() {
     setError(null);
     setSuccess(false);
 
+    const token = localStorage.getItem("token");
+
     const res = await fetch("/api/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // temporário enquanto não há auth real
-        "x-user-id": "badcb368-5fca-4c98-a638-ffc4ff20dcb7",
+        Authorization: `Bearer ${token}`, // 👈 agora sim
       },
       body: JSON.stringify({
         title,
@@ -72,9 +73,9 @@ export default function CreateTaskForm() {
 
   return (
     <div className="w-full max-w-xl rounded-lg bg-white p-6 shadow-md m-auto">
-        <h2 className="mb-6 text-center text-xl font-semibold text-gray-800">
-          Criar nova task
-        </h2>
+      <h2 className="mb-6 text-center text-xl font-semibold text-gray-800">
+        Criar nova task
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Título */}
         <div>
@@ -83,7 +84,7 @@ export default function CreateTaskForm() {
           </label>
           <input
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                         focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+             focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -97,7 +98,7 @@ export default function CreateTaskForm() {
           </label>
           <textarea
             className="w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm
-                         focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+             focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
@@ -111,7 +112,7 @@ export default function CreateTaskForm() {
           </label>
           <select
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                         focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+             focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             value={assigneeId}
             onChange={(e) => setAssigneeId(e.target.value)}
           >

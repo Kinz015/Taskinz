@@ -3,7 +3,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
-  title: "Desafio Técnico Full Stack",
+  title: "Taskinz",
   description: "",
 };
 

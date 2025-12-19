@@ -61,7 +61,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Nome — só no register */}
       {mode === "register" && (
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -71,10 +70,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
             type="text"
             placeholder="Seu nome"
             required
+            minLength={2}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-             focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+       focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
           />
         </div>
       )}
@@ -86,6 +86,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
         </label>
         <input
           type="email"
+          pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+          title="Informe um e-mail válido"
           placeholder="seu@email.com"
           required
           value={email}
@@ -103,6 +105,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
         <input
           type="password"
           placeholder="••••••••"
+          pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[^\s]{8,}$"
+          title="A senha deve ter no mínimo 8 caracteres, incluindo letra, número e caractere especial"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
