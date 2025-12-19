@@ -43,7 +43,7 @@ export function useDeleteTask() {
 
                   toast.success("Tarefa excluída com sucesso");
                   closeToast();
-                  router.push("/tasks");
+                  router.push("/");
                   router.refresh();
                 } catch {
                   toast.error("Erro ao excluir tarefa");

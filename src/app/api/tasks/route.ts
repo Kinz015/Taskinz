@@ -2,35 +2,11 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TaskStatus } from "@prisma/client";
 import { Prisma } from "@prisma/client";
-import jwt from "jsonwebtoken";
-
-function getCurrentUserId(req: Request): string | null {
-  const authHeader = req.headers.get("authorization");
-
-  if (!authHeader) return null;
-
-  const token = authHeader.replace("Bearer ", "");
-
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
-      sub: string;
-    };
-
-    return payload.sub;
-  } catch {
-    return null;
-  }
-}
+import { requireAuth } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const userId = getCurrentUserId(req);
-
-    console.log("USER ID (JWT):", userId);
-
-    if (!userId) {
-      return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
-    }
+    const user = await requireAuth(); // 🔐 COOKIE AUTH
 
     const body = await req.json();
     const { title, description, dueAt, status, assigneeId } = body;
@@ -53,24 +29,21 @@ export async function POST(req: Request) {
         dueAt: dueAt ? new Date(dueAt) : null,
         status: validStatus,
 
-        // ✅ autor vem do token
-        author: {
-          connect: { id: userId },
-        },
+        authorId: user.sub, // 🔐 dono vem do cookie
 
-        // ✅ assignee opcional
         ...(assigneeId && {
-          assignee: {
-            connect: { id: assigneeId },
-          },
+          assigneeId,
         }),
       },
     });
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Erro ao criar task" }, { status: 500 });
+    console.log(error)
+    return NextResponse.json(
+      { error: "Não autenticado" },
+      { status: 401 }
+    );
   }
 }
 

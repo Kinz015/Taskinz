@@ -1,14 +1,21 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
 export async function GET() {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true
-    }
-  })
+  try {
+    await requireAuth(); // 🔐 valida cookie
 
-  return NextResponse.json(users)
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    return NextResponse.json(users);
+  } catch {
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
 }

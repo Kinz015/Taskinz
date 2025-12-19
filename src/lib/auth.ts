@@ -19,3 +19,13 @@ export async function getLoggedUser(): Promise<AuthUser | null> {
     return null;
   }
 }
+
+export async function requireAuth(): Promise<AuthUser> {
+  const user = await getLoggedUser();
+
+  if (!user) {
+    throw new Error("Não autenticado");
+  }
+
+  return user;
+}

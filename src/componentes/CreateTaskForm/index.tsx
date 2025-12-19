@@ -23,7 +23,9 @@ export default function CreateTaskForm() {
   // 🔹 Carregar usuários para o select de responsável
   useEffect(() => {
     async function loadUsers() {
-      const res = await fetch("/api/users");
+      const res = await fetch("/api/users", {
+        credentials: "include",
+      });
       const data = await res.json();
       setUsers(data);
     }
@@ -37,14 +39,12 @@ export default function CreateTaskForm() {
     setError(null);
     setSuccess(false);
 
-    const token = localStorage.getItem("token");
-
     const res = await fetch("/api/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // 👈 agora sim
       },
+      credentials: "include", 
       body: JSON.stringify({
         title,
         description,
