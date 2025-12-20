@@ -14,18 +14,13 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
   // ✅ DESEMPACOTA params corretamente
   const { id } = await params;
 
-  console.log("🧪 id recebido:", id);
-
   const taskId = Number(id);
-  console.log("🧪 taskId convertido:", taskId);
 
   if (Number.isNaN(taskId)) {
-    console.log("❌ taskId é NaN → notFound()");
     notFound();
   }
 
   const user = await requireAuth();
-  console.log("🧪 user autenticado:", user);
 
   const [task, users] = await Promise.all([
     prisma.task.findUnique({
@@ -50,10 +45,8 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
     }),
   ]);
 
-  console.log("🧪 task encontrada:", task);
-
   if (!task) {
-    notFound();
+    redirect("404");
   }
 
   if (task.authorId !== user.id) {
