@@ -1,6 +1,7 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { getLoggedUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 async function getTasks(sort: string, order: string) {
   const res = await fetch(
@@ -33,6 +34,10 @@ export default async function Home({ searchParams }: HomeProps) {
   const order = params.order === "asc" ? "asc" : "desc";
 
   const tasks = await getTasks(sort, order);
+
+  if (!user) {
+  redirect("/login");
+}
 
   return (
     <div className="flex flex-col min-h-screen">
