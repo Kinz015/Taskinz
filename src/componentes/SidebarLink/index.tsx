@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 type SidebarLinkProps =
   | {
@@ -19,32 +20,47 @@ export default function SidebarLink(props: SidebarLinkProps) {
   const pathname = usePathname();
 
   const isActive =
-    props.href !== undefined && pathname === props.href;
+    "href" in props && props.href !== undefined && pathname === props.href;
 
   const baseClass = `
-    flex items-center font-bold p-4 rounded-xl gap-2 transition
-    ${isActive
-      ? "bg-gray-400 text-black"
-      : "bg-[#D9D9D9] hover:bg-[#cfcfcf] text-black"}
+    flex items-center justify-center lg:justify-start
+    font-bold p-4 rounded-xl gap-3 transition
+    ${
+      isActive
+        ? "bg-gray-400 text-black"
+        : "bg-[#D9D9D9] hover:bg-[#cfcfcf] text-black"
+    }
   `;
 
-  // 👉 LINK
-  if (props.href !== undefined) {
+  const content = (
+    <>
+      {/* Ícone */}
+      <span className="shrink-0">
+        {React.Children.toArray(props.children)[0]}
+      </span>
+
+      {/* Texto — só desktop */}
+      <span className="hidden lg:inline text-sm whitespace-nowrap">
+        {React.Children.toArray(props.children)[1]}
+      </span>
+    </>
+  );
+
+   if (props.href !== undefined) {
     return (
       <Link href={props.href} className={baseClass}>
-        {props.children}
+        {content}
       </Link>
     );
   }
 
-  // 👉 BOTÃO (logout)
   return (
     <button
       type="button"
       onClick={props.onClick}
       className={`${baseClass} w-full text-left`}
     >
-      {props.children}
+      {content}
     </button>
   );
 }

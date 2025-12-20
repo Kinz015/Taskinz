@@ -37,36 +37,57 @@ export function SideBar({ user }: SideBarProps) {
   }
 
   return (
-    <aside className="w-80 bg-white">
-      <div className="min-h-50">
-        <Image
-          src="/TaskinzSemFundo.png"
-          alt="Taskinz"
-          width={400}
-          height={100}
-          priority
-          className="p-20"
-        />
-      </div>
-      <div className="flex">
-        <nav className="flex flex-1 flex-col gap-2 mx-2">
+    <aside
+      className="
+        hidden md:flex
+        md:w-20
+        lg:w-80
+        bg-white
+        transition-all
+      "
+    >
+      <div className="min-h-screen flex flex-col w-full">
+        {/* Logo — só no desktop */}
+        <div className="hidden lg:flex justify-center">
+          <Image
+            src="/TaskinzSemFundo.png"
+            alt="Taskinz"
+            width={400}
+            height={100}
+            priority
+            className="p-20"
+          />
+        </div>
+
+        <nav className="flex flex-1 flex-col gap-2 mx-2 mt-4">
           <SidebarLink href="/">
-            <ClipboardListIcon /> Todas as tarefas
+            <ClipboardListIcon />
+            Todas as tarefas
           </SidebarLink>
+
           <SidebarLink href="/adicionar-tarefa">
-            <ClipboardPlusIcon /> Adicionar tarefa
+            <ClipboardPlusIcon />
+            Adicionar tarefa
           </SidebarLink>
+
           <SidebarLink href="/concluidas">
-            <ClipboardCheckIcon /> Concluídas
+            <ClipboardCheckIcon />
+            Concluídas
           </SidebarLink>
+
           <SidebarLink href="/em-andamento">
-            <ClipboardClockIcon /> Em andamento
+            <ClipboardClockIcon />
+            Em andamento
           </SidebarLink>
+
           <SidebarLink href="/pendentes">
-            <ClockAlertIcon /> Pendentes
+            <ClockAlertIcon />
+            Pendentes
           </SidebarLink>
+
           <SidebarLink onClick={handleLogout}>
-            <LogOutIcon /> Sair
+            <LogOutIcon />
+            Sair
           </SidebarLink>
         </nav>
       </div>
