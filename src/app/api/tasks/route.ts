@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         dueAt: dueAt ? new Date(dueAt) : null,
         status: validStatus,
 
-        authorId: user.sub, // 🔐 dono vem do cookie
+        authorId: user.id, // 🔐 dono vem do cookie
 
         ...(assigneeId && {
           assigneeId,

@@ -1,6 +1,8 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
+import { getLoggedUser } from "@/lib/auth";
 import { TaskDTO } from "@/types/task";
+import { redirect } from "next/navigation";
 
 async function getEmAndamentoTasks(
   sort: string,
@@ -27,13 +29,17 @@ type EmAndamentoProps = {
   }>;
 };
 
-export default async function EmAndamento({
-  searchParams,
-}: EmAndamentoProps) {
+const user = await getLoggedUser();
+
+export default async function EmAndamento({ searchParams }: EmAndamentoProps) {
   const params = await searchParams;
 
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
+
+  if (!user) {
+    redirect("/login");
+  }
 
   const tasks = await getEmAndamentoTasks(sort, order);
 
@@ -42,11 +48,7 @@ export default async function EmAndamento({
       <Header title="Tarefas Em andamento" />
 
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable
-          tasks={tasks}
-          sort={sort}
-          order={order}
-        />
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
       </main>
     </div>
   );

@@ -29,13 +29,13 @@ type PendentesProps = {
   }>;
 };
 
+const user = await getLoggedUser();
+
 export default async function Pendentes({ searchParams }: PendentesProps) {
   const params = await searchParams;
 
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
-
-  const user = await getLoggedUser();
 
   if (!user) {
     redirect("/login");

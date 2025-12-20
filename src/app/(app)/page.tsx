@@ -36,8 +36,8 @@ export default async function Home({ searchParams }: HomeProps) {
   const tasks = await getTasks(sort, order);
 
   if (!user) {
-  redirect("/login");
-}
+    redirect("/login");
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
