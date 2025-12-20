@@ -9,8 +9,14 @@ export async function GET(
   _req: Request,
   { params }: { params: { id: string } }
 ) {
+  const taskId = Number(params.id);
+
+  if (Number.isNaN(taskId)) {
+    return NextResponse.json({ error: "ID inválido" }, { status: 400 });
+  }
+
   const task = await prisma.task.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: taskId },
     include: {
       author: {
         select: { id: true, name: true, email: true },
@@ -34,20 +40,19 @@ export async function GET(
  */
 export async function PUT(
   req: Request,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
+  const taskId = Number(params.id);
+
+  if (Number.isNaN(taskId)) {
+    return NextResponse.json({ message: "ID inválido" }, { status: 400 });
+  }
+
   try {
-    const { id } = await context.params; // ✅ AQUI está a correção
-    const numericId = Number(id);
-
-    if (isNaN(numericId)) {
-      return NextResponse.json({ message: "ID inválido" }, { status: 400 });
-    }
-
     const body = await req.json();
 
     const task = await prisma.task.update({
-      where: { id: numericId },
+      where: { id: taskId },
       data: {
         title: body.title,
         description: body.description,
@@ -74,23 +79,23 @@ export async function PUT(
  */
 export async function DELETE(
   _req: Request,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
+  const taskId = Number(params.id);
+
+  if (Number.isNaN(taskId)) {
+    return NextResponse.json({ message: "ID inválido" }, { status: 400 });
+  }
+
   try {
-    const { id } = await context.params;
-    const taskId = Number(id);
-
-    if (isNaN(taskId)) {
-      return NextResponse.json({ message: "ID inválido" }, { status: 400 });
-    }
-
     await prisma.task.delete({
       where: { id: taskId },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("DELETE /tasks error:", error);
+    console.error("DELETE /api/tasks/[id] erro:", error);
+
     return NextResponse.json(
       { message: "Erro ao excluir task" },
       { status: 500 }

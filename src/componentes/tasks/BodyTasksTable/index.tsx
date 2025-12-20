@@ -164,7 +164,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                     <div className="absolute right-0 top-full mt-2 z-50 w-40 bg-white rounded-md shadow-lg border">
                       <Link
                         href={`/tasks/${task.id}`}
-                        className="block px-4 py-2 text-sm hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-t-md hover:cursor-pointer"
                       >
                         Abrir tarefa
                       </Link>
@@ -183,12 +183,18 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                         }}
                         className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
                           isAuthor
-                            ? "hover:bg-gray-100"
+                            ? "hover:bg-gray-100 hover:cursor-pointer"
                             : "opacity-50 cursor-not-allowed"
                         }`}
                       >
                         {!isAuthor && <LockIcon size={14} />}
                         Editar tarefa
+                      </button>
+                      <button
+                        onClick={() => setOpenMenuId(null)}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-b-md hover:cursor-pointer"
+                      >
+                        Cancelar
                       </button>
                     </div>
                   )}
