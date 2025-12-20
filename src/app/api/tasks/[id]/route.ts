@@ -1,86 +1,70 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { requireAuth } from "@/lib/auth";
-import { Prisma } from "@prisma/client";
+
 /**
  * GET /api/tasks/:id
  * Buscar uma task específica
  */
-export async function PUT(
-  req: Request,
+export async function GET(
+  _req: Request,
   { params }: { params: { id: string } }
 ) {
-  try {
-    const user = await requireAuth(); // 🔐 usuário logado
-    const taskId = Number(params.id);
+  const task = await prisma.task.findUnique({
+    where: { id: Number(params.id) },
+    include: {
+      author: {
+        select: { id: true, name: true, email: true },
+      },
+      assignee: {
+        select: { id: true, name: true, email: true },
+      },
+    },
+  });
 
-    if (isNaN(taskId)) {
+  if (!task) {
+    return NextResponse.json({ error: "Task não encontrada" }, { status: 404 });
+  }
+
+  return NextResponse.json(task);
+}
+
+/**
+ * PUT /api/tasks/:id
+ * Atualizar uma task
+ */
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params; // ✅ AQUI está a correção
+    const numericId = Number(id);
+
+    if (isNaN(numericId)) {
       return NextResponse.json({ message: "ID inválido" }, { status: 400 });
     }
 
     const body = await req.json();
-    const { title, description, status, dueAt, assigneeId } = body;
 
-    // 🔍 busca a task para checar ownership
-    const task = await prisma.task.findUnique({
-      where: { id: taskId },
-      select: {
-        authorId: true,
-        assigneeId: true,
+    const task = await prisma.task.update({
+      where: { id: numericId },
+      data: {
+        title: body.title,
+        description: body.description,
+        status: body.status,
+        dueAt: body.dueAt ? new Date(body.dueAt) : null,
+        assigneeId: body.assigneeId ?? null,
       },
     });
 
-    if (!task) {
-      return NextResponse.json(
-        { message: "Task não encontrada" },
-        { status: 404 }
-      );
-    }
-
-    const isAuthor = task.authorId === user.sub;
-    const isAssignee = task.assigneeId === user.sub;
-
-    // ❌ não é autor nem assignee
-    if (!isAuthor && !isAssignee) {
-      return NextResponse.json(
-        { message: "Você não tem permissão para editar esta task" },
-        { status: 403 }
-      );
-    }
-
-    // 🧠 regra de domínio
-    let data: Prisma.TaskUpdateInput = {};
-
-    if (isAuthor) {
-      data = {
-        ...(title !== undefined && { title }),
-        ...(description !== undefined && { description }),
-        ...(dueAt !== undefined && {
-          dueAt: dueAt ? new Date(dueAt) : null,
-        }),
-        ...(assigneeId !== undefined && { assigneeId }),
-        ...(status !== undefined && { status }),
-      };
-    } else if (isAssignee) {
-      if (status === undefined) {
-        return NextResponse.json(
-          { message: "Assignee só pode alterar o status" },
-          { status: 403 }
-        );
-      }
-
-      data = { status };
-    }
-
-    const updated = await prisma.task.update({
-      where: { id: taskId },
-      data,
-    });
-
-    return NextResponse.json(updated);
+    return NextResponse.json(task);
   } catch (error) {
     console.error("PUT /api/tasks/[id] erro:", error);
-    return NextResponse.json({ message: "Não autenticado" }, { status: 401 });
+
+    return NextResponse.json(
+      { message: "Erro interno ao atualizar task" },
+      { status: 500 }
+    );
   }
 }
 
@@ -90,33 +74,26 @@ export async function PUT(
  */
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await requireAuth();
-    const taskId = Number(params.id);
+    const { id } = await context.params;
+    const taskId = Number(id);
 
     if (isNaN(taskId)) {
       return NextResponse.json({ message: "ID inválido" }, { status: 400 });
     }
 
-    const deleted = await prisma.task.deleteMany({
-      where: {
-        id: taskId,
-        authorId: user.sub, // 🔐 só o autor
-      },
+    await prisma.task.delete({
+      where: { id: taskId },
     });
-
-    if (deleted.count === 0) {
-      return NextResponse.json(
-        { message: "Você não tem permissão para excluir esta task" },
-        { status: 403 }
-      );
-    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("DELETE /api/tasks/[id] erro:", error);
-    return NextResponse.json({ message: "Não autenticado" }, { status: 401 });
+    console.error("DELETE /tasks error:", error);
+    return NextResponse.json(
+      { message: "Erro ao excluir task" },
+      { status: 500 }
+    );
   }
 }
