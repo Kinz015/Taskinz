@@ -9,10 +9,12 @@ export type TaskDTO = {
   createdAt: string;
   updatedAt: string;
   author: {
+    id: string
     name: string | null;
     email: string;
   };
   assignee: {
+    id: string
     name: string | null;
     email: string;
   } | null;

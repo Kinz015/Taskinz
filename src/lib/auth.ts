@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { AuthUser } from "@/types/auth";
 
 export async function getLoggedUser(): Promise<AuthUser | null> {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies(); // ✅ AQUI
   const token = cookieStore.get("token")?.value;
 
   if (!token) return null;
@@ -12,9 +12,15 @@ export async function getLoggedUser(): Promise<AuthUser | null> {
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET!
-    ) as AuthUser;
+    ) as JwtPayload;
 
-    return decoded;
+    if (!decoded.sub || !decoded.email) return null;
+
+    return {
+      id: decoded.sub as string,
+      email: decoded.email as string,
+      name: decoded.name as string | undefined,
+    };
   } catch {
     return null;
   }

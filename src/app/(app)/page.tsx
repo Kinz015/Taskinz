@@ -1,5 +1,6 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
+import { getLoggedUser } from "@/lib/auth";
 
 async function getTasks(sort: string, order: string) {
   const res = await fetch(
@@ -23,6 +24,8 @@ type HomeProps = {
   }>;
 };
 
+const user = await getLoggedUser();
+
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
 
@@ -35,7 +38,7 @@ export default async function Home({ searchParams }: HomeProps) {
     <div className="flex flex-col min-h-screen">
       <Header title="Todas as tarefas" />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} />
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
       </main>
     </div>
   );

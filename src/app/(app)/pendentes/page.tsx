@@ -1,6 +1,8 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
+import { getLoggedUser } from "@/lib/auth";
 import { TaskDTO } from "@/types/task";
+import { redirect } from "next/navigation";
 
 async function getPendentesTasks(
   sort: string,
@@ -27,13 +29,17 @@ type PendentesProps = {
   }>;
 };
 
-export default async function Pendentes({
-  searchParams,
-}: PendentesProps) {
+export default async function Pendentes({ searchParams }: PendentesProps) {
   const params = await searchParams;
 
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
+
+  const user = await getLoggedUser();
+
+  if (!user) {
+    redirect("/login");
+  }
 
   const tasks = await getPendentesTasks(sort, order);
 
@@ -42,11 +48,7 @@ export default async function Pendentes({
       <Header title="Tarefas Pendentes" />
 
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable
-          tasks={tasks}
-          sort={sort}
-          order={order}
-        />
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
       </main>
     </div>
   );
