@@ -13,6 +13,7 @@ import SidebarLink from "../SidebarLink";
 import { useRouter } from "next/navigation";
 import { toastConfirmLogout } from "@/hooks/useDeleteTask";
 import { AuthUser } from "@/types/auth";
+import logo from "@/assets/TaskinzLogo.png";
 
 type SideBarProps = {
   user: AuthUser | null;
@@ -50,7 +51,7 @@ export function SideBar({ user }: SideBarProps) {
         {/* Logo — só no desktop */}
         <div className="hidden lg:flex justify-center">
           <Image
-            src="/TaskinzSemFundo.png"
+            src={logo}
             alt="Taskinz"
             width={400}
             height={100}
