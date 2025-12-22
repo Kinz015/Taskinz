@@ -2,25 +2,11 @@ import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { getLoggedUser } from "@/lib/auth";
 import { TaskDTO } from "@/types/task";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-async function getCompletedTasks(
-  sort: string,
-  order: string
-): Promise<TaskDTO[]> {
-  const res = await fetch(
-    `http://localhost:3000/api/tasks?status=completed&sort=${sort}&order=${order}`,
-    {
-      cache: "no-store",
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Erro ao buscar tasks em progresso");
-  }
-
-  return res.json();
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type CompletedProps = {
   searchParams: Promise<{
@@ -29,24 +15,43 @@ type CompletedProps = {
   }>;
 };
 
-const user = await getLoggedUser();
+async function getBaseUrl() {
+  const h = await headers();
+  const host = h.get("host");
+  if (!host) throw new Error("Host header ausente");
+
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  return `${protocol}://${host}`;
+}
+
+async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]> {
+  const baseUrl = await getBaseUrl(); // ✅ AQUI
+
+  const res = await fetch(
+    `${baseUrl}/api/tasks?status=completed&sort=${sort}&order=${order}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) throw new Error("Erro ao buscar tasks concluídas");
+  return res.json();
+}
 
 export default async function Concluidas({ searchParams }: CompletedProps) {
-  const params = await searchParams;
-
-  const sort = params.sort ?? "createdAt";
-  const order = params.order === "asc" ? "asc" : "desc";
+  const user = await getLoggedUser();
 
   if (!user) {
     redirect("/login");
   }
+
+  const params = await searchParams;
+  const sort = params.sort ?? "createdAt";
+  const order = params.order === "asc" ? "asc" : "desc";
 
   const tasks = await getCompletedTasks(sort, order);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Tarefas Concluídas" />
-
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
         <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
       </main>

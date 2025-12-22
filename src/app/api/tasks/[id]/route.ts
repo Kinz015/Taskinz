@@ -1,15 +1,18 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+type Params = { id: string };
 
 /**
  * GET /api/tasks/:id
  * Buscar uma task específica
  */
 export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<Params> }
 ) {
-  const taskId = Number(params.id);
+  const { id } = await params;
+  const taskId = Number(id);
 
   if (Number.isNaN(taskId)) {
     return NextResponse.json({ error: "ID inválido" }, { status: 400 });
@@ -39,10 +42,11 @@ export async function GET(
  * Atualizar uma task
  */
 export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<Params> }
 ) {
-  const taskId = Number(params.id);
+  const { id } = await params;
+  const taskId = Number(id);
 
   if (Number.isNaN(taskId)) {
     return NextResponse.json({ message: "ID inválido" }, { status: 400 });
@@ -78,10 +82,11 @@ export async function PUT(
  * Remover uma task
  */
 export async function DELETE(
-  _req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<Params> }
 ) {
-  const taskId = Number(params.id);
+  const { id } = await params;
+  const taskId = Number(id);
 
   if (Number.isNaN(taskId)) {
     return NextResponse.json({ message: "ID inválido" }, { status: 400 });
