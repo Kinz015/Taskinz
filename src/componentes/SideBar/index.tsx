@@ -48,7 +48,6 @@ export function SideBar({ user }: SideBarProps) {
       "
     >
       <div className="min-h-screen flex flex-col w-full">
-        {/* Logo — só no desktop */}
         <div className="hidden lg:flex justify-center">
           <Image
             src={logo}
@@ -60,7 +59,7 @@ export function SideBar({ user }: SideBarProps) {
           />
         </div>
 
-        <nav className="flex flex-1 flex-col gap-2 mx-2 mt-4">
+        <nav className="flex flex-1 flex-col gap-2 mx-2">
           <SidebarLink href="/">
             <ClipboardListIcon />
             Todas as tarefas
