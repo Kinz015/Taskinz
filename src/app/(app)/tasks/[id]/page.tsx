@@ -36,25 +36,57 @@ export default async function TaskPage({ params }: TaskPageProps) {
 
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-400">Título</p>
+              <p className="text-sm text-gray-400">Título:</p>
               <p className="text-base font-medium">{task.title}</p>
             </div>
 
             {task.description && (
               <div>
-                <p className="text-sm text-gray-400">Descrição</p>
+                <p className="text-sm text-gray-400">Descrição:</p>
                 <p className="text-base">{task.description}</p>
               </div>
             )}
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <p className="text-sm text-gray-400">Status</p>
-                <p className="font-medium capitalize">{task.status}</p>
+                <p className="text-sm text-gray-400">Status:</p>
+                <p className="font-medium capitalize">
+                  {
+                    // Mapeamento de status
+                    {
+                      in_progress: "Em Progresso",
+                      pending: "Pendente",
+                      completed: "Concluída",
+                    }[task.status] || task.status // fallback para o valor original, caso não esteja no mapeamento
+                  }
+                </p>
               </div>
 
               <div>
-                <p className="text-sm text-gray-400">Responsável</p>
+                <p className="text-sm text-gray-400">Prazo:</p>
+                <p className="font-medium">
+                  {task.dueAt ? new Date(task.dueAt).toLocaleDateString() : "—"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-400">Criado por:</p>
+                <p className="font-medium">
+                  {task.assignee
+                    ? task.author.name || task.author.email
+                    : "Sem responsável"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-400">Criada em:</p>
+                <p className="font-medium">
+                  {new Date(task.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-400">Responsável:</p>
                 <p className="font-medium">
                   {task.assignee
                     ? task.assignee.name || task.assignee.email
@@ -63,21 +95,7 @@ export default async function TaskPage({ params }: TaskPageProps) {
               </div>
 
               <div>
-                <p className="text-sm text-gray-400">Prazo</p>
-                <p className="font-medium">
-                  {task.dueAt ? new Date(task.dueAt).toLocaleDateString() : "—"}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm text-gray-400">Criada em</p>
-                <p className="font-medium">
-                  {new Date(task.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm text-gray-400">Última alteração</p>
+                <p className="text-sm text-gray-400">Última alteração:</p>
                 <p className="font-medium">
                   {new Date(task.updatedAt).toLocaleDateString()}
                 </p>
