@@ -1,6 +1,7 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { getLoggedUser } from "@/lib/auth";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { TaskDTO } from "@/types/task";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -24,19 +25,16 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getPendentesTasks(
-  sort: string,
-  order: string
-): Promise<TaskDTO[]> {
+async function getPendentesTasks(sort: string, order: string): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
-  const res = await fetch(
-    `${baseUrl}/api/tasks?status=pending&sort=${sort}&order=${order}`,
-    { cache: "no-store" }
+  const res = await fetchWithAuth(
+    `${baseUrl}/api/tasks?status=pending&sort=${sort}&order=${order}`
   );
 
   if (!res.ok) {
-    throw new Error("Erro ao buscar tasks pendentes");
+    const text = await res.text().catch(() => "");
+    throw new Error(`Erro ao buscar tasks concluídas: ${res.status} ${text}`);
   }
 
   return res.json();

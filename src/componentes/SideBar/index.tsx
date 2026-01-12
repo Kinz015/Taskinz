@@ -7,6 +7,7 @@ import {
   ClipboardCheckIcon,
   ClipboardClockIcon,
   ClockAlertIcon,
+  IdCardIcon,
 } from "lucide-react";
 import Image from "next/image";
 import SidebarLink from "../SidebarLink";
@@ -68,6 +69,11 @@ export function SideBar({ user }: SideBarProps) {
           <SidebarLink href="/adicionar-tarefa">
             <ClipboardPlusIcon />
             Adicionar tarefa
+          </SidebarLink>
+
+          <SidebarLink href="/minhas-tarefas">
+            <IdCardIcon />
+            Minhas Tarefas
           </SidebarLink>
 
           <SidebarLink href="/concluidas">

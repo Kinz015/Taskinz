@@ -25,22 +25,23 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]> {
+async function getMyTasks(sort: string, order: string): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?status=completed&sort=${sort}&order=${order}`
+    `${baseUrl}/api/tasks?mine=true&sort=${sort}&order=${order}`
   );
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks concluídas: ${res.status} ${text}`);
+    throw new Error(`Erro ao buscar tasks: ${res.status} ${text}`);
   }
 
   return res.json();
 }
 
-export default async function Concluidas({ searchParams }: CompletedProps) {
+
+export default async function MinhasTarefas({ searchParams }: CompletedProps) {
   const user = await getLoggedUser();
 
   if (!user) {
@@ -51,7 +52,7 @@ export default async function Concluidas({ searchParams }: CompletedProps) {
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
 
-  const tasks = await getCompletedTasks(sort, order);
+  const tasks = await getMyTasks(sort, order);
 
   return (
     <div className="flex flex-col min-h-screen">

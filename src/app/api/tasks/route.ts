@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { TaskStatus } from "@prisma/client";
-import { Prisma } from "@prisma/client";
+import { TaskStatus, Prisma } from "@prisma/client";
 import { requireAuth } from "@/lib/auth";
 
 export async function POST(req: Request) {
@@ -35,30 +34,46 @@ export async function POST(req: Request) {
           assigneeId,
         }),
       },
+      include: {
+        author: {
+          select: { id: true, name: true, email: true },
+        },
+        assignee: {
+          select: { id: true, name: true, email: true },
+        },
+      },
     });
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
-    console.log(error)
-    return NextResponse.json(
-      { error: "Não autenticado" },
-      { status: 401 }
-    );
+    console.log(error);
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 }
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const status = searchParams.get("status");
+  // ✅ se quiser proteger a listagem (recomendado), autentica aqui também
+  const user = await requireAuth();
 
-  const where =
-    status && Object.values(TaskStatus).includes(status as TaskStatus)
-      ? { status: status as TaskStatus }
-      : {};
+  const { searchParams } = new URL(req.url);
+
+  // status continua opcional
+  const statusParam = searchParams.get("status");
+  const where: Prisma.TaskWhereInput = {
+    ...(statusParam &&
+      Object.values(TaskStatus).includes(statusParam as TaskStatus) && {
+        status: statusParam as TaskStatus,
+      }),
+  };
+
+  // ✅ NOVO: mine=true => só tasks criadas pelo usuário logado
+  const mine = searchParams.get("mine") === "true";
+  if (mine) {
+    where.authorId = user.id;
+  }
 
   const sort = searchParams.get("sort");
   const rawOrder = searchParams.get("order");
-
   const order: Prisma.SortOrder = rawOrder === "asc" ? "asc" : "desc";
 
   const orderBy: Prisma.TaskOrderByWithRelationInput =
@@ -73,18 +88,10 @@ export async function GET(req: Request) {
     orderBy,
     include: {
       author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
+        select: { id: true, name: true, email: true },
       },
       assignee: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
+        select: { id: true, name: true, email: true },
       },
     },
   });
