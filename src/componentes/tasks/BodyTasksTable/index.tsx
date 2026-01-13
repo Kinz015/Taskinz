@@ -128,7 +128,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   {index + 1}
                 </td>
 
-                <td className="py-4 text-left">{task.title}</td>
+                <td className="py-4 text-left max-w-75 truncate">{task.title}</td>
 
                 <td className="py-4 text-center">
                   <StatusBadge status={task.status} />
