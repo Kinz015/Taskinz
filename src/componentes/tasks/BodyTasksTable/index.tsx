@@ -110,11 +110,11 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
         <colgroup>
           <col className="min-w-[60]" />
           <col className="w-[500]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
           <col className="min-w-[60]" />
         </colgroup>
 

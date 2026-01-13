@@ -98,11 +98,11 @@ export default function HeaderTasksTable({
         <colgroup>
           <col className="min-w-[67]" />
           <col className="w-[500]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
-          <col className="min-w-[200]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
+          <col className="min-w-[150]" />
           <col className="min-w-[67]" />
         </colgroup>
 
