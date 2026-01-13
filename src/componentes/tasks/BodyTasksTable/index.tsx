@@ -157,7 +157,9 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                     onClick={() =>
                       setOpenMenuId(openMenuId === task.id ? null : task.id)
                     }
-                    className="w-full h-full flex justify-center py-4 hover:bg-gray-300 hover:cursor-pointer rounded-r-lg"
+                    className={`w-full h-full flex justify-center py-${
+                      openMenuId === task.id ? "6" : "4"
+                    } hover:bg-gray-300 hover:cursor-pointer rounded-r-lg`}
                   >
                     <EllipsisIcon />
                   </button>
