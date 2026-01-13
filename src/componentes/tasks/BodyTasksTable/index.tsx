@@ -108,14 +108,14 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
       {/* 🖥 DESKTOP */}
       <table className="hidden md:table px-2 w-full border-separate border-spacing-y-2">
         <colgroup>
-          <col className="min-w-[60]" />
+          <col className="min-w-[60] w-[60] max-w-[60]" />
           <col className="w-[500]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
-          <col className="min-w-[60]" />
+          <col className="min-w-[60] w-[60] max-w-[60]" />
         </colgroup>
 
         <tbody>
@@ -128,7 +128,9 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   {index + 1}
                 </td>
 
-                <td className="py-4 text-left max-w-75 truncate">{task.title}</td>
+                <td className="py-4 text-left max-w-75 truncate">
+                  {task.title}
+                </td>
 
                 <td className="py-4 text-center">
                   <StatusBadge status={task.status} />
@@ -155,7 +157,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                     onClick={() =>
                       setOpenMenuId(openMenuId === task.id ? null : task.id)
                     }
-                    className="w-full h-full flex justify-center py-4 hover:bg-gray-300 rounded-r-lg"
+                    className="w-full h-full flex justify-center py-4 hover:bg-gray-300 hover:cursor-pointer rounded-r-lg"
                   >
                     <EllipsisIcon />
                   </button>

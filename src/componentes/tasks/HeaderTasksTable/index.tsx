@@ -96,14 +96,14 @@ export default function HeaderTasksTable({
       {/* 🖥 DESKTOP — header da tabela */}
       <table className="hidden md:table px-2 w-full">
         <colgroup>
-          <col className="min-w-[67]" />
+          <col className="min-w-[67] w-[67] max-w-[67]" />
           <col className="w-[500]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
-          <col className="min-w-[67]" />
+          <col className="min-w-[67] w-[67] max-w-[67]" />
         </colgroup>
 
         <thead>
@@ -121,7 +121,7 @@ export default function HeaderTasksTable({
             <th className="py-4 text-center">
               {SortableHeader("Última alteração", "updatedAt")}
             </th>
-            <th className="py-4 text-center">Ações</th>
+            <th className="py-4 pr-2 text-center">Ações</th>
           </tr>
         </thead>
       </table>
