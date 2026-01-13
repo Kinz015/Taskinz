@@ -108,14 +108,14 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
       {/* 🖥 DESKTOP */}
       <table className="hidden md:table px-2 w-full border-separate border-spacing-y-2">
         <colgroup>
-          <col className="w-[40]" />
+          <col className="min-w-[60]" />
           <col className="w-[500]" />
-          <col className="w-[200]" />
-          <col className="w-[200]" />
-          <col className="w-[200]" />
-          <col className="w-[200]" />
-          <col className="w-[200]" />
-          <col className="w-[70]" />
+          <col className="min-w-[200]" />
+          <col className="min-w-[200]" />
+          <col className="min-w-[200]" />
+          <col className="min-w-[200]" />
+          <col className="min-w-[200]" />
+          <col className="min-w-[60]" />
         </colgroup>
 
         <tbody>
@@ -124,7 +124,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
 
             return (
               <tr key={task.id} className="bg-[#E5E5E5]">
-                <td className="rounded-l-lg pl-6 pr-3 py-4 font-semibold">
+                <td className="rounded-l-lg text-center py-4 font-semibold">
                   {index + 1}
                 </td>
 

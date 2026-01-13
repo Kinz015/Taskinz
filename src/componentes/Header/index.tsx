@@ -12,7 +12,7 @@ export function Header({ title }: HeaderProps) {
         bg-[#1b1b1f]
         h-50
         px-4 sm:px-10 lg:pl-21
-        justify-center lg:justify-start
+        justify-between
       "
     >
       <h1
@@ -24,6 +24,10 @@ export function Header({ title }: HeaderProps) {
       >
         {title}
       </h1>
+      <div className="flex justify-center items-center gap-2">
+        <div className="p-4 bg-white rounded-full"></div>
+        <span className="text-white font-bold pt-05">Nome do usuário</span>
+      </div>
     </header>
   );
 }
