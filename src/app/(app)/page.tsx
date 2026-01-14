@@ -54,11 +54,9 @@ export default async function Home({ searchParams }: HomeProps) {
   const tasks = await getTasks(sort, order);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       <Header title="Todas as tarefas" />
-      <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
-      </main>
-    </div>
+      <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
+    </>
   );
 }

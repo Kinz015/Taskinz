@@ -11,9 +11,9 @@ type TasksTableProps = {
 };
 export default function TasksTable({ tasks, sort, order, user }: TasksTableProps) {
   return (
-    <div className="flex flex-1 flex-col">
+    <>
       <HeaderTasksTable sort={sort} order={order} />
       <BodyTasksTable tasks={tasks} user={user} />
-    </div>
+    </>
   );
 }
