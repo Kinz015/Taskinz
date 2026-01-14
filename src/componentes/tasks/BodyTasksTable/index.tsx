@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthUser } from "@/types/auth";
 import { toastError } from "@/utils/toast";
+import { RowActionsMenu } from "@/componentes/RowActionsMenu";
 
 type BodyTasksTableProps = {
   tasks: TaskDTO[];
@@ -152,56 +153,47 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   {new Date(task.updatedAt).toLocaleDateString()}
                 </td>
 
-                <td className="relative rounded-r-lg overflow-visible">
-                  <button
-                    onClick={() =>
+                <td className="rounded-r-lg">
+                  <RowActionsMenu
+                    open={openMenuId === task.id}
+                    onToggle={() =>
                       setOpenMenuId(openMenuId === task.id ? null : task.id)
                     }
-                    className={`w-full h-full flex justify-center py-${
-                      openMenuId === task.id ? "6" : "4"
-                    } hover:bg-gray-300 hover:cursor-pointer rounded-r-lg`}
+                    onClose={() => setOpenMenuId(null)}
                   >
-                    <EllipsisIcon />
-                  </button>
+                    <Link
+                      href={`/tasks/${task.id}`}
+                      className="block px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-t-md"
+                    >
+                      Abrir tarefa
+                    </Link>
 
-                  {openMenuId === task.id && (
-                    <div className="absolute right-0 top-full mt-2 z-50 w-40 bg-white rounded-md shadow-lg border">
-                      <Link
-                        href={`/tasks/${task.id}`}
-                        className="block px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-t-md hover:cursor-pointer"
-                      >
-                        Abrir tarefa
-                      </Link>
+                    <button
+                      onClick={() => {
+                        if (!isAuthor) {
+                          toastError("Apenas o autor da tarefa pode editá-la.");
+                          setOpenMenuId(null);
+                          return;
+                        }
+                        router.push(`/tasks/${task.id}/edit`);
+                      }}
+                      className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
+                        isAuthor
+                          ? "hover:bg-gray-100"
+                          : "opacity-50 cursor-not-allowed"
+                      }`}
+                    >
+                      {!isAuthor && <LockIcon size={14} />}
+                      Editar tarefa
+                    </button>
 
-                      <button
-                        onClick={() => {
-                          if (!isAuthor) {
-                            toastError(
-                              "Apenas o autor da tarefa pode editá-la."
-                            );
-                            setOpenMenuId(null);
-                            return;
-                          }
-
-                          router.push(`/tasks/${task.id}/edit`);
-                        }}
-                        className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
-                          isAuthor
-                            ? "hover:bg-gray-100 hover:cursor-pointer"
-                            : "opacity-50 cursor-not-allowed"
-                        }`}
-                      >
-                        {!isAuthor && <LockIcon size={14} />}
-                        Editar tarefa
-                      </button>
-                      <button
-                        onClick={() => setOpenMenuId(null)}
-                        className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-b-md hover:cursor-pointer"
-                      >
-                        Cancelar
-                      </button>
-                    </div>
-                  )}
+                    <button
+                      onClick={() => setOpenMenuId(null)}
+                      className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-b-md"
+                    >
+                      Cancelar
+                    </button>
+                  </RowActionsMenu>
                 </td>
               </tr>
             );
