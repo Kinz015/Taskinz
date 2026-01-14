@@ -14,8 +14,10 @@ export async function Header({ title }: HeaderProps) {
 
   const user = await prisma.user.findUnique({
     where: { id: auth.id },
-    select: { name: true, imageUrl: true },
+    select: { name: true, email: true, imageUrl: true },
   });
+
+  if (!user) redirect("/login");
 
   return (
     <header
@@ -36,14 +38,26 @@ export async function Header({ title }: HeaderProps) {
       >
         {title}
       </h1>
-      <Link
-        href={"/meu-perfil"}
-        className="flex justify-center items-center gap-2"
-      >
-        <div className="bg-white rounded-full">
-          <CircleUserRoundIcon size={30} />
+
+      <Link href="/meu-perfil" className="flex items-center gap-2">
+        <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
+          {user.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={user.imageUrl}
+              alt="Foto do perfil"
+              width={40}
+              height={40}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <CircleUserRoundIcon className="h-full w-full text-gray-300" />
+          )}
         </div>
-        <span className="text-white pt-05">{user?.name}</span>
+
+        <span className="text-white pt-05">
+          {user.name ?? user.email ?? "Usuário"}
+        </span>
       </Link>
     </header>
   );
