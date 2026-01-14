@@ -18,7 +18,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
   const router = useRouter();
 
   return (
-    <div className="max-h-[calc(100vh-256px)] overflow-y-scroll">
+    <div className="max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
       {/* 📱 MOBILE */}
       <div className="md:hidden space-y-3 px-2">
         {tasks.map((task) => {

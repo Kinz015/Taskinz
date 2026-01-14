@@ -4,6 +4,16 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+
+/* esconde scrollbar mas mantém scroll */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE/old Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 /* 
 @theme inline {
   --color-background: var(--background);
