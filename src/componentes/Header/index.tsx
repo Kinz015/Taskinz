@@ -1,4 +1,5 @@
 import { getLoggedUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { CircleUserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -8,11 +9,13 @@ type HeaderProps = {
 };
 
 export async function Header({ title }: HeaderProps) {
-  const user = await getLoggedUser(); // ✅ dentro do request
+  const auth = await getLoggedUser();
+  if (!auth) redirect("/login");
 
-  if (!user) {
-    redirect("/login");
-  }
+  const user = await prisma.user.findUnique({
+    where: { id: auth.id },
+    select: { name: true, imageUrl: true },
+  });
 
   return (
     <header
@@ -34,7 +37,7 @@ export async function Header({ title }: HeaderProps) {
         {title}
       </h1>
       <Link
-        href={"meu-perfil"}
+        href={"/meu-perfil"}
         className="flex justify-center items-center gap-2"
       >
         <div className="bg-white rounded-full">

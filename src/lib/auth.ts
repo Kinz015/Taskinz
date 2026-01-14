@@ -19,7 +19,6 @@ export async function getLoggedUser(): Promise<AuthUser | null> {
     return {
       id: decoded.sub as string,
       email: decoded.email as string,
-      name: decoded.name as string | undefined,
     };
   } catch {
     return null;
