@@ -55,7 +55,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <>
-      <Header title="Todas as tarefas" user={user}/>
+      <Header title="Todas as tarefas"/>
       <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
     </>
   );

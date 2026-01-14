@@ -1,14 +1,19 @@
-"use client";
-
-import { AuthUser } from "@/types/auth";
+import { getLoggedUser } from "@/lib/auth";
 import { CircleUserRoundIcon } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 type HeaderProps = {
   title: string;
-  user: AuthUser | null;
 };
 
-export function Header({ title, user }: HeaderProps) {
+export async function Header({ title }: HeaderProps) {
+  const user = await getLoggedUser(); // ✅ dentro do request
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <header
       className="
@@ -28,10 +33,15 @@ export function Header({ title, user }: HeaderProps) {
       >
         {title}
       </h1>
-      <div className="flex justify-center items-center gap-2">
-        <div className="bg-white rounded-full"><CircleUserRoundIcon size={30} /></div>
+      <Link
+        href={"meu-perfil"}
+        className="flex justify-center items-center gap-2"
+      >
+        <div className="bg-white rounded-full">
+          <CircleUserRoundIcon size={30} />
+        </div>
         <span className="text-white pt-05">{user?.name}</span>
-      </div>
+      </Link>
     </header>
   );
 }

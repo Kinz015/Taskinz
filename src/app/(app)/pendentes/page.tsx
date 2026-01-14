@@ -55,7 +55,7 @@ export default async function Pendentes({ searchParams }: PendentesProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas pendentes" />
+      <Header title="Tarefas pendentes"/>
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
         <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
       </main>
