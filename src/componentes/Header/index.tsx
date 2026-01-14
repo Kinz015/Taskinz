@@ -1,10 +1,14 @@
 "use client";
 
+import { AuthUser } from "@/types/auth";
+import { CircleUserRoundIcon } from "lucide-react";
+
 type HeaderProps = {
   title: string;
+  user: AuthUser | null;
 };
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, user }: HeaderProps) {
   return (
     <header
       className="
@@ -25,8 +29,8 @@ export function Header({ title }: HeaderProps) {
         {title}
       </h1>
       <div className="flex justify-center items-center gap-2">
-        <div className="p-4 bg-white rounded-full"></div>
-        <span className="text-white font-bold pt-05">Nome do usuário</span>
+        <div className="bg-white rounded-full"><CircleUserRoundIcon size={30} /></div>
+        <span className="text-white pt-05">{user?.name}</span>
       </div>
     </header>
   );
