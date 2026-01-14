@@ -30,7 +30,7 @@ export async function Header({ title }: HeaderProps) {
       <h1
         className="
           text-white font-bold
-          text-2xl sm:text-4xl lg:text-4xl
+          text-2xl sm:text-3xl lg:text-4xl
           text-center lg:text-left
         "
       >

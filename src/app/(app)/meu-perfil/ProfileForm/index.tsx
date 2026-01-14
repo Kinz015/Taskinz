@@ -234,7 +234,7 @@ export default function ProfileForm({
           className={`rounded-lg px-4 py-2 font-medium transition ${
             !canSave || saving
               ? "bg-white/10 text-white/40 cursor-not-allowed"
-              : "bg-amber-600 text-white hover:bg-amber-700"
+              : "bg-green-700 text-white hover:bg-green-800"
           }`}
         >
           {saving ? "Salvando..." : "Salvar"}

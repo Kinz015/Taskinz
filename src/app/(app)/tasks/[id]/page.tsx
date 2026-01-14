@@ -31,7 +31,7 @@ export default async function TaskPage({ params }: TaskPageProps) {
       <main className="flex flex-1 items-start justify-center p-6 text-white">
         <div className="w-full max-w-2xl rounded-lg bg-[#2a2a2a] p-6 shadow-lg">
           <h2 className="mb-6 text-xl font-semibold text-white">
-            Detalhes da task
+            Detalhes da tarefa
           </h2>
 
           <div className="space-y-4">
@@ -109,7 +109,7 @@ export default async function TaskPage({ params }: TaskPageProps) {
         hover:bg-gray-700 hover:cursor-pointer
       "
                 >
-                  Editar task
+                  Editar tarefa
                 </Link>
               </div>
             </div>

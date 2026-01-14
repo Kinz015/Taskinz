@@ -12,7 +12,7 @@ export default function CreateTaskForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueAt, setDueAt] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("pending");
   const [assigneeId, setAssigneeId] = useState<string | "">("");
 
   const [users, setUsers] = useState<User[]>([]);
@@ -20,16 +20,12 @@ export default function CreateTaskForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // 🔹 Carregar usuários para o select de responsável
   useEffect(() => {
     async function loadUsers() {
-      const res = await fetch("/api/users", {
-        credentials: "include",
-      });
+      const res = await fetch("/api/users", { credentials: "include" });
       const data = await res.json();
       setUsers(data);
     }
-
     loadUsers();
   }, []);
 
@@ -41,10 +37,8 @@ export default function CreateTaskForm() {
 
     const res = await fetch("/api/tasks", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", 
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
         title,
         description,
@@ -54,7 +48,7 @@ export default function CreateTaskForm() {
       }),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
       setError(data.error || "Erro ao criar task");
@@ -66,25 +60,27 @@ export default function CreateTaskForm() {
     setTitle("");
     setDescription("");
     setDueAt("");
-    setStatus("");
+    setStatus("pending");
     setAssigneeId("");
     setLoading(false);
   }
 
+  const inputBase =
+    "w-full rounded-lg bg-white/10 border border-white/10 text-white placeholder:text-white/30 px-3 py-2 text-sm outline-none focus:border-white/30 focus:ring-2 focus:ring-white/10";
+  const labelBase = "mb-1 block text-sm font-medium text-white/70";
+
   return (
-    <div className="w-full max-w-xl rounded-lg bg-white p-6 shadow-md m-auto">
-      <h2 className="mb-6 text-center text-xl font-semibold text-gray-800">
+    <div className="w-full max-w-xl rounded-2xl bg-white/10 border border-white/10 p-6 shadow-lg m-auto">
+      <h2 className="mb-6 text-center text-2xl font-bold text-white">
         Criar nova task
       </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Título */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Título
-          </label>
+          <label className={labelBase}>Título</label>
           <input
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-             focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className={inputBase}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -93,12 +89,9 @@ export default function CreateTaskForm() {
 
         {/* Descrição */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Descrição
-          </label>
+          <label className={labelBase}>Descrição</label>
           <textarea
-            className="w-full resize-y rounded-md border border-gray-300 px-3 py-2 text-sm
-             focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className={`${inputBase} resize-y`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
@@ -107,33 +100,33 @@ export default function CreateTaskForm() {
 
         {/* Responsável */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Responsável
-          </label>
+          <label className={labelBase}>Responsável</label>
           <select
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-             focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className={inputBase}
             value={assigneeId}
             onChange={(e) => setAssigneeId(e.target.value)}
           >
-            <option value="">— Sem responsável —</option>
+            <option className="bg-[#1b1b1f]" value="">
+              — Sem responsável —
+            </option>
+
             {users.map((user) => (
-              <option key={user.id} value={user.id}>
+              <option className="bg-[#1b1b1f]" key={user.id} value={user.id}>
                 {user.name || user.email}
               </option>
             ))}
           </select>
+          <p className="mt-1 text-xs text-white/40">
+            Selecione alguém ou deixe sem responsável.
+          </p>
         </div>
 
         {/* Prazo */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Prazo
-          </label>
+          <label className={labelBase}>Prazo</label>
           <input
             type="datetime-local"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                         focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className={inputBase}
             value={dueAt}
             onChange={(e) => setDueAt(e.target.value)}
           />
@@ -141,18 +134,21 @@ export default function CreateTaskForm() {
 
         {/* Status */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Status
-          </label>
+          <label className={labelBase}>Status</label>
           <select
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                         focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            className={inputBase}
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
-            <option value="pending">Pendente</option>
-            <option value="in_progress">Em andamento</option>
-            <option value="completed">Concluída</option>
+            <option className="bg-[#1b1b1f]" value="pending">
+              Pendente
+            </option>
+            <option className="bg-[#1b1b1f]" value="in_progress">
+              Em andamento
+            </option>
+            <option className="bg-[#1b1b1f]" value="completed">
+              Concluída
+            </option>
           </select>
         </div>
 
@@ -160,20 +156,29 @@ export default function CreateTaskForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-4 w-full rounded-md bg-indigo-600 py-2 text-sm font-medium text-white
-                       transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-400"
+          className={`mt-2 w-full rounded-lg py-2 text-sm font-semibold text-white transition
+    ${
+      loading
+        ? "bg-green-500/60 cursor-not-allowed"
+        : "bg-green-700 hover:bg-green-800"
+    }
+  `}
         >
           {loading ? "Criando..." : "Criar task"}
         </button>
       </form>
+
+      {/* feedback */}
       {error && (
-        <p className="mt-4 text-center text-sm text-red-600">{error}</p>
+        <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-center text-sm text-red-200">
+          {error}
+        </div>
       )}
 
       {success && (
-        <p className="mt-4 text-center text-sm text-green-600">
-          Task criada com sucesso
-        </p>
+        <div className="mt-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-sm text-emerald-200">
+          Task criada com sucesso!
+        </div>
       )}
     </div>
   );
