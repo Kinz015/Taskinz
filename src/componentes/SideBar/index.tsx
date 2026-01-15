@@ -41,9 +41,9 @@ export function SideBar({ user }: SideBarProps) {
   return (
     <aside
       className="
-        hidden md:flex
-        md:w-20
-        lg:w-80
+        w-50
+        xl:w-50
+        2xl:w-80
         bg-white
         transition-all
       "
@@ -56,7 +56,11 @@ export function SideBar({ user }: SideBarProps) {
             width={400}
             height={100}
             priority
-            className="p-20"
+            className="
+            py-14 px-4
+            xl:py-20 xl:px-4
+            2xl:p-20
+            "
           />
         </div>
 

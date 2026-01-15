@@ -24,7 +24,8 @@ export async function Header({ title }: HeaderProps) {
       className="
         flex items-center
         bg-[#1b1b1f]
-        h-50
+        h-38
+        xl:h-50
         px-4 sm:px-10 lg:pl-21
         justify-between
       "

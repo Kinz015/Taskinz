@@ -77,7 +77,7 @@ export function RowActionsMenu({ open, onToggle, onClose, children }: Props) {
         ref={btnRef}
         onClick={onToggle}
         className={`w-full h-full flex justify-center rounded-r-lg hover:bg-gray-300 hover:cursor-pointer ${
-          open ? "py-6" : "py-4"
+          open ? "py-6" : "p-4"
         }`}
       >
         <EllipsisIcon />

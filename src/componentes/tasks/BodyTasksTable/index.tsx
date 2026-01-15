@@ -19,7 +19,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
   const router = useRouter();
 
   return (
-    <div className="max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
+    <div className="max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
       {/* 📱 MOBILE */}
       <div className="md:hidden space-y-3 px-2">
         {tasks.map((task) => {
@@ -114,8 +114,8 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
-          <col className="min-w-[150]" />
-          <col className="min-w-[150]" />
+          <col className="min-w-[150] max-[1250px]:hidden" />
+          <col className="min-w-[150] max-[1400px]:hidden" />
           <col className="min-w-[60] w-[60] max-w-[60]" />
         </colgroup>
 
@@ -145,11 +145,11 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   {task.dueAt ? new Date(task.dueAt).toLocaleDateString() : "-"}
                 </td>
 
-                <td className="py-4 text-center">
+                <td className="py-4 text-center max-[1250px]:hidden">
                   {new Date(task.createdAt).toLocaleDateString()}
                 </td>
 
-                <td className="py-4 text-center">
+                <td className="py-4 text-center max-[1400px]:hidden">
                   {new Date(task.updatedAt).toLocaleDateString()}
                 </td>
 
