@@ -113,7 +113,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
           <col className="w-[500]" />
           <col className="min-w-[150]" />
           <col className="min-w-[150]" />
-          <col className="min-w-[150]" />
+          <col className="min-w-[150] max-[1000px]:hidden" />
           <col className="min-w-[150] max-[1250px]:hidden" />
           <col className="min-w-[150] max-[1400px]:hidden" />
           <col className="min-w-[60] w-[60] max-w-[60]" />
@@ -141,7 +141,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   {task.assignee ? task.assignee.name : "Sem responsável"}
                 </td>
 
-                <td className="py-4 text-center">
+                <td className="py-4 text-center max-[1000px]:hidden">
                   {task.dueAt ? new Date(task.dueAt).toLocaleDateString() : "-"}
                 </td>
 

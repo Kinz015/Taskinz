@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { toastConfirmLogout } from "@/hooks/useDeleteTask";
 import { AuthUser } from "@/types/auth";
 import logo from "@/assets/TaskinzLogo.png";
+import logoOnly from "@/assets/TaskinzLogoOnly.png";
 
 type SideBarProps = {
   user: AuthUser | null;
@@ -41,7 +42,9 @@ export function SideBar({ user }: SideBarProps) {
   return (
     <aside
       className="
-        w-50
+        hidden
+        md:inline
+        min-[1100px]:w-50
         xl:w-50
         2xl:w-80
         bg-white
@@ -49,7 +52,17 @@ export function SideBar({ user }: SideBarProps) {
       "
     >
       <div className="min-h-screen flex flex-col w-full">
-        <div className="hidden lg:flex justify-center">
+        <div className="lg:flex justify-center">
+          <Image
+            src={logoOnly}
+            alt="Taskinz"
+            width={71}
+            height={71}
+            className="hidden
+            py-12 px-2
+            max-[1100px]:inline
+            "
+          />
           <Image
             src={logo}
             alt="Taskinz"
@@ -57,6 +70,8 @@ export function SideBar({ user }: SideBarProps) {
             height={100}
             priority
             className="
+            hidden
+            min-[1100px]:inline
             py-14 px-4
             xl:py-20 xl:px-4
             2xl:p-20

@@ -24,9 +24,11 @@ export async function Header({ title }: HeaderProps) {
       className="
         flex items-center
         bg-[#1b1b1f]
-        h-38
+     
+        md:h-38
+        px-10
         xl:h-50
-        px-4 sm:px-10 lg:pl-21
+        lg:pl-21
         justify-between
       "
     >
@@ -34,7 +36,6 @@ export async function Header({ title }: HeaderProps) {
         className="
           text-white font-bold
           text-2xl sm:text-3xl lg:text-4xl
-          text-center lg:text-left
         "
       >
         {title}

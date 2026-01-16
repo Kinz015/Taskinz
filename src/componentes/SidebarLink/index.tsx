@@ -40,7 +40,7 @@ export default function SidebarLink(props: SidebarLinkProps) {
       </span>
 
       {/* Texto — só desktop */}
-      <span className="hidden lg:inline text-sm whitespace-nowrap">
+      <span className="hidden min-[1100px]:inline text-sm whitespace-nowrap">
         {React.Children.toArray(props.children)[1]}
       </span>
     </>
