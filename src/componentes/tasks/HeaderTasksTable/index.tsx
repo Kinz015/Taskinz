@@ -55,41 +55,41 @@ export default function HeaderTasksTable({
       {/* 📱 MOBILE — barra de ordenação */}
       <div className="md:hidden">
         <div className="flex items-center flex-wrap gap-2 bg-[#1b1b1f] px-4 py-2 text-sm text-white">
-          <span className="mr-2 text-gray-400">Ordenar por:</span>
+          <span className="text-gray-400">Ordenar por:</span>
 
-          {(["dueAt", "createdAt", "updatedAt"] as SortField[]).map((field) => {
-            const label =
-              field === "dueAt"
-                ? "Prazo"
-                : field === "createdAt"
-                ? "Criação"
-                : "Atualização";
-
-            const isActive = sort === field;
-            const nextOrder = getNextOrder(sort, field, order);
-
-            return (
-              <Link
-                key={field}
-                href={`?sort=${field}&order=${nextOrder}`}
-                className={`flex items-center gap-1 rounded-md px-3 py-1 transition
-                    ${
-                      isActive
-                        ? "bg-red-500 text-white"
-                        : "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                    }
-                  `}
-              >
-                {label}
-                {isActive &&
-                  (order === "asc" ? (
-                    <CircleChevronUpIcon size={14} />
-                  ) : (
-                    <CircleChevronDownIcon size={14} />
-                  ))}
-              </Link>
-            );
-          })}
+          <div className="flex gap-2">
+            {(["dueAt", "createdAt", "updatedAt"] as SortField[]).map((field) => {
+              const label =
+                field === "dueAt"
+                  ? "Prazo"
+                  : field === "createdAt"
+                  ? "Criação"
+                  : "Atualização";
+              const isActive = sort === field;
+              const nextOrder = getNextOrder(sort, field, order);
+              return (
+                <Link
+                  key={field}
+                  href={`?sort=${field}&order=${nextOrder}`}
+                  className={`flex items-center gap-1 rounded-md px-3 py-1 transition
+                      ${
+                        isActive
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                      }
+                    `}
+                >
+                  {label}
+                  {isActive &&
+                    (order === "asc" ? (
+                      <CircleChevronUpIcon size={14} />
+                    ) : (
+                      <CircleChevronDownIcon size={14} />
+                    ))}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
 
