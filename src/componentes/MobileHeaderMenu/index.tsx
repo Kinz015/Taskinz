@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -29,6 +30,7 @@ type Props = {
 export function MobileHeaderMenu({ user }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   async function handleLogout() {
     toastConfirmLogout({
@@ -81,9 +83,7 @@ export function MobileHeaderMenu({ user }: Props) {
               <div className="flex items-center gap-2">
                 <Image src={logoOnly} alt="Taskinz" width={42} height={42} />
                 <div className="text-sm">
-                  <div className="font-semibold">
-                    {user?.name ?? "Usuário"}
-                  </div>
+                  <div className="font-semibold">{user?.name ?? "Usuário"}</div>
                   <div className="text-gray-500 truncate max-w-47.5">
                     {user?.email ?? ""}
                   </div>
@@ -100,27 +100,57 @@ export function MobileHeaderMenu({ user }: Props) {
             </div>
 
             <nav className="p-3 flex flex-col gap-2">
-              <MenuLink href="/" onClick={() => setOpen(false)} icon={<ClipboardListIcon size={18} />}>
+              <MenuLink
+                href="/"
+                onClick={() => setOpen(false)}
+                icon={<ClipboardListIcon size={18} />}
+                active={pathname === "/"}
+              >
                 Todas as tarefas
               </MenuLink>
 
-              <MenuLink href="/adicionar-tarefa" onClick={() => setOpen(false)} icon={<ClipboardPlusIcon size={18} />}>
+              <MenuLink
+                href="/adicionar-tarefa"
+                onClick={() => setOpen(false)}
+                icon={<ClipboardPlusIcon size={18} />}
+                active={pathname === "/adicionar-tarefa"}
+              >
                 Adicionar tarefa
               </MenuLink>
 
-              <MenuLink href="/minhas-tarefas" onClick={() => setOpen(false)} icon={<IdCardIcon size={18} />}>
+              <MenuLink
+                href="/minhas-tarefas"
+                onClick={() => setOpen(false)}
+                icon={<IdCardIcon size={18} />}
+                active={pathname === "/minhas-tarefas"}
+              >
                 Minhas tarefas
               </MenuLink>
 
-              <MenuLink href="/concluidas" onClick={() => setOpen(false)} icon={<ClipboardCheckIcon size={18} />}>
+              <MenuLink
+                href="/concluidas"
+                onClick={() => setOpen(false)}
+                icon={<ClipboardCheckIcon size={18} />}
+                active={pathname === "/concluidas"}
+              >
                 Concluídas
               </MenuLink>
 
-              <MenuLink href="/em-andamento" onClick={() => setOpen(false)} icon={<ClipboardClockIcon size={18} />}>
+              <MenuLink
+                href="/em-andamento"
+                onClick={() => setOpen(false)}
+                icon={<ClipboardClockIcon size={18} />}
+                active={pathname === "/em-andamento"}
+              >
                 Em andamento
               </MenuLink>
 
-              <MenuLink href="/pendentes" onClick={() => setOpen(false)} icon={<ClockAlertIcon size={18} />}>
+              <MenuLink
+                href="/pendentes"
+                onClick={() => setOpen(false)}
+                icon={<ClockAlertIcon size={18} />}
+                active={pathname === "/pendentes"}
+              >
                 Pendentes
               </MenuLink>
 
@@ -139,25 +169,34 @@ export function MobileHeaderMenu({ user }: Props) {
   );
 }
 
+function linkClass(isActive: boolean) {
+  return `
+    flex items-center gap-3 px-3 py-3 rounded-xl transition
+    ${
+      isActive
+        ? "bg-[#cfcfcf] text-black"
+        : "bg-gray-100 hover:bg-[#cfcfcf] text-black"
+    }
+  `;
+}
+
 function MenuLink({
   href,
   icon,
   children,
   onClick,
+  active,
 }: {
   href: string;
   icon: React.ReactNode;
   children: React.ReactNode;
   onClick: () => void;
+  active: boolean;
 }) {
   return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="flex items-center gap-3 px-3 py-3 rounded-lg bg-gray-100 hover:bg-gray-200"
-    >
+    <Link href={href} onClick={onClick} className={linkClass(active)}>
       {icon}
-      <span className="font-medium">{children}</span>
+      <span>{children}</span>
     </Link>
   );
 }

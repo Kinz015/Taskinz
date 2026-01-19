@@ -31,27 +31,18 @@ export async function Header({ title }: HeaderProps) {
         xl:h-50
         sm:pl-16
         lg:pl-21
-        justify-between
       "
     >
-      <h1
-        className="
-          text-white font-bold
-          text-2xl sm:text-3xl lg:text-4xl
-        "
-      >
-        {title}
-      </h1>
-      <MobileHeaderMenu user={user} />
-      <Link href="/meu-perfil" className="flex items-center gap-2">
-        <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
+      {/* 📱 MOBILE */}
+      <div className="flex md:hidden h-[120] w-full items-center justify-between">
+        <div className="h-12 w-12 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
           {user.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={user.imageUrl}
               alt="Foto do perfil"
-              width={40}
-              height={40}
+              width={48}
+              height={48}
               className="h-full w-full object-cover"
             />
           ) : (
@@ -59,10 +50,45 @@ export async function Header({ title }: HeaderProps) {
           )}
         </div>
 
-        <span className="hidden md:inline text-white pt-05">
-          {user.name ?? user.email ?? "Usuário"}
+        <span className="text-white font-bold text-xl truncate max-w-[55vw]">
+          {title}
         </span>
-      </Link>
+        <div className="w-12 h-12 flex justify-center items-center">
+          <MobileHeaderMenu user={user}/>
+        </div>
+      </div>
+
+      {/* 💻 Desktop */}
+      <div className="hidden md:flex justify-between w-full">
+        <h1
+          className="
+            text-white font-bold
+            text-2xl sm:text-3xl lg:text-4xl
+          "
+        >
+          {title}
+        </h1>
+        <MobileHeaderMenu user={user} />
+        <Link href="/meu-perfil" className="flex items-center gap-2">
+          <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
+            {user.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={user.imageUrl}
+                alt="Foto do perfil"
+                width={40}
+                height={40}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <CircleUserRoundIcon className="h-full w-full text-gray-300" />
+            )}
+          </div>
+          <span className="text-white pt-05">
+            {user.name ?? user.email ?? "Usuário"}
+          </span>
+        </Link>
+      </div>
     </header>
   );
 }
