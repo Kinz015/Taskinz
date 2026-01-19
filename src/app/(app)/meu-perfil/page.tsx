@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { requireAuth } from "@/lib/auth";
-import ProfileForm from "./ProfileForm";
+import ProfileForm from "../../../componentes/ProfileForm";
 import { prisma } from "@/lib/prisma";
 
 

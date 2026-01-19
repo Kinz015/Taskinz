@@ -99,7 +99,7 @@ export default function HeaderTasksTable({
           <col className="min-w-[67] w-[67] max-w-[67]" />
           <col className="w-[500]" />
           <col className="min-w-[150]" />
-          <col className="min-w-[150]" />
+          <col className="min-w-[150] max-[830px]:hidden" />
           <col className="min-w-[150] max-[1000px]:hidden" />
           <col className="min-w-[150] max-[1250px]:hidden" />
           <col className="min-w-[150] max-[1400px]:hidden" />
@@ -111,7 +111,7 @@ export default function HeaderTasksTable({
             <th className="py-4 pl-2 text-center">Nº</th>
             <th className="py-4 text-start">Título</th>
             <th className="py-4 text-center">Status</th>
-            <th className="py-4 text-center">Responsável</th>
+            <th className="py-4 text-center max-[830px]:hidden">Responsável</th>
             <th className="py-4 text-center max-[1000px]:hidden">
               {SortableHeader("Prazo", "dueAt")}
             </th>

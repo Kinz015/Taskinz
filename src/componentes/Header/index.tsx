@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { CircleUserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { MobileHeaderMenu } from "../MobileHeaderMenu";
 
 type HeaderProps = {
   title: string;
@@ -41,7 +42,7 @@ export async function Header({ title }: HeaderProps) {
       >
         {title}
       </h1>
-
+      <MobileHeaderMenu user={user} />
       <Link href="/meu-perfil" className="flex items-center gap-2">
         <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
           {user.imageUrl ? (
@@ -58,7 +59,7 @@ export async function Header({ title }: HeaderProps) {
           )}
         </div>
 
-        <span className="text-white pt-05">
+        <span className="hidden md:inline text-white pt-05">
           {user.name ?? user.email ?? "Usuário"}
         </span>
       </Link>

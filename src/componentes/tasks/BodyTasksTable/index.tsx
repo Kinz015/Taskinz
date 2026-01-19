@@ -112,7 +112,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
           <col className="min-w-[60] w-[60] max-w-[60]" />
           <col className="w-[500]" />
           <col className="min-w-[150]" />
-          <col className="min-w-[150]" />
+          <col className="min-w-[150] max-[830px]:hidden" />
           <col className="min-w-[150] max-[1000px]:hidden" />
           <col className="min-w-[150] max-[1250px]:hidden" />
           <col className="min-w-[150] max-[1400px]:hidden" />
@@ -137,7 +137,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   <StatusBadge status={task.status} />
                 </td>
 
-                <td className="py-4 text-center">
+                <td className="py-4 text-center max-[830px]:hidden">
                   {task.assignee ? task.assignee.name : "Sem responsável"}
                 </td>
 
