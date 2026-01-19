@@ -33,7 +33,7 @@ export async function Header({ title }: HeaderProps) {
       "
     >
       {/* 📱 MOBILE */}
-      <div className="flex md:hidden h-[120] w-full items-center justify-between px-2">
+      <div className="flex md:hidden h-[120] w-full items-center justify-between px-4">
         <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
           {user.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
