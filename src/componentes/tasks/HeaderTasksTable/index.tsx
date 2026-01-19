@@ -53,8 +53,8 @@ export default function HeaderTasksTable({
   return (
     <>
       {/* 📱 MOBILE — barra de ordenação */}
-      <div className="md:hidden mb-4">
-        <div className="flex items-center flex-wrap gap-2 bg-[#1b1b1f] p-3 text-sm text-white">
+      <div className="md:hidden">
+        <div className="flex items-center flex-wrap gap-2 bg-[#1b1b1f] p-2 text-sm text-white">
           <span className="mr-2 text-gray-400">Ordenar por:</span>
 
           {(["dueAt", "createdAt", "updatedAt"] as SortField[]).map((field) => {

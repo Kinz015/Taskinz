@@ -27,15 +27,14 @@ export async function Header({ title }: HeaderProps) {
         bg-[#1b1b1f]
         h-30
         md:h-38
-        px-10
         xl:h-50
         sm:pl-16
         lg:pl-21
       "
     >
       {/* 📱 MOBILE */}
-      <div className="flex md:hidden h-[120] w-full items-center justify-between">
-        <div className="h-12 w-12 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
+      <div className="flex md:hidden h-[120] w-full items-center justify-between px-2">
+        <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
           {user.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -69,7 +68,7 @@ export async function Header({ title }: HeaderProps) {
           {title}
         </h1>
         <MobileHeaderMenu user={user} />
-        <Link href="/meu-perfil" className="flex items-center gap-2">
+        <Link href="/meu-perfil" className="flex items-center gap-2 mr-10">
           <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
             {user.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
