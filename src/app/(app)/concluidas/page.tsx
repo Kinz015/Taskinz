@@ -57,7 +57,7 @@ export default async function Concluidas({ searchParams }: CompletedProps) {
     <div className="flex flex-col min-h-screen">
       <Header title="Tarefas concluídas"/>
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="completed"/>
       </main>
     </div>
   );

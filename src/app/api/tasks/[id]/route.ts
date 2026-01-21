@@ -1,16 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { requireAuth } from "@/lib/auth";
 
 type Params = { id: string };
 
 /**
  * GET /api/tasks/:id
- * Buscar uma task específica
+ * Buscar uma task específica (SÓ do usuário logado)
  */
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<Params> }
 ) {
+  const user = await requireAuth();
+
   const { id } = await params;
   const taskId = Number(id);
 
@@ -18,15 +21,11 @@ export async function GET(
     return NextResponse.json({ error: "ID inválido" }, { status: 400 });
   }
 
-  const task = await prisma.task.findUnique({
-    where: { id: taskId },
+  const task = await prisma.task.findFirst({
+    where: { id: taskId, authorId: user.id }, // 🔒 trava por dono
     include: {
-      author: {
-        select: { id: true, name: true, email: true },
-      },
-      assignee: {
-        select: { id: true, name: true, email: true },
-      },
+      author: { select: { id: true, name: true, email: true } },
+      assignee: { select: { id: true, name: true, email: true } },
     },
   });
 
@@ -39,12 +38,14 @@ export async function GET(
 
 /**
  * PUT /api/tasks/:id
- * Atualizar uma task
+ * Atualizar uma task (SÓ se for do usuário logado)
  */
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<Params> }
 ) {
+  const user = await requireAuth();
+
   const { id } = await params;
   const taskId = Number(id);
 
@@ -55,8 +56,8 @@ export async function PUT(
   try {
     const body = await req.json();
 
-    const task = await prisma.task.update({
-      where: { id: taskId },
+    const result = await prisma.task.updateMany({
+      where: { id: taskId, authorId: user.id }, // 🔒 trava por dono
       data: {
         title: body.title,
         description: body.description,
@@ -66,10 +67,25 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(task);
+    if (result.count === 0) {
+      return NextResponse.json(
+        { message: "Task não encontrada" },
+        { status: 404 }
+      );
+    }
+
+    // (opcional) retornar a task atualizada já com include
+    const updated = await prisma.task.findFirst({
+      where: { id: taskId, authorId: user.id },
+      include: {
+        author: { select: { id: true, name: true, email: true } },
+        assignee: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    return NextResponse.json(updated);
   } catch (error) {
     console.error("PUT /api/tasks/[id] erro:", error);
-
     return NextResponse.json(
       { message: "Erro interno ao atualizar task" },
       { status: 500 }
@@ -79,12 +95,14 @@ export async function PUT(
 
 /**
  * DELETE /api/tasks/:id
- * Remover uma task
+ * Remover uma task (SÓ se for do usuário logado)
  */
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<Params> }
 ) {
+  const user = await requireAuth();
+
   const { id } = await params;
   const taskId = Number(id);
 
@@ -93,14 +111,20 @@ export async function DELETE(
   }
 
   try {
-    await prisma.task.delete({
-      where: { id: taskId },
+    const result = await prisma.task.deleteMany({
+      where: { id: taskId, authorId: user.id }, // 🔒 trava por dono
     });
+
+    if (result.count === 0) {
+      return NextResponse.json(
+        { message: "Task não encontrada" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/tasks/[id] erro:", error);
-
     return NextResponse.json(
       { message: "Erro ao excluir task" },
       { status: 500 }

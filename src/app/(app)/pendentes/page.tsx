@@ -34,7 +34,7 @@ async function getPendentesTasks(sort: string, order: string): Promise<TaskDTO[]
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks concluídas: ${res.status} ${text}`);
+    throw new Error(`Erro ao buscar tasks pendentes: ${res.status} ${text}`);
   }
 
   return res.json();
@@ -57,7 +57,7 @@ export default async function Pendentes({ searchParams }: PendentesProps) {
     <div className="flex flex-col min-h-screen">
       <Header title="Tarefas pendentes"/>
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} />
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="pending"/>
       </main>
     </div>
   );
