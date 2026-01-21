@@ -90,11 +90,6 @@ export function SideBar({ user }: SideBarProps) {
             Adicionar tarefa
           </SidebarLink>
 
-          <SidebarLink href="/minhas-tarefas">
-            <IdCardIcon />
-            Minhas Tarefas
-          </SidebarLink>
-
           <SidebarLink href="/concluidas">
             <ClipboardCheckIcon />
             Concluídas
@@ -114,6 +109,12 @@ export function SideBar({ user }: SideBarProps) {
             <LogOutIcon />
             Sair
           </SidebarLink>
+
+          {/* Links futuros
+          <SidebarLink href="/minhas-tarefas">
+            <IdCardIcon />
+            Minhas Tarefas
+          </SidebarLink> */}
         </nav>
       </div>
     </aside>
