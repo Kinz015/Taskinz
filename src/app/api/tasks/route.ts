@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     if (!title) {
       return NextResponse.json(
         { error: "Título é obrigatório" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,19 +28,13 @@ export async function POST(req: Request) {
         dueAt: dueAt ? new Date(dueAt) : null,
         status: validStatus,
 
-        authorId: user.id, // 🔐 dono vem do cookie
+        authorId: user.id, // 🔒 dono SEMPRE vem do cookie
 
-        ...(assigneeId && {
-          assigneeId,
-        }),
+        ...(assigneeId && { assigneeId }),
       },
       include: {
-        author: {
-          select: { id: true, name: true, email: true },
-        },
-        assignee: {
-          select: { id: true, name: true, email: true },
-        },
+        author: { select: { id: true, name: true, email: true } },
+        assignee: { select: { id: true, name: true, email: true } },
       },
     });
 
@@ -52,25 +46,21 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  // ✅ se quiser proteger a listagem (recomendado), autentica aqui também
+  // 🔐 Protege a listagem
   const user = await requireAuth();
 
   const { searchParams } = new URL(req.url);
 
-  // status continua opcional
   const statusParam = searchParams.get("status");
+
+  // 🔒 SEMPRE filtra por authorId do usuário logado (nunca global)
   const where: Prisma.TaskWhereInput = {
+    authorId: user.id,
     ...(statusParam &&
       Object.values(TaskStatus).includes(statusParam as TaskStatus) && {
         status: statusParam as TaskStatus,
       }),
   };
-
-  // ✅ NOVO: mine=true => só tasks criadas pelo usuário logado
-  const mine = searchParams.get("mine") === "true";
-  if (mine) {
-    where.authorId = user.id;
-  }
 
   const sort = searchParams.get("sort");
   const rawOrder = searchParams.get("order");
@@ -80,19 +70,15 @@ export async function GET(req: Request) {
     sort === "dueAt"
       ? { dueAt: order }
       : sort === "updatedAt"
-      ? { updatedAt: order }
-      : { createdAt: order };
+        ? { updatedAt: order }
+        : { createdAt: order };
 
   const tasks = await prisma.task.findMany({
     where,
     orderBy,
     include: {
-      author: {
-        select: { id: true, name: true, email: true },
-      },
-      assignee: {
-        select: { id: true, name: true, email: true },
-      },
+      author: { select: { id: true, name: true, email: true } },
+      assignee: { select: { id: true, name: true, email: true } },
     },
   });
 
