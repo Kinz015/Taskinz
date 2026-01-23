@@ -83,7 +83,7 @@ export default function ProfileForm({
         payload.newPassword = newPassword;
       }
 
-      const res = await fetch("/api/users/me", {
+      const res = await fetch("/api/user", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

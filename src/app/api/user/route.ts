@@ -126,6 +126,6 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ ok: true, user: updated }, { status: 200 });
   } catch (e) {
     console.log(e);
-    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
