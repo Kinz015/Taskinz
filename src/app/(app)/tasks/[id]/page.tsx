@@ -1,6 +1,6 @@
 import { Header } from "@/componentes/Header";
 import { requireAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { getTaskForUser } from "@/lib/tasks";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -15,17 +15,8 @@ export default async function TaskPage({ params }: TaskPageProps) {
   const user = await requireAuth();
   if (!user) redirect("/login");
 
-  const task = await prisma.task.findUnique({
-    where: { id: Number(id) },
-    include: {
-      author: true,
-      assignee: true,
-    },
-  });
-
-  if (!task) {
-    notFound();
-  }
+  const task = await getTaskForUser(Number(id), user.id);
+  if (!task) notFound();
 
   return (
     <div className="flex min-h-screen flex-col bg-[#1f1f1f]">

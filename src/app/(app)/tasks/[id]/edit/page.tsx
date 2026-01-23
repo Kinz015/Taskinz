@@ -14,11 +14,7 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
   const user = await requireAuth();
 
   if (!user) {
-    redirect("/login"); // Redireciona para login se não estiver autenticado
-  }
-
-  if (!user) {
-    redirect("/login"); // Caso o user não seja encontrado
+    redirect("/login");
   }
 
   const { id } = await params;
@@ -30,10 +26,6 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
 
   const task = await getTaskForUser(taskId, user.id);
   if (!task) notFound();
-
-  if (task.authorId !== user.id) {
-    notFound();
-  }
 
   return (
     <div className="flex flex-col min-h-screen">
