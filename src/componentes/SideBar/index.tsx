@@ -15,6 +15,7 @@ import { toastConfirmLogout } from "@/hooks/useDeleteTask";
 import { AuthUser } from "@/types/auth";
 import logo from "@/assets/TaskinzLogo.png";
 import logoOnly from "@/assets/TaskinzLogoOnly.png";
+import Link from "next/link";
 
 type SideBarProps = {
   user: AuthUser | null;
@@ -51,7 +52,7 @@ export function SideBar({ user }: SideBarProps) {
       "
     >
       <div className="min-h-screen flex flex-col w-full">
-        <div className="lg:flex justify-center">
+        <Link href="/" className="lg:flex justify-center">
           <Image
             src={logoOnly}
             alt="Taskinz"
@@ -76,7 +77,7 @@ export function SideBar({ user }: SideBarProps) {
             2xl:p-20
             "
           />
-        </div>
+        </Link>
 
         <nav className="flex flex-1 flex-col gap-2 mx-2">
           <SidebarLink href="/">
