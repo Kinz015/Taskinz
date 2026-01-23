@@ -7,6 +7,7 @@ import {
   ClipboardCheckIcon,
   ClipboardClockIcon,
   ClockAlertIcon,
+  BookUserIcon,
 } from "lucide-react";
 import Image from "next/image";
 import SidebarLink from "../SidebarLink";
@@ -110,13 +111,17 @@ export function SideBar({ user }: SideBarProps) {
             Sair
           </SidebarLink>
 
-          {user?.isAdmin && (
-            <div>
-              <hr className="" />
-              <h2 className="p-2">Área admin</h2>
+          {user.isAdmin && (
+            <div className="pt-4 flex flex-col gap-2">
+              <hr className="text-gray-500" />
+              <h2 className="p-2 font-bold">Área admin</h2>
               <SidebarLink href="/todas-as-tarefas">
                 <ClipboardListIcon />
                 Todos as tarefas
+              </SidebarLink>
+              <SidebarLink href="/todos-os-usuarios">
+                <BookUserIcon />
+                Todos os usuários
               </SidebarLink>
             </div>
           )}
