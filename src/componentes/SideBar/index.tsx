@@ -18,7 +18,7 @@ import logoOnly from "@/assets/TaskinzLogoOnly.png";
 import Link from "next/link";
 
 type SideBarProps = {
-  user: AuthUser | null;
+  user: AuthUser;
 };
 
 export function SideBar({ user }: SideBarProps) {
@@ -110,11 +110,16 @@ export function SideBar({ user }: SideBarProps) {
             Sair
           </SidebarLink>
 
-          {/* Links futuros
-          <SidebarLink href="/minhas-tarefas">
-            <IdCardIcon />
-            Minhas Tarefas
-          </SidebarLink> */}
+          {user?.isAdmin && (
+            <div>
+              <hr className="" />
+              <h2 className="p-2">Área admin</h2>
+              <SidebarLink href="/todas-as-tarefas">
+                <ClipboardListIcon />
+                Todos as tarefas
+              </SidebarLink>
+            </div>
+          )}
         </nav>
       </div>
     </aside>

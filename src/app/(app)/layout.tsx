@@ -1,12 +1,18 @@
 import { SideBar } from "@/componentes/SideBar";
-import { getLoggedUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getLoggedUser();
+  const user = await requireAuth();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <div className="flex min-h-screen">
       <SideBar user={user} />
