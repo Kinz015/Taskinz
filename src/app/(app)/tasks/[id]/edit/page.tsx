@@ -1,8 +1,8 @@
 import { Header } from "@/componentes/Header";
-import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import { EditTaskForm } from "@/componentes/tasks/EditTaskForm";
+import { getTaskForUser } from "@/lib/tasks";
 
 type EditTaskPageProps = {
   params: Promise<{
@@ -11,17 +11,11 @@ type EditTaskPageProps = {
 };
 
 export default async function EditTaskPage({ params }: EditTaskPageProps) {
-  const auth = await requireAuth();
+  const user = await requireAuth();
 
-  if (!auth) {
+  if (!user) {
     redirect("/login"); // Redireciona para login se não estiver autenticado
   }
-
-  // Garantindo que `user` nunca será null
-  const user = await prisma.user.findUnique({
-    where: { id: auth.id },
-    select: { id: true, name: true, email: true },
-  });
 
   if (!user) {
     redirect("/login"); // Caso o user não seja encontrado
@@ -34,24 +28,8 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
     notFound();
   }
 
-  const [task] = await Promise.all([
-    prisma.task.findUnique({
-      where: { id: taskId },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        status: true,
-        dueAt: true,
-        assigneeId: true,
-        authorId: true,
-      },
-    }),
-  ]);
-
-  if (!task) {
-    notFound();
-  }
+  const task = await getTaskForUser(taskId, user.id);
+  if (!task) notFound();
 
   if (task.authorId !== user.id) {
     notFound();

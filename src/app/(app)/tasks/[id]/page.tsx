@@ -1,7 +1,8 @@
 import { Header } from "@/componentes/Header";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 type TaskPageProps = {
   params: Promise<{
@@ -11,6 +12,8 @@ type TaskPageProps = {
 
 export default async function TaskPage({ params }: TaskPageProps) {
   const { id } = await params;
+  const user = await requireAuth();
+  if (!user) redirect("/login");
 
   const task = await prisma.task.findUnique({
     where: { id: Number(id) },

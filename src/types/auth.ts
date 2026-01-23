@@ -3,4 +3,5 @@ export type AuthUser = {
   email: string;
   name: string;
   imageUrl?: string;
+  isAdmin?: boolean;
 };

@@ -9,16 +9,16 @@ export async function getLoggedUser(): Promise<AuthUser | null> {
   if (!token) return null;
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
     if (!decoded.sub || !decoded.email) return null;
 
     return {
       id: decoded.sub as string,
+      name: decoded.name as string,
       email: decoded.email as string,
+      imageUrl: decoded.imageUrl as string,
+      isAdmin: decoded.isAdm as boolean,
     };
   } catch {
     return null;

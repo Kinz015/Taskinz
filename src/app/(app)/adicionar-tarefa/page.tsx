@@ -2,23 +2,12 @@ import { Header } from "@/componentes/Header";
 import CreateTaskForm from "@/componentes/tasks/CreateTaskForm";
 import { requireAuth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 
 export default async function NewTaskPage() {
-  const auth = await requireAuth();
-
-  if (!auth) {
-    redirect("/login"); // Redireciona para login se não estiver autenticado
-  }
-
-  // Garantindo que `user` nunca será null
-  const user = await prisma.user.findUnique({
-    where: { id: auth.id },
-    select: { id: true, name: true, email: true },
-  });
+  const user = await requireAuth();
 
   if (!user) {
-    redirect("/login"); // Caso o user não seja encontrado
+    redirect("/login"); // Redireciona para login se não estiver autenticado
   }
 
   return (

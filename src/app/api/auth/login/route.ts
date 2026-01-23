@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email e senha são obrigatórios" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -22,13 +22,15 @@ export async function POST(req: Request) {
         name: true,
         email: true,
         passwordHash: true,
+        imageUrl: true,
+        isAdmin: true,
       },
     });
 
     if (!user) {
       return NextResponse.json(
         { error: "Credenciais inválidas" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -37,7 +39,7 @@ export async function POST(req: Request) {
     if (!passwordMatch) {
       return NextResponse.json(
         { error: "Credenciais inválidas" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -46,9 +48,11 @@ export async function POST(req: Request) {
         sub: user.id,
         name: user.name,
         email: user.email,
+        imageUrl: user.imageUrl,
+        isAdmin: user.isAdmin
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     const response = NextResponse.json({
@@ -72,7 +76,7 @@ export async function POST(req: Request) {
     console.error("LOGIN ERROR:", error);
     return NextResponse.json(
       { error: "Erro interno no servidor" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

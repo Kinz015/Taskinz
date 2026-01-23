@@ -1,23 +1,16 @@
-import { getLoggedUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+
 import { CircleUserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MobileHeaderMenu } from "../MobileHeaderMenu";
+import { requireAuth } from "@/lib/auth";
 
 type HeaderProps = {
   title: string;
 };
 
 export async function Header({ title }: HeaderProps) {
-  const auth = await getLoggedUser();
-  if (!auth) redirect("/login");
-
-  const user = await prisma.user.findUnique({
-    where: { id: auth.id },
-    select: { name: true, email: true, isAdmin: true, imageUrl: true },
-  });
-
+  const user = await requireAuth();
   if (!user) redirect("/login");
 
   return (
