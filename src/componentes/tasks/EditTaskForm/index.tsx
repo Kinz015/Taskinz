@@ -4,6 +4,7 @@ import { useDeleteTask } from "@/hooks/useDeleteTask";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toastSuccess, toastError } from "@/utils/toast";
+import { AuthUser } from "@/types/auth";
 
 type EditTaskFormProps = {
   task: {
@@ -14,23 +15,18 @@ type EditTaskFormProps = {
     dueAt: Date | null;
     assigneeId: string | null;
   };
-  users: {
-    id: string;
-    name: string | null;
-    email: string;
-  }[];
+  user: AuthUser;
 };
 
-export function EditTaskForm({ task, users }: EditTaskFormProps) {
+export function EditTaskForm({ task, user }: EditTaskFormProps) {
   const { deleteTask } = useDeleteTask();
   const router = useRouter();
 
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description ?? "");
-  const [assigneeId, setAssigneeId] = useState(task.assigneeId ?? "");
   const [status, setStatus] = useState(task.status);
   const [dueAt, setDueAt] = useState(
-    task.dueAt ? new Date(task.dueAt).toISOString().split("T")[0] : ""
+    task.dueAt ? new Date(task.dueAt).toISOString().split("T")[0] : "",
   );
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +42,7 @@ export function EditTaskForm({ task, users }: EditTaskFormProps) {
         description,
         status,
         dueAt: dueAt || null,
-        assigneeId: assigneeId || null,
+        assigneeId: user.id,
       }),
     });
 
@@ -59,7 +55,7 @@ export function EditTaskForm({ task, users }: EditTaskFormProps) {
     router.push(`/tasks/${task.id}`);
     router.refresh();
 
-    toastSuccess("Tarefa atualizada com sucesso")
+    toastSuccess("Tarefa atualizada com sucesso");
     setLoading(false);
   }
   return (
@@ -102,25 +98,13 @@ export function EditTaskForm({ task, users }: EditTaskFormProps) {
 
       {/* Responsável */}
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-300">
-          Responsável
-        </label>
-        <select
-          value={assigneeId}
-          onChange={(e) => setAssigneeId(e.target.value)}
-          className="
-        w-full rounded-md bg-[#1f1f1f] px-3 py-2 text-white
-        border border-gray-700
-        focus:outline-none focus:ring-2 focus:ring-indigo-500
-      "
-        >
-          <option value="">— Sem responsável —</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name || user.email}
-            </option>
-          ))}
-        </select>
+        <label className="">Responsável</label>
+        <div className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80">
+          {user.name}
+        </div>
+        <p className="mt-1 text-xs text-white/40">
+          O responsável desta task será o usuário logado.
+        </p>
       </div>
 
       {/* Status */}

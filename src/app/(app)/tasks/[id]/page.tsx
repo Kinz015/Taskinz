@@ -71,11 +71,7 @@ export default async function TaskPage({ params }: TaskPageProps) {
 
               <div>
                 <p className="text-sm text-gray-400">Criado por:</p>
-                <p className="font-medium">
-                  {task.assignee
-                    ? task.author.name || task.author.email
-                    : "Sem responsável"}
-                </p>
+                <p className="font-medium">{task.author.name}</p>
               </div>
 
               <div>
@@ -87,11 +83,7 @@ export default async function TaskPage({ params }: TaskPageProps) {
 
               <div>
                 <p className="text-sm text-gray-400">Responsável:</p>
-                <p className="font-medium">
-                  {task.assignee
-                    ? task.assignee.name || task.assignee.email
-                    : "Sem responsável"}
-                </p>
+                <p className="font-medium">{task.author.name}</p>
               </div>
 
               <div>

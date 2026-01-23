@@ -1,33 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AuthUser } from "@/types/auth";
+import { useState } from "react";
 
-type User = {
-  id: string;
-  name: string | null;
-  email: string;
+
+
+type CreateTaskFormProps = {
+  user: AuthUser;
 };
 
-export default function CreateTaskForm() {
+export default function CreateTaskForm({ user }: CreateTaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [status, setStatus] = useState("pending");
-  const [assigneeId, setAssigneeId] = useState<string | "">("");
 
-  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    async function loadUsers() {
-      const res = await fetch("/api/users", { credentials: "include" });
-      const data = await res.json();
-      setUsers(data);
-    }
-    loadUsers();
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +34,7 @@ export default function CreateTaskForm() {
         description,
         dueAt: dueAt || null,
         status,
-        assigneeId: assigneeId || null,
+        // ✅ não envia assigneeId: responsável = author (no backend)
       }),
     });
 
@@ -61,9 +51,9 @@ export default function CreateTaskForm() {
     setDescription("");
     setDueAt("");
     setStatus("pending");
-    setAssigneeId("");
     setLoading(false);
   }
+  console.log(user.name, user.email);
 
   const inputBase =
     "w-full rounded-lg bg-white/10 border border-white/10 text-white placeholder:text-white/30 px-3 py-2 text-sm outline-none focus:border-white/30 focus:ring-2 focus:ring-white/10";
@@ -76,7 +66,6 @@ export default function CreateTaskForm() {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Título */}
         <div>
           <label className={labelBase}>Título</label>
           <input
@@ -87,7 +76,6 @@ export default function CreateTaskForm() {
           />
         </div>
 
-        {/* Descrição */}
         <div>
           <label className={labelBase}>Descrição</label>
           <textarea
@@ -98,30 +86,17 @@ export default function CreateTaskForm() {
           />
         </div>
 
-        {/* Responsável */}
+        {/* Responsável (autor logado) */}
         <div>
           <label className={labelBase}>Responsável</label>
-          <select
-            className={inputBase}
-            value={assigneeId}
-            onChange={(e) => setAssigneeId(e.target.value)}
-          >
-            <option className="bg-[#1b1b1f]" value="">
-              — Sem responsável —
-            </option>
-
-            {users.map((user) => (
-              <option className="bg-[#1b1b1f]" key={user.id} value={user.id}>
-                {user.name || user.email}
-              </option>
-            ))}
-          </select>
+          <div className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80">
+            {user.name}
+          </div>
           <p className="mt-1 text-xs text-white/40">
-            Selecione alguém ou deixe sem responsável.
+            O responsável desta task será o usuário logado.
           </p>
         </div>
 
-        {/* Prazo */}
         <div>
           <label className={labelBase}>Prazo</label>
           <input
@@ -132,7 +107,6 @@ export default function CreateTaskForm() {
           />
         </div>
 
-        {/* Status */}
         <div>
           <label className={labelBase}>Status</label>
           <select
@@ -152,23 +126,19 @@ export default function CreateTaskForm() {
           </select>
         </div>
 
-        {/* Botão */}
         <button
           type="submit"
           disabled={loading}
-          className={`mt-2 w-full rounded-lg py-2 text-sm font-semibold text-white transition
-    ${
-      loading
-        ? "bg-green-500/60 cursor-not-allowed"
-        : "bg-green-700 hover:bg-green-800"
-    }
-  `}
+          className={`mt-2 w-full rounded-lg py-2 text-sm font-semibold text-white transition ${
+            loading
+              ? "bg-green-500/60 cursor-not-allowed"
+              : "bg-green-700 hover:bg-green-800"
+          }`}
         >
           {loading ? "Criando..." : "Criar task"}
         </button>
       </form>
 
-      {/* feedback */}
       {error && (
         <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-center text-sm text-red-200">
           {error}

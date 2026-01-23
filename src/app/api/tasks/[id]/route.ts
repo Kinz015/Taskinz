@@ -63,7 +63,7 @@ export async function PUT(
         description: body.description,
         status: body.status,
         dueAt: body.dueAt ? new Date(body.dueAt) : null,
-        assigneeId: body.assigneeId ?? null,
+        assigneeId: user.id,
       },
     });
 

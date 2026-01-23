@@ -80,7 +80,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                         onClick={() => {
                           if (!isAuthor) {
                             toastError(
-                              "Apenas o autor da tarefa pode editá-la."
+                              "Apenas o autor da tarefa pode editá-la.",
                             );
                             setOpenMenuId(null);
                             return;
@@ -121,6 +121,12 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
 
         <tbody>
           {tasks.map((task, index) => {
+            const responsibleLabel =
+              task.assignee?.name?.trim()  ||
+              task.assignee?.email ||
+              task.author?.name?.trim() ||
+              task.author?.email ||
+              "Sem responsável";
             const isAuthor = user.id === task.author.id;
 
             return (
@@ -138,7 +144,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                 </td>
 
                 <td className="py-4 text-center max-[830px]:hidden">
-                  {task.assignee ? task.assignee.name : "Sem responsável"}
+                  {responsibleLabel}
                 </td>
 
                 <td className="py-4 text-center max-[1000px]:hidden">

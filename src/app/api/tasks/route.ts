@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const user = await requireAuth(); // 🔐 COOKIE AUTH
 
     const body = await req.json();
-    const { title, description, dueAt, status, assigneeId } = body;
+    const { title, description, dueAt, status } = body;
 
     if (!title) {
       return NextResponse.json(
@@ -29,8 +29,7 @@ export async function POST(req: Request) {
         status: validStatus,
 
         authorId: user.id, // 🔒 dono SEMPRE vem do cookie
-
-        ...(assigneeId && { assigneeId }),
+        assigneeId: user.id,
       },
       include: {
         author: { select: { id: true, name: true, email: true } },

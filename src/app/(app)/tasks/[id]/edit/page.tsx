@@ -1,8 +1,8 @@
 import { Header } from "@/componentes/Header";
-import { EditTaskForm } from "@/componentes/tasks/EditTaskForm";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
+import { EditTaskForm } from "@/componentes/tasks/EditTaskForm";
 
 type EditTaskPageProps = {
   params: Promise<{
@@ -11,18 +11,30 @@ type EditTaskPageProps = {
 };
 
 export default async function EditTaskPage({ params }: EditTaskPageProps) {
-  // ✅ DESEMPACOTA params corretamente
-  const { id } = await params;
+  const auth = await requireAuth();
 
+  if (!auth) {
+    redirect("/login"); // Redireciona para login se não estiver autenticado
+  }
+
+  // Garantindo que `user` nunca será null
+  const user = await prisma.user.findUnique({
+    where: { id: auth.id },
+    select: { id: true, name: true, email: true },
+  });
+
+  if (!user) {
+    redirect("/login"); // Caso o user não seja encontrado
+  }
+
+  const { id } = await params;
   const taskId = Number(id);
 
   if (Number.isNaN(taskId)) {
     notFound();
   }
 
-  const user = await requireAuth();
-
-  const [task, users] = await Promise.all([
+  const [task] = await Promise.all([
     prisma.task.findUnique({
       where: { id: taskId },
       select: {
@@ -35,29 +47,22 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
         authorId: true,
       },
     }),
-    prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-      orderBy: { name: "asc" },
-    }),
   ]);
 
   if (!task) {
-    redirect("404");
+    notFound();
   }
 
   if (task.authorId !== user.id) {
-    redirect("/");
+    notFound();
   }
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Editar task" />
       <main className="flex flex-1 flex-col bg-[#1f1f1f] p-6 text-white">
-        <EditTaskForm task={task} users={users} />
+        {/* Passando o user validado */}
+        <EditTaskForm task={task} user={user} />
       </main>
     </div>
   );
