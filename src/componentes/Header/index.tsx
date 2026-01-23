@@ -1,4 +1,3 @@
-
 import { CircleUserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -80,7 +79,7 @@ export async function Header({ title }: HeaderProps) {
               {user.name ?? user.email ?? "Usuário"}
             </span>
           </Link>
-          {user.isAdmin === true && (
+          {user.isAdmin && (
             <span
               className="
               inline-flex items-center rounded-full
