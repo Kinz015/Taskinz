@@ -4,7 +4,7 @@ import { getLoggedUser } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { TaskDTO } from "@/types/task";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -25,16 +25,19 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]> {
+async function getAllTasks(
+  sort: string,
+  order: string,
+): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/admin/tasks?status=completed&sort=${sort}&order=${order}`
+    `${baseUrl}/api/admin/tasks?&sort=${sort}&order=${order}`,
   );
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks concluídas: ${res.status} ${text}`);
+    throw new Error(`Erro ao buscar todas as tasks: ${res.status} ${text}`);
   }
 
   return res.json();
@@ -43,21 +46,26 @@ async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]
 export default async function Concluidas({ searchParams }: CompletedProps) {
   const user = await getLoggedUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
+  if (!user.isAdmin) notFound();
 
   const params = await searchParams;
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
 
-  const tasks = await getCompletedTasks(sort, order);
+  const tasks = await getAllTasks(sort, order);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas concluídas"/>
+      <Header title="Todas as tarefas" />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="completed"/>
+        <TasksTable
+          tasks={tasks}
+          sort={sort}
+          order={order}
+          user={user}
+          page="completed"
+        />
       </main>
     </div>
   );

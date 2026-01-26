@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-type CompletedProps = {
+type PendentesProps = {
   searchParams: Promise<{
     sort?: "dueAt" | "createdAt" | "updatedAt";
     order?: "asc" | "desc";
@@ -25,22 +25,22 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]> {
+async function getPendentesTasks(sort: string, order: string): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/admin/tasks?status=completed&sort=${sort}&order=${order}`
+    `${baseUrl}/api/admin/tasks?status=pending&sort=${sort}&order=${order}`
   );
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks concluídas: ${res.status} ${text}`);
+    throw new Error(`Erro ao buscar tasks pendentes: ${res.status} ${text}`);
   }
 
   return res.json();
 }
 
-export default async function Concluidas({ searchParams }: CompletedProps) {
+export default async function Pendentes({ searchParams }: PendentesProps) {
   const user = await getLoggedUser();
 
   if (!user) {
@@ -51,13 +51,13 @@ export default async function Concluidas({ searchParams }: CompletedProps) {
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
 
-  const tasks = await getCompletedTasks(sort, order);
+  const tasks = await getPendentesTasks(sort, order);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas concluídas"/>
+      <Header title="Tarefas pendentes"/>
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="completed"/>
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="pending"/>
       </main>
     </div>
   );
