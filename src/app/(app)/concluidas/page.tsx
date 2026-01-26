@@ -29,7 +29,7 @@ async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/admin/tasks?status=completed&sort=${sort}&order=${order}`
+    `${baseUrl}/api/tasks?status=completed&sort=${sort}&order=${order}`
   );
 
   if (!res.ok) {
