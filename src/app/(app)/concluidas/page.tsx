@@ -43,9 +43,7 @@ async function getCompletedTasks(sort: string, order: string): Promise<TaskDTO[]
 export default async function Concluidas({ searchParams }: CompletedProps) {
   const user = await getLoggedUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   const params = await searchParams;
   const sort = params.sort ?? "createdAt";

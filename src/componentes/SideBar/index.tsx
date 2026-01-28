@@ -115,7 +115,7 @@ export function SideBar({ user }: SideBarProps) {
             <div className="pt-4 flex flex-col gap-2">
               <hr className="text-gray-500" />
               <h2 className="p-2 font-bold">Área admin</h2>
-              <SidebarLink href="/todas-as-tarefas">
+              <SidebarLink href="/Admin/todas-as-tarefas">
                 <ClipboardListIcon />
                 Todos as tarefas
               </SidebarLink>

@@ -4,12 +4,12 @@ import { getLoggedUser } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { TaskDTO } from "@/types/task";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-type HomeProps = {
+type TodasAsTasksProps = {
   searchParams: Promise<{
     sort?: "dueAt" | "createdAt" | "updatedAt";
     order?: "asc" | "desc";
@@ -29,23 +29,24 @@ async function getTasks(sort: string, order: string): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?sort=${sort}&order=${order}`
+    `${baseUrl}/api/admin/tasks?sort=${sort}&order=${order}`,
   );
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar todas as tarefas: ${res.status} ${text}`);
+    throw new Error(`Erro ao buscar tasks (admin): ${res.status} ${text}`);
   }
 
   return res.json();
 }
 
-export default async function Home({ searchParams }: HomeProps) {
+export default async function TodasAsTasks({
+  searchParams,
+}: TodasAsTasksProps) {
   const user = await getLoggedUser(); // ✅ dentro do request
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
+  if (!user.isAdmin) notFound();
 
   const params = await searchParams;
   const sort = params.sort ?? "createdAt";
@@ -55,8 +56,14 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <>
-      <Header title="Todas as tarefas"/>
-      <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="all" />
+      <Header title="Todas as tarefas" />
+      <TasksTable
+        tasks={tasks}
+        sort={sort}
+        order={order}
+        user={user}
+        page="all"
+      />
     </>
   );
 }
