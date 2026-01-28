@@ -119,7 +119,7 @@ export function SideBar({ user }: SideBarProps) {
                 <ClipboardListIcon />
                 Todos as tarefas
               </SidebarLink>
-              <SidebarLink href="/todos-os-usuarios">
+              <SidebarLink href="/Admin/todos-os-usuarios">
                 <BookUserIcon />
                 Todos os usuários
               </SidebarLink>

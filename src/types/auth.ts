@@ -3,5 +3,7 @@ export type AuthUser = {
   email: string;
   name: string;
   imageUrl?: string;
-  isAdmin?: boolean;
+  isAdmin: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
