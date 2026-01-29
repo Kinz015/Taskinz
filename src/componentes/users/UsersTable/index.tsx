@@ -1,9 +1,10 @@
 import HeaderUsersTable from "../HeaderUsersTable";
 import BodyUsersTable from "../BodyUsersTable";
-import { AuthUser } from "@/types/auth";
+import { AdminUserRow } from "@/types/user";
+
 
 type UsersTableProps = {
-  users: AuthUser[];
+  users: AdminUserRow [];
 };
 export default function UsersTable({ users }: UsersTableProps) {
   return (

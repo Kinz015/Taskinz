@@ -1,10 +1,10 @@
 "use client";
 
-import { AuthUser } from "@/types/auth";
+import { AdminUserRow } from "@/types/user";
 import { EllipsisIcon } from "lucide-react";
 
 type BodyUsersTableProps = {
-  users: AuthUser[];
+  users: AdminUserRow[];
 };
 export default function BodyUsersTable({ users }: BodyUsersTableProps) {
   console.log(users);
@@ -62,12 +62,12 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
 
               <td className="py-4 text-center">5</td>
 
-              <td className="py-4 text-center">6</td>
+              <td className="py-4 text-center">{user.tasksTotal}</td>
 
-              <td className="py-4 text-center">7</td>
-              <td className="py-4 text-center">8</td>
+              <td className="py-4 text-center">{user.tasksConcluidas}</td>
+              <td className="py-4 text-center">{user.tasksEmAndamento}</td>
 
-              <td className="py-4 text-center">9</td>
+              <td className="py-4 text-center">{user.tasksPendentes}</td>
 
               <td className="py-4 text-center">
                 {new Date(user.createdAt).toLocaleDateString()}

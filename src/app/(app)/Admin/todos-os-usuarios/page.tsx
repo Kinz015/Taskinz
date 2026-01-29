@@ -2,7 +2,7 @@ import { Header } from "@/componentes/Header";
 import UsersTable from "@/componentes/users/UsersTable";
 import { getLoggedUser } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
-import { AuthUser } from "@/types/auth";
+import { AdminUserRow } from "@/types/user";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
@@ -18,7 +18,7 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getUsers(): Promise<AuthUser[]> {
+async function getUsers(): Promise<AdminUserRow[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(`${baseUrl}/api/admin/users`);
