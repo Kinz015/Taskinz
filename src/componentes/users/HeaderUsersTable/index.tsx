@@ -13,7 +13,6 @@ export default function HeaderUsersTable() {
           <col className="w-[150]" />
           <col className="w-[150]" />
           <col className="w-[150]" />
-          <col className="w-[150]" />
           <col className="min-w-[67] w-[67] max-w-[67]" />
         </colgroup>
 
@@ -23,7 +22,6 @@ export default function HeaderUsersTable() {
             <th className="py-4 text-left">Usuário</th>
             <th className="py-4 text-left">Email</th>
             <th className="py-4 text-center">Cargo</th>
-            <th className="py-4 text-center">Status</th>
             <th className="py-4 text-center">Tasks</th>
             <th className="py-4 text-center">Concluídas</th>
             <th className="py-4 text-center">

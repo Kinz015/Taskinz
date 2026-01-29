@@ -1,7 +1,6 @@
 "use client";
 
 import { AdminUserRow } from "@/types/user";
-import clsx from "clsx";
 import { EllipsisIcon } from "lucide-react";
 
 type BodyUsersTableProps = {
@@ -19,7 +18,6 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
           <col className="w-[100]" />
           <col className="w-[150]" />
           <col className="w-[100]" />
-          <col className="w-[150]" />
           <col className="w-[150]" />
           <col className="w-[150]" />
           <col className="w-[150]" />
@@ -67,8 +65,6 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
                   {user.isAdmin ? "Admin" : "User"}
                 </span>
               </td>
-
-              <td className="py-4 text-center">5</td>
 
               <td className="py-4 text-center">{user.tasksTotal}</td>
 
