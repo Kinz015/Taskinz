@@ -19,6 +19,8 @@ export async function getLoggedUser(): Promise<AuthUser | null> {
       email: decoded.email as string,
       imageUrl: decoded.imageUrl as string,
       isAdmin: decoded.isAdmin as boolean,
+      createdAt: decoded.createdAt as string,
+      updatedAt: decoded.createdAt as string
     };
   } catch {
     return null;

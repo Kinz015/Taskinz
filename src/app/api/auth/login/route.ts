@@ -24,6 +24,8 @@ export async function POST(req: Request) {
         passwordHash: true,
         imageUrl: true,
         isAdmin: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -49,7 +51,9 @@ export async function POST(req: Request) {
         name: user.name,
         email: user.email,
         imageUrl: user.imageUrl,
-        isAdmin: user.isAdmin
+        isAdmin: user.isAdmin,
+        createdAT: user.createdAt,
+        updatedAt: user.updatedAt
       },
       process.env.JWT_SECRET!,
       { expiresIn: "7d" },
