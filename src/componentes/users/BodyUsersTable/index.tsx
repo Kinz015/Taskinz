@@ -1,13 +1,13 @@
 "use client";
 
 import { AdminUserRow } from "@/types/user";
+import clsx from "clsx";
 import { EllipsisIcon } from "lucide-react";
 
 type BodyUsersTableProps = {
   users: AdminUserRow[];
 };
 export default function BodyUsersTable({ users }: BodyUsersTableProps) {
-  console.log(users);
   return (
     <div className="max-h-[calc(100vh-164px)] md:max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
       {/* 🖥 DESKTOP */}
@@ -57,7 +57,15 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
               <td className="py-4 text-left">{user.email}</td>
 
               <td className="py-4 text-center">
-                {user.isAdmin ? "Admin" : "User"}
+                <span
+                  className={
+                    user.isAdmin
+                      ? "px-2 py-1 rounded-full text-xs font-semibold bg-red-700 text-red-200"
+                      : "px-2 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-200"
+                  }
+                >
+                  {user.isAdmin ? "Admin" : "User"}
+                </span>
               </td>
 
               <td className="py-4 text-center">5</td>
