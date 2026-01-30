@@ -7,7 +7,6 @@ type BodyUsersTableProps = {
   users: AdminUserRow[];
 };
 export default function BodyUsersTable({ users }: BodyUsersTableProps) {
-  console.log([users])
   return (
     <div className="max-h-[calc(100vh-164px)] md:max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
       {/* 🖥 DESKTOP */}
