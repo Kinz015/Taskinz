@@ -1,4 +1,54 @@
-export default function HeaderUsersTable() {
+import {
+  CircleChevronDownIcon,
+  CircleChevronUpIcon,
+  CircleEqualIcon,
+} from "lucide-react";
+import Link from "next/link";
+
+type SortField = "createdAt"
+type SortOrder = "asc" | "desc";
+
+type HeaderUsersTableProps = {
+  sort: SortField;
+  order: SortOrder;
+};
+
+function getNextOrder(
+  currentSort: SortField,
+  clickedSort: SortField,
+  currentOrder: SortOrder,
+): SortOrder {
+  if (currentSort !== clickedSort) return "desc";
+  return currentOrder === "asc" ? "desc" : "asc";
+}
+
+export default function HeaderUsersTable({
+  sort,
+  order,
+}: HeaderUsersTableProps) {
+  function SortableHeader(label: string, field: SortField) {
+    const isActive = sort === field;
+    const nextOrder = getNextOrder(sort, field, order);
+    return (
+      <Link
+        href={`?sort=${field}&order=${nextOrder}`}
+        className="inline-flex items-center gap-1 justify-center select-none hover:underline"
+      >
+        <span>{label}</span>
+
+        {isActive ? (
+          order === "asc" ? (
+            <CircleChevronUpIcon size={17} />
+          ) : (
+            <CircleChevronDownIcon size={17} />
+          )
+        ) : (
+          <CircleEqualIcon size={17} />
+        )}
+      </Link>
+    );
+  }
+
   return (
     <>
       {/* 🖥 DESKTOP — header da tabela */}
@@ -24,11 +74,11 @@ export default function HeaderUsersTable() {
             <th className="py-4 text-center">Cargo</th>
             <th className="py-4 text-center">Tasks</th>
             <th className="py-4 text-center">Concluídas</th>
-            <th className="py-4 text-center">
-              Em andamento
-            </th>
+            <th className="py-4 text-center">Em andamento</th>
             <th className="py-4 text-center">Pendentes</th>
-            <th className="py-4 text-center">Criado em</th>
+            <th className="py-4 text-center">
+              {SortableHeader("Criado em", "createdAt")}
+            </th>
             <th className="py-4 pr-2 text-center">Ações</th>
           </tr>
         </thead>

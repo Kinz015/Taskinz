@@ -1,15 +1,30 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
-import { TaskStatus } from "@prisma/client";
+import { Prisma, TaskStatus } from "@prisma/client";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const user = await requireAuth();
 
     if (!user.isAdmin) {
       return NextResponse.json({ error: "Acesso negado" }, { status: 403 });
     }
+
+    const { searchParams } = new URL(req.url);
+
+    const sort = searchParams.get("sort");
+    const rawOrder = searchParams.get("order");
+    const order: Prisma.SortOrder = rawOrder === "asc" ? "asc" : "desc";
+
+    const orderBy: Prisma.UserOrderByWithRelationInput =
+      sort === "updatedAt"
+        ? { updatedAt: order }
+        : sort === "name"
+          ? { name: order }
+          : sort === "email"
+            ? { email: order }
+            : { createdAt: order };
 
     const users = await prisma.user.findMany({
       select: {
@@ -21,7 +36,7 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
       },
-      orderBy: { createdAt: "desc" },
+      orderBy, // ✅ agora respeita sort/order
     });
 
     const grouped = await prisma.task.groupBy({
