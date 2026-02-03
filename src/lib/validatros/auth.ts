@@ -1,8 +1,11 @@
 import { z } from "zod";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
 export const emailSchema = z
   .string()
-  .email("E-mail inválido");
+  .email("E-mail inválido")
+  .regex(emailRegex, "E-mail inválido");
 
 export const passwordSchema = z
   .string()

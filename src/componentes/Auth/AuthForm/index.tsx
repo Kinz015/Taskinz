@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { loginSchema, registerSchema } from "@/lib/validatros/auth";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 type AuthMode = "login" | "register";
 
@@ -20,6 +21,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,7 +81,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
           <input
             type="text"
             placeholder="Seu nome"
-            required
             minLength={2}
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -94,7 +95,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
           E-mail
         </label>
         <input
-          type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -107,14 +107,29 @@ export default function AuthForm({ mode }: AuthFormProps) {
         <label className="mb-1 block text-sm font-medium text-gray-700">
           Senha
         </label>
-        <input
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm
           focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
-        />
+            autoComplete="current-password"
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+            aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+          >
+            {showPassword ? (
+              <EyeOffIcon className="h-4 w-4" />
+            ) : (
+              <EyeIcon className="h-4 w-4" />
+            )}
+          </button>
+        </div>
       </div>
 
       <button
@@ -128,8 +143,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
             ? "Entrando..."
             : "Cadastrando..."
           : mode === "login"
-          ? "Entrar"
-          : "Cadastrar"}
+            ? "Entrar"
+            : "Cadastrar"}
       </button>
 
       {error && <p className="text-center text-sm text-red-600">{error}</p>}
