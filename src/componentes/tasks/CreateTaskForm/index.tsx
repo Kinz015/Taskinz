@@ -3,6 +3,8 @@
 import { AuthUser } from "@/types/auth";
 import { useState } from "react";
 
+
+
 type CreateTaskFormProps = {
   user: AuthUser;
 };
@@ -11,7 +13,7 @@ export default function CreateTaskForm({ user }: CreateTaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueAt, setDueAt] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("pending");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +50,7 @@ export default function CreateTaskForm({ user }: CreateTaskFormProps) {
     setTitle("");
     setDescription("");
     setDueAt("");
-    setStatus("overdue");
+    setStatus("pending");
     setLoading(false);
   }
 
@@ -111,11 +113,11 @@ export default function CreateTaskForm({ user }: CreateTaskFormProps) {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
-            <option className="bg-[#1b1b1f]" value="overdue">
-              Atrasada
+            <option className="bg-[#1b1b1f]" value="pending">
+              Pendente
             </option>
-            <option className="bg-[#1b1b1f]" value="started">
-              Iniciada
+            <option className="bg-[#1b1b1f]" value="in_progress">
+              Em andamento
             </option>
             <option className="bg-[#1b1b1f]" value="completed">
               Concluída

@@ -74,8 +74,8 @@ export default function HeaderUsersTable({
             <th className="py-4 text-center">Cargo</th>
             <th className="py-4 text-center">Tasks</th>
             <th className="py-4 text-center">Concluídas</th>
-            <th className="py-4 text-center">Iniciadas</th>
-            <th className="py-4 text-center">Atrasadas</th>
+            <th className="py-4 text-center">Em andamento</th>
+            <th className="py-4 text-center">Pendentes</th>
             <th className="py-4 text-center">
               {SortableHeader("Criado em", "createdAt")}
             </th>

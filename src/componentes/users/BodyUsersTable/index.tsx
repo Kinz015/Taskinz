@@ -69,9 +69,9 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
               <td className="py-4 text-center">{user.tasksTotal}</td>
 
               <td className="py-4 text-center">{user.tasksConcluidas}</td>
-              <td className="py-4 text-center">{user.tasksIniciadas}</td>
+              <td className="py-4 text-center">{user.tasksEmAndamento}</td>
 
-              <td className="py-4 text-center">{user.tasksAtrasadas}</td>
+              <td className="py-4 text-center">{user.tasksPendentes}</td>
 
               <td className="py-4 text-center">
                 {new Date(user.createdAt).toLocaleDateString()}

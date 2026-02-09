@@ -22,9 +22,9 @@ Responsável (quem executa)
 
 Controle de status das tarefas:
 
-Atrasadas
+Pendente
 
-Iniciadas
+Em andamento
 
 Concluída
 

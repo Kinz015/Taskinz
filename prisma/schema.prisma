@@ -14,8 +14,8 @@ datasource db {
 }
 
 enum TaskStatus {
-  overdue
-  started
+  pending
+  in_progress
   completed
 }
 
@@ -23,7 +23,7 @@ model Task {
   id          Int        @id @default(autoincrement())
   title       String
   description String?
-  status      TaskStatus @default(started)
+  status      TaskStatus @default(in_progress)
 
   dueAt DateTime?
 

@@ -48,8 +48,8 @@ export default async function TaskPage({ params }: TaskPageProps) {
                   {
                     // Mapeamento de status
                     {
-                      started: "Em Progresso",
-                      overdue: "Pendente",
+                      in_progress: "Em Progresso",
+                      pending: "Pendente",
                       completed: "Concluída",
                     }[task.status] || task.status // fallback para o valor original, caso não esteja no mapeamento
                   }

@@ -121,8 +121,8 @@ export function EditTaskForm({ task, user }: EditTaskFormProps) {
         focus:outline-none focus:ring-2 focus:ring-indigo-500
       "
         >
-          <option value="overdue">Atrasada</option>
-          <option value="started">Iniciada</option>
+          <option value="pending">Pendente</option>
+          <option value="in_progress">Em andamento</option>
           <option value="completed">Concluída</option>
         </select>
       </div>

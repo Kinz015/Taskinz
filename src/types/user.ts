@@ -9,6 +9,6 @@ export type AdminUserRow = {
 
   tasksTotal: number;
   tasksConcluidas: number;
-  tasksIniciadas: number;
-  tasksAtrasadas: number;
+  tasksEmAndamento: number;
+  tasksPendentes: number;
 };

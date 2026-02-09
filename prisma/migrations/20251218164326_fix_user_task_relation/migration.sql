@@ -3,7 +3,7 @@ CREATE TABLE `tasks` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
-    `status` ENUM('pending', '', 'completed') NOT NULL DEFAULT 'pending',
+    `status` ENUM('pending', 'in_progress', 'completed') NOT NULL DEFAULT 'pending',
     `dueAt` DATETIME(3) NULL,
     `userId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),

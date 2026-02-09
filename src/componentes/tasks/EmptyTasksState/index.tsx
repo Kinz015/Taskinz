@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { CirclePlusIcon, ClipboardCheckIcon, ClipboardClockIcon, ClipboardListIcon, ClockAlertIcon } from "lucide-react";
 import Link from "next/link";
 
-type Page = "all" | "overdue" | "started" | "completed";
+type Page = "all" | "pending" | "in_progress" | "completed";
 
 type Props = {
   page: Page;
@@ -20,13 +20,13 @@ export default function EmptyTasksState({ page }: Props) {
       description:
         "Crie sua primeira tarefa para acompanhar prazos, status e responsáveis.",
     },
-    overdue: {
-      title: "Você não tem tarefas atrasadas",
+    pending: {
+      title: "Você não tem tarefas pendentes",
       description:
         "Crie uma nova tarefa para acompanhar prazos, status e responsáveis.",
     },
-    started: {
-      title: "Você não tem tarefas iniciadas",
+    in_progress: {
+      title: "Você não tem tarefas em andamento",
       description:
         "Quando você iniciar uma tarefa, ela aparecerá aqui para acompanhar o progresso.",
     },
@@ -50,8 +50,8 @@ export default function EmptyTasksState({ page }: Props) {
         >
           {page === "all" && <ClipboardListIcon />}
           {page === "completed" &&  <ClipboardCheckIcon />}
-          {page === "started" &&  <ClipboardClockIcon />}
-          {page === "overdue" &&  <ClockAlertIcon />}
+          {page === "in_progress" &&  <ClipboardClockIcon />}
+          {page === "pending" &&  <ClockAlertIcon />}
         </div>
         <h2 className="text-xl font-bold text-white">{pages[page].title}</h2>
         <p className="mt-2 max-w-lg text-sm text-white/60">

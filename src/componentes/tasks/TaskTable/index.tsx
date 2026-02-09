@@ -4,7 +4,7 @@ import HeaderTasksTable from "../HeaderTasksTable";
 import { AuthUser } from "@/types/auth";
 import EmptyTasksState from "../EmptyTasksState";
 
-type Page = "all" | "overdue" | "started" | "completed";
+type Page = "all" | "pending" | "in_progress" | "completed";
 
 type TasksTableProps = {
   tasks: TaskDTO[];
