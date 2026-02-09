@@ -137,21 +137,21 @@ export function MobileHeaderMenu({ user }: Props) {
               </MenuLink>
 
               <MenuLink
-                href="/em-andamento"
+                href="/iniciadas"
                 onClick={() => setOpen(false)}
                 icon={<ClipboardClockIcon size={18} />}
-                active={pathname === "/em-andamento"}
+                active={pathname === "/iniciadas"}
               >
-                Em andamento
+                Iniciadas
               </MenuLink>
 
               <MenuLink
-                href="/pendentes"
+                href="/atrasadas"
                 onClick={() => setOpen(false)}
                 icon={<ClockAlertIcon size={18} />}
-                active={pathname === "/pendentes"}
+                active={pathname === "/atrasadas"}
               >
-                Pendentes
+                Atrasadas
               </MenuLink>
 
               <button
