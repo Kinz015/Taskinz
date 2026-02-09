@@ -3,6 +3,22 @@ import { prisma } from "@/lib/prisma";
 import { TaskStatus, Prisma } from "@prisma/client";
 import { requireAuth } from "@/lib/auth";
 
+export const runtime = "nodejs";
+
+async function syncOverdueStartedTasks(userId: string) {
+  const now = new Date();
+
+  // started + vencida => overdue
+  await prisma.task.updateMany({
+    where: {
+      authorId: userId,
+      status: TaskStatus.started,
+      dueAt: { not: null, lt: now },
+    },
+    data: { status: TaskStatus.overdue },
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const user = await requireAuth(); // 🔐 COOKIE AUTH
@@ -37,6 +53,8 @@ export async function POST(req: Request) {
       },
     });
 
+    await syncOverdueStartedTasks(user.id);
+
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
     console.log(error);
@@ -47,6 +65,8 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
   // 🔐 Protege a listagem
   const user = await requireAuth();
+
+  await syncOverdueStartedTasks(user.id);
 
   const { searchParams } = new URL(req.url);
 
