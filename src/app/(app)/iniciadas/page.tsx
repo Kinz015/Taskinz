@@ -10,10 +10,10 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 type EmAndamentoProps = {
-  searchParams: {
+  searchParams: Promise<{
     sort?: "dueAt" | "createdAt" | "updatedAt";
     order?: "asc" | "desc";
-  };
+  }>;
 };
 
 async function getBaseUrl() {
@@ -25,11 +25,14 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getIniciadasTasks(sort: string, order: string): Promise<TaskDTO[]> {
+async function getIniciadasTasks(
+  sort: string,
+  order: string,
+): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?status=started&sort=${sort}&order=${order}`
+    `${baseUrl}/api/tasks?status=started&sort=${sort}&order=${order}`,
   );
 
   if (!res.ok) {
@@ -48,8 +51,9 @@ export default async function Iniciada({ searchParams }: EmAndamentoProps) {
     redirect("/login");
   }
 
-  const sort = searchParams.sort ?? "createdAt";
-  const order = searchParams.order === "asc" ? "asc" : "desc";
+  const params = await searchParams;
+  const sort = params.sort ?? "createdAt";
+  const order = params.order === "asc" ? "asc" : "desc";
 
   const tasks = await getIniciadasTasks(sort, order);
 
@@ -57,7 +61,13 @@ export default async function Iniciada({ searchParams }: EmAndamentoProps) {
     <div className="flex flex-col min-h-screen">
       <Header title="Tarefas iniciadas" />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="started"/>
+        <TasksTable
+          tasks={tasks}
+          sort={sort}
+          order={order}
+          user={user}
+          page="started"
+        />
       </main>
     </div>
   );
