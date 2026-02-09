@@ -87,14 +87,14 @@ export function SideBar({ user }: SideBarProps) {
                 Concluídas
               </SidebarLink>
 
-              <SidebarLink href="/em-andamento">
+              <SidebarLink href="/iniciadas">
                 <ClipboardClockIcon />
-                Em andamento
+                Iniciadas
               </SidebarLink>
 
-              <SidebarLink href="/pendentes">
+              <SidebarLink href="/atrasadas">
                 <ClockAlertIcon />
-                Pendentes
+                Atrasadas
               </SidebarLink>
 
               <SidebarLink href="/projetos">

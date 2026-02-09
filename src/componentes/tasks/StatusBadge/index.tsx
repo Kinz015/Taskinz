@@ -5,11 +5,11 @@ const statusMap: Record<
   { label: string; className: string }
 > = {
   pending: {
-    label: "Pendente",
+    label: "Atrasada",
     className: "bg-[#A12D2F]"
   },
   in_progress: {
-    label: "Em andamento",
+    label: "Iniciada",
     className: "bg-[#D97706]"
   },
   completed: {
