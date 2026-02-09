@@ -53,7 +53,7 @@ export async function POST(req: Request) {
         imageUrl: user.imageUrl,
         isAdmin: user.isAdmin,
         createdAT: user.createdAt,
-        updatedAt: user.updatedAt
+        updatedAt: user.updatedAt,
       },
       process.env.JWT_SECRET!,
       { expiresIn: "7d" },
@@ -76,10 +76,15 @@ export async function POST(req: Request) {
     });
 
     return response;
-  } catch (error) {
-    console.error("LOGIN ERROR:", error);
+  } catch (err: any) {
+    console.error("LOGIN ERROR:", err);
     return NextResponse.json(
-      { error: "Erro interno no servidor" },
+      {
+        error: "Erro interno",
+        name: err?.name,
+        code: err?.code,
+        message: err?.message,
+      },
       { status: 500 },
     );
   }
