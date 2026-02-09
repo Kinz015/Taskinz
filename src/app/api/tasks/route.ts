@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     const validStatus = Object.values(TaskStatus).includes(status)
       ? status
-      : TaskStatus.pending;
+      : TaskStatus.overdue;
 
     const task = await prisma.task.create({
       data: {

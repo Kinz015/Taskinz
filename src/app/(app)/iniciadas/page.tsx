@@ -25,22 +25,22 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
-async function getEmAndamentoTasks(sort: string, order: string): Promise<TaskDTO[]> {
+async function getIniciadasTasks(sort: string, order: string): Promise<TaskDTO[]> {
   const baseUrl = await getBaseUrl();
 
   const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?status=in_progress&sort=${sort}&order=${order}`
+    `${baseUrl}/api/tasks?status=started&sort=${sort}&order=${order}`
   );
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks em andamento: ${res.status} ${text}`);
+    throw new Error(`Erro ao buscar tasks iniciadas: ${res.status} ${text}`);
   }
 
   return res.json();
 }
 
-export default async function EmAndamento({ searchParams }: EmAndamentoProps) {
+export default async function Iniciada({ searchParams }: EmAndamentoProps) {
   const user = await getLoggedUser();
 
   // ✅ continua: UX + evita request desnecessário
@@ -51,13 +51,13 @@ export default async function EmAndamento({ searchParams }: EmAndamentoProps) {
   const sort = searchParams.sort ?? "createdAt";
   const order = searchParams.order === "asc" ? "asc" : "desc";
 
-  const tasks = await getEmAndamentoTasks(sort, order);
+  const tasks = await getIniciadasTasks(sort, order);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas em andamento" />
+      <Header title="Tarefas iniciadas" />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="in_progress"/>
+        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="started"/>
       </main>
     </div>
   );

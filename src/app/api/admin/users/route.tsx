@@ -49,8 +49,8 @@ export async function GET(req: Request) {
       {
         tasksTotal: number;
         tasksConcluidas: number;
-        tasksEmAndamento: number;
-        tasksPendentes: number;
+        tasksIniciadas: number;
+        tasksAtrasadas: number;
       }
     >();
 
@@ -61,8 +61,8 @@ export async function GET(req: Request) {
       const entry = stats.get(uid) ?? {
         tasksTotal: 0,
         tasksConcluidas: 0,
-        tasksEmAndamento: 0,
-        tasksPendentes: 0,
+        tasksIniciadas: 0,
+        tasksAtrasadas: 0,
       };
 
       const c = row._count._all;
@@ -70,8 +70,8 @@ export async function GET(req: Request) {
       entry.tasksTotal += c;
 
       if (row.status === TaskStatus.completed) entry.tasksConcluidas += c;
-      if (row.status === TaskStatus.in_progress) entry.tasksEmAndamento += c;
-      if (row.status === TaskStatus.pending) entry.tasksPendentes += c;
+      if (row.status === TaskStatus.started) entry.tasksIniciadas += c;
+      if (row.status === TaskStatus.overdue) entry.tasksAtrasadas += c;
 
       stats.set(uid, entry);
     }
@@ -81,8 +81,8 @@ export async function GET(req: Request) {
       ...(stats.get(u.id) ?? {
         tasksTotal: 0,
         tasksConcluidas: 0,
-        tasksEmAndamento: 0,
-        tasksPendentes: 0,
+        tasksIniciadas: 0,
+        tasksAtrasadas: 0,
       }),
     }));
 

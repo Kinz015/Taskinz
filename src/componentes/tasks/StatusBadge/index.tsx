@@ -4,11 +4,11 @@ const statusMap: Record<
   TaskStatus,
   { label: string; className: string }
 > = {
-  pending: {
+  overdue: {
     label: "Atrasada",
     className: "bg-[#A12D2F]"
   },
-  in_progress: {
+  started: {
     label: "Iniciada",
     className: "bg-[#D97706]"
   },

@@ -1,4 +1,4 @@
-export type TaskStatus = "pending" | "in_progress" | "completed";
+export type TaskStatus = "overdue" | "started" | "completed";
 
 export type TaskDTO = {
   id: number;
