@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 enum TaskStatus {
@@ -34,19 +34,21 @@ enum InviteStatus {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String  @id @default(uuid())
+  email        String  @unique
   name         String
   passwordHash String
   imageUrl     String?
-  isAdmin      Boolean  @default(false)
+  isAdmin      Boolean @default(false)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Tasks
   authoredTasks Task[] @relation("TaskAuthor")
   assignedTasks Task[] @relation("TaskAssignee")
+
+  ownedProjects Project[] @relation("ProjectOwner")
 
   // Projects (membros)
   projectMemberships ProjectMember[]
@@ -59,19 +61,19 @@ model User {
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   title       String
   description String?
   imageUrl    String?
 
   // dono "principal" (útil pra UI/queries rápidas)
   ownerId String
-  owner   User @relation(fields: [ownerId], references: [id])
+  owner   User   @relation("ProjectOwner", fields: [ownerId], references: [id])
 
   // Relacionamentos
-  tasks    Task[]
-  members  ProjectMember[]
-  invites  ProjectInvite[]
+  tasks   Task[]
+  members ProjectMember[]
+  invites ProjectInvite[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -79,7 +81,6 @@ model Project {
   @@index([ownerId])
   @@map("projects")
 }
-
 
 model ProjectMember {
   id        Int         @id @default(autoincrement())
@@ -98,23 +99,23 @@ model ProjectMember {
 }
 
 model ProjectInvite {
-  id        Int          @id @default(autoincrement())
+  id        Int @id @default(autoincrement())
   projectId Int
 
   // Quem convidou
   inviterId String
-  inviter   User @relation("InviteFromUser", fields: [inviterId], references: [id])
+  inviter   User   @relation("InviteFromUser", fields: [inviterId], references: [id])
 
   // Quem foi convidado (pode ser null se convidar por email)
   inviteeId String?
-  invitee   User? @relation("InviteToUser", fields: [inviteeId], references: [id])
+  invitee   User?   @relation("InviteToUser", fields: [inviteeId], references: [id])
 
   inviteeEmail String // sempre salva o email, mesmo se não existir user ainda
 
   role   ProjectRole  @default(MEMBER)
   status InviteStatus @default(PENDING)
 
-  token     String   @unique // para aceitar por link ou notificação
+  token     String    @unique // para aceitar por link ou notificação
   expiresAt DateTime?
 
   createdAt DateTime @default(now())
@@ -141,10 +142,10 @@ model Task {
   project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
 
   authorId String
-  author   User @relation("TaskAuthor", fields: [authorId], references: [id])
+  author   User   @relation("TaskAuthor", fields: [authorId], references: [id])
 
   assigneeId String?
-  assignee   User? @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -154,4 +155,3 @@ model Task {
   @@index([assigneeId])
   @@map("tasks")
 }
-
