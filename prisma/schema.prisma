@@ -19,6 +19,115 @@ enum TaskStatus {
   completed
 }
 
+enum ProjectRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  CANCELED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  imageUrl     String?
+  isAdmin      Boolean  @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Tasks
+  authoredTasks Task[] @relation("TaskAuthor")
+  assignedTasks Task[] @relation("TaskAssignee")
+
+  // Projects (membros)
+  projectMemberships ProjectMember[]
+
+  // Convites recebidos/enviados
+  receivedInvites ProjectInvite[] @relation("InviteToUser")
+  sentInvites     ProjectInvite[] @relation("InviteFromUser")
+
+  @@map("users")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  imageUrl    String?
+
+  // dono "principal" (útil pra UI/queries rápidas)
+  ownerId String
+  owner   User @relation(fields: [ownerId], references: [id])
+
+  // Relacionamentos
+  tasks    Task[]
+  members  ProjectMember[]
+  invites  ProjectInvite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@map("projects")
+}
+
+
+model ProjectMember {
+  id        Int         @id @default(autoincrement())
+  projectId Int
+  userId    String
+  role      ProjectRole @default(MEMBER)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, userId]) // usuário não entra 2x no mesmo projeto
+  @@index([userId])
+  @@map("project_members")
+}
+
+model ProjectInvite {
+  id        Int          @id @default(autoincrement())
+  projectId Int
+
+  // Quem convidou
+  inviterId String
+  inviter   User @relation("InviteFromUser", fields: [inviterId], references: [id])
+
+  // Quem foi convidado (pode ser null se convidar por email)
+  inviteeId String?
+  invitee   User? @relation("InviteToUser", fields: [inviteeId], references: [id])
+
+  inviteeEmail String // sempre salva o email, mesmo se não existir user ainda
+
+  role   ProjectRole  @default(MEMBER)
+  status InviteStatus @default(PENDING)
+
+  token     String   @unique // para aceitar por link ou notificação
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([inviteeEmail])
+  @@index([inviteeId])
+  @@map("project_invites")
+}
+
 model Task {
   id          Int        @id @default(autoincrement())
   title       String
@@ -26,6 +135,10 @@ model Task {
   status      TaskStatus @default(started)
 
   dueAt DateTime?
+
+  // 🔥 liga com projeto (opcional ou obrigatório — você escolhe)
+  projectId Int?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
 
   authorId String
   author   User @relation("TaskAuthor", fields: [authorId], references: [id])
@@ -35,21 +148,10 @@ model Task {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([authorId])
+  @@index([assigneeId])
   @@map("tasks")
 }
 
-model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  name         String
-  passwordHash String
-  imageUrl     String?
-  isAdmin   Boolean  @default(false)
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  authoredTasks Task[] @relation("TaskAuthor")
-  assignedTasks Task[] @relation("TaskAssignee")
-  @@map("users")
-}
