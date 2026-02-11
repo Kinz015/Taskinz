@@ -1,4 +1,5 @@
 import { Header } from "@/componentes/Header";
+import NovoProjetoForm from "@/componentes/projetos/NovoProjetoForm";
 import { getLoggedUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -16,9 +17,7 @@ export default async function Projetos() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Área de projetos"/>
-      <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <p>novo-projetos</p>
-      </main>
+      <NovoProjetoForm/>
     </div>
   );
 }
