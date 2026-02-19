@@ -9,8 +9,34 @@ export default function NovoProjetoForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function addTag() {
+    const value = tagInput.trim().toLowerCase();
+
+    if (!value) return;
+
+    if (tags.length >= 5) {
+      setError("Máximo de 5 tags por projeto.");
+      return;
+    }
+
+    if (tags.includes(value)) {
+      setError("Essa tag já foi adicionada.");
+      return;
+    }
+
+    setTags([...tags, value]);
+    setTagInput("");
+    setError(null);
+  }
+
+  function removeTag(name: string) {
+    setTags(tags.filter((tag) => tag !== name));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,6 +57,7 @@ export default function NovoProjetoForm() {
           title: title.trim(),
           description: description.trim() || null,
           imageUrl: imageUrl.trim() || null,
+          tags,
         }),
       });
 
@@ -113,6 +140,47 @@ export default function NovoProjetoForm() {
               </button>
             ) : null}
           </div>
+
+          <label className="mt-5 block text-sm font-medium text-white/80">
+            Tags (máx. 5)
+          </label>
+
+          <div className="mt-2 flex gap-2">
+            <input
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              placeholder="Digite uma tag"
+              className="flex-1 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white outline-none placeholder:text-white/35"
+              maxLength={20}
+            />
+            <button
+              type="button"
+              onClick={addTag}
+              className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-black hover:bg-white/90"
+            >
+              Adicionar
+            </button>
+          </div>
+
+          {tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-white"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    className="text-white/60 hover:text-white"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
 
           {error ? (
             <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-200">

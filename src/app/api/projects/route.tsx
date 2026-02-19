@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const user = await requireAuth(); // 🔐 COOKIE AUTH
 
     const body = await req.json();
-    const { title, description, imageUrl } = body;
+    const { title, description, imageUrl, tags } = body;
     if (!title) {
       return NextResponse.json(
         { error: "Título é obrigatório" },
@@ -22,7 +22,9 @@ export async function POST(req: Request) {
         description,
         imageUrl,
         ownerId: user.id,
-
+        tags: {
+          create: tags.map((name: string) => ({ name })),
+        },
         // já cria o membro OWNER automaticamente
         members: {
           create: {

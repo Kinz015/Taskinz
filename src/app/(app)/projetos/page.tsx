@@ -32,6 +32,7 @@ export default async function Projetos() {
     },
     orderBy: { createdAt: "desc" },
     include: {
+      tags: true,
       _count: {
         select: { tasks: true, members: true },
       },
@@ -109,9 +110,13 @@ export default async function Projetos() {
                 <p className="mt-4 line-clamp-3 text-sm text-white/70">
                   {project.description}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Tag>NextJs</Tag>
-                </div>
+                {project.tags && project.tags.length > 0 ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <Tag key={tag.id}>{tag.name}</Tag>
+                    ))}
+                  </div>
+                ) : null}
               </Link>
             ))}
           </section>
