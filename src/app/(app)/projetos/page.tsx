@@ -1,41 +1,13 @@
 import { Header } from "@/componentes/Header";
-import { getLoggedUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { FolderIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-type Project = {
-  id: number;
-  title: string;
-  link: string;
-  img: string; // use /public/projects/... (recomendado)
-  description: string;
-  tags?: string[];
-};
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "Taskinz",
-    link: "https://taskinz.vercel.app",
-    img: "/projects/taskinz.png",
-    description:
-      "Gerenciador de tarefas e projetos com prazos, status e organização simples.",
-    tags: ["Next.js", "Prisma", "MySQL"],
-  },
-  {
-    id: 2,
-    title: "Linkinz",
-    link: "https://linkinz.vercel.app",
-    img: "/projects/linkinz.png",
-    description:
-      "Página de links personalizada para compartilhar tudo em um só lugar.",
-    tags: ["React", "UI"],
-  },
-];
 
 function Tag({ children }: { children: string }) {
   return (
@@ -46,11 +18,25 @@ function Tag({ children }: { children: string }) {
 }
 
 export default async function Projetos() {
-  const user = await getLoggedUser();
+  const user = await requireAuth();
 
   if (!user) {
     redirect("/login");
   }
+
+  const projects = await prisma.project.findMany({
+    where: {
+      members: {
+        some: { userId: user.id },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    include: {
+      _count: {
+        select: { tasks: true, members: true },
+      },
+    },
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -67,10 +53,10 @@ export default async function Projetos() {
           </header>
 
           <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p) => (
+            {projects.map((project) => (
               <Link
-                key={p.id}
-                href={p.link}
+                key={project.id}
+                href="#"
                 target="_blank"
                 rel="noreferrer"
                 className="group rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-white/20 hover:bg-white/7"
@@ -78,20 +64,23 @@ export default async function Projetos() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="relative h-10 w-10 overflow-hidden rounded-xl border border-white/10 bg-black/20">
-                      <Image
-                        src={p.img}
-                        alt={p.title}
-                        fill
-                        className="object-cover"
-                        sizes="40px"
-                      />
+                      {project.imageUrl ? (
+                        <Image
+                          src={project.imageUrl}
+                          alt={project.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <FolderIcon className="h-5 w-5 text-white/50" />
+                      )}
                     </div>
                     <div className="min-w-0">
                       <h2 className="truncate text-base font-semibold text-white">
-                        {p.title}
+                        {project.title}
                       </h2>
                       <p className="truncate text-xs text-white/60">
-                        {new URL(p.link).host}
+                        https://linkAleatorio
                       </p>
                     </div>
                   </div>
@@ -103,26 +92,26 @@ export default async function Projetos() {
 
                 <div className="mt-4">
                   <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black/20">
-                    <Image
-                      src={p.img}
-                      alt={`Preview de ${p.title}`}
-                      fill
-                      className="object-cover transition group-hover:scale-[1.02]"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
+                    {project.imageUrl ? (
+                      <Image
+                        src={project.imageUrl}
+                        alt={`Preview de ${project.title}`}
+                        fill
+                        className="object-cover transition group-hover:scale-[1.02]"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <FolderIcon className="h-5 w-5 text-white/50" />
+                    )}
                   </div>
                 </div>
 
                 <p className="mt-4 line-clamp-3 text-sm text-white/70">
-                  {p.description}
+                  {project.description}
                 </p>
-                {p.tags?.length ? (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <Tag key={t}>{t}</Tag>
-                    ))}
-                  </div>
-                ) : null}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Tag>NextJs</Tag>
+                </div>
               </Link>
             ))}
           </section>

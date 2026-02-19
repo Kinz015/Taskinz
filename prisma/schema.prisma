@@ -65,6 +65,7 @@ model Project {
   title       String
   description String?
   imageUrl    String?
+  tags      Tag[]
 
   // dono "principal" (útil pra UI/queries rápidas)
   ownerId String
@@ -154,4 +155,14 @@ model Task {
   @@index([authorId])
   @@index([assigneeId])
   @@map("tasks")
+}
+
+model Tag {
+  id        Int     @id @default(autoincrement())
+  name      String
+
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
 }
