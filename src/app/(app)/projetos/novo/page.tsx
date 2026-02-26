@@ -13,7 +13,6 @@ export default async function Projetos() {
     redirect("/login");
   }
 
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Área de projetos"/>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FolderPlus, Image as ImageIcon, X } from "lucide-react";
 
@@ -8,11 +8,31 @@ export default function NovoProjetoForm() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Selecione uma imagem válida.");
+      return;
+    }
+
+    // ✅ revoga preview antigo
+    setPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+
+    setSelectedFile(file);
+  }
 
   function addTag() {
     const value = tagInput.trim().toLowerCase();
@@ -49,16 +69,19 @@ export default function NovoProjetoForm() {
 
     setLoading(true);
     try {
+      const formData = new FormData();
+      formData.append("title", title.trim());
+      formData.append("description", description.trim());
+      formData.append("tags", JSON.stringify(tags));
+
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      }
+
       const res = await fetch("/api/projects", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim() || null,
-          imageUrl: imageUrl.trim() || null,
-          tags,
-        }),
+        body: formData,
       });
 
       const data = await res.json().catch(() => ({}));
@@ -119,27 +142,52 @@ export default function NovoProjetoForm() {
           />
 
           <label className="mt-5 block text-sm font-medium text-white/80">
-            Imagem (URL opcional)
+            Imagem do Projeto
           </label>
+
           <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 focus-within:border-white/20">
             <ImageIcon className="h-5 w-5 text-white/50" />
+
             <input
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full bg-transparent text-sm text-white outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-4 file:py-1 file:text-white hover:file:bg-white/20"
             />
-            {imageUrl.trim() ? (
+          </div>
+
+          {previewUrl ? (
+            <div className="mt-4 relative h-48 w-48 overflow-hidden rounded-xl border border-white/10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="h-full w-full object-cover"
+              />
+
               <button
                 type="button"
-                onClick={() => setImageUrl("")}
-                className="rounded-lg p-1 text-white/60 hover:bg-white/10 hover:text-white"
-                aria-label="Limpar imagem"
+                onClick={() => {
+                  setSelectedFile(null);
+                  setPreviewUrl((prev) => {
+                    if (prev) URL.revokeObjectURL(prev);
+                    return null;
+                  });
+
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                }}
+                className="absolute top-2 right-2 rounded-full bg-black/60 p-2 text-white hover:bg-black/80 transition"
+                aria-label="Remover imagem"
               >
                 <X className="h-4 w-4" />
               </button>
-            ) : null}
-          </div>
+            </div>
+          ) : (
+            <div className="mt-4 text-xs text-white/50 italic">
+              Nenhuma imagem selecionada.
+            </div>
+          )}
 
           <label className="mt-5 block text-sm font-medium text-white/80">
             Tags (máx. 5)
