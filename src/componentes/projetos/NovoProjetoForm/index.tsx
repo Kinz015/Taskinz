@@ -162,7 +162,7 @@ export default function NovoProjetoForm() {
             </button>
           </div>
 
-          {tags.length > 0 && (
+          {tags.length > 0 ? (
             <div className="mt-3 flex flex-wrap gap-2">
               {tags.map((tag) => (
                 <span
@@ -179,6 +179,10 @@ export default function NovoProjetoForm() {
                   </button>
                 </span>
               ))}
+            </div>
+          ) : (
+            <div className="mt-3 text-xs text-white/50 italic">
+              Sem tags vinculadas.
             </div>
           )}
 

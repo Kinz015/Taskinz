@@ -116,7 +116,11 @@ export default async function Projetos() {
                       <Tag key={tag.id}>{tag.name}</Tag>
                     ))}
                   </div>
-                ) : null}
+                ) : (
+                  <div className="mt-4 text-xs text-white/50 italic">
+                    Nenhuma tag vinculada.
+                  </div>
+                )}
               </Link>
             ))}
           </section>
