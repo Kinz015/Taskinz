@@ -1,6 +1,6 @@
 import { Header } from "@/componentes/Header";
 import UsersTable from "@/componentes/users/UsersTable";
-import { getLoggedUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { AdminUserRow } from "@/types/user";
 import { headers } from "next/headers";
@@ -43,7 +43,7 @@ async function getUsers(sort: string, order: string): Promise<AdminUserRow[]> {
 export default async function TodosOsUsers({
   searchParams,
 }: TodosOsUsersProps) {
-  const user = await getLoggedUser(); // ✅ dentro do request
+  const user = await requireAuth(); // ✅ dentro do request
 
   if (!user) redirect("/login");
   if (!user.isAdmin) notFound();

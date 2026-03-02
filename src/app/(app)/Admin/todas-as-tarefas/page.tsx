@@ -1,6 +1,6 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
-import { getLoggedUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { TaskDTO } from "@/types/task";
 import { headers } from "next/headers";
@@ -43,7 +43,7 @@ async function getTasks(sort: string, order: string): Promise<TaskDTO[]> {
 export default async function TodasAsTasks({
   searchParams,
 }: TodasAsTasksProps) {
-  const user = await getLoggedUser(); // ✅ dentro do request
+  const user = await requireAuth(); // ✅ dentro do request
 
   if (!user) redirect("/login");
   if (!user.isAdmin) notFound();

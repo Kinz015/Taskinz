@@ -57,9 +57,7 @@ export default async function Projetos() {
             {projects.map((project) => (
               <Link
                 key={project.id}
-                href="#"
-                target="_blank"
-                rel="noreferrer"
+                href={`/projetos/${project.id}`}
                 className="group rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:border-white/20 hover:bg-white/7"
               >
                 <div className="flex items-start justify-between gap-3">

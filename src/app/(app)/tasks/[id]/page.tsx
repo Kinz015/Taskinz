@@ -11,9 +11,10 @@ type TaskPageProps = {
 };
 
 export default async function TaskPage({ params }: TaskPageProps) {
-  const { id } = await params;
   const user = await requireAuth();
   if (!user) redirect("/login");
+
+  const { id } = await params;
 
   const task = await getTaskForUser(Number(id), user.id);
   if (!task) notFound();

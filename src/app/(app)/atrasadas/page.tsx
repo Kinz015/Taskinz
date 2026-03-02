@@ -1,6 +1,6 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
-import { getLoggedUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { TaskDTO } from "@/types/task";
 import { headers } from "next/headers";
@@ -41,7 +41,7 @@ async function getAtrasadasTasks(sort: string, order: string): Promise<TaskDTO[]
 }
 
 export default async function Atrasadas({ searchParams }: AtrasadasProps) {
-  const user = await getLoggedUser();
+  const user = await requireAuth();
 
   if (!user) {
     redirect("/login");

@@ -1,13 +1,13 @@
 import { Header } from "@/componentes/Header";
 import NovoProjetoForm from "@/componentes/projetos/NovoProjetoForm";
-import { getLoggedUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Projetos() {
-  const user = await getLoggedUser();
+  const user = await requireAuth();
 
   if (!user) {
     redirect("/login");
