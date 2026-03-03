@@ -1,9 +1,8 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
-import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { prisma } from "@/lib/prisma";
 import { TaskDTO } from "@/types/task";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -16,30 +15,6 @@ type AtrasadasProps = {
   }>;
 };
 
-async function getBaseUrl() {
-  const h = await headers();
-  const host = h.get("host");
-  if (!host) throw new Error("Host header ausente");
-
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  return `${protocol}://${host}`;
-}
-
-async function getAtrasadasTasks(sort: string, order: string): Promise<TaskDTO[]> {
-  const baseUrl = await getBaseUrl();
-
-  const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?status=overdue&sort=${sort}&order=${order}`
-  );
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks atrasadas: ${res.status} ${text}`);
-  }
-
-  return res.json();
-}
-
 export default async function Atrasadas({ searchParams }: AtrasadasProps) {
   const user = await requireAuth();
 
@@ -51,13 +26,39 @@ export default async function Atrasadas({ searchParams }: AtrasadasProps) {
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
 
-  const tasks = await getAtrasadasTasks(sort, order);
+  const tasksRaw = await prisma.task.findMany({
+    where: {
+      authorId: user.id,
+      projectId: null,
+      status: "overdue", // ← ESSENCIAL
+    },
+    orderBy: {
+      [sort]: order,
+    },
+    include: {
+      author: true,
+      assignee: true,
+    },
+  });
+
+  const tasks: TaskDTO[] = tasksRaw.map((task) => ({
+    ...task,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+    dueAt: task.dueAt ? task.dueAt.toISOString() : null,
+  }));
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas atrasadas"/>
+      <Header title="Tarefas atrasadas" />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable tasks={tasks} sort={sort} order={order} user={user} page="overdue"/>
+        <TasksTable
+          tasks={tasks}
+          sort={sort}
+          order={order}
+          user={user}
+          page="overdue"
+        />
       </main>
     </div>
   );
