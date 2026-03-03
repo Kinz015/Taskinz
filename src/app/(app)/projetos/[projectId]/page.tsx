@@ -6,7 +6,13 @@ import { notFound, redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default async function Projetos({ params }: string) {
+type ProjectPageProps = {
+  params: Promise<{
+    projectId: string;
+  }>;
+};
+
+export default async function Projetos({ params }: ProjectPageProps) {
   const user = await requireAuth();
 
   if (!user) {
@@ -43,7 +49,7 @@ export default async function Projetos({ params }: string) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Área de projetos" />
+      <Header title={project.title} />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
         <h1>{project.title}</h1>
       </main>

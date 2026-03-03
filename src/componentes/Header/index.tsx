@@ -60,6 +60,17 @@ export async function Header({ title }: HeaderProps) {
           {title}
         </h1>
         <div className="flex items-center gap-2 mr-10">
+          {user.isAdmin && (
+            <span
+              className="
+              inline-flex items-center rounded-full
+              border border-red-500/30 bg-red-500/10
+              px-2 py-0.5 text-[11px] font-semibold 
+              tracking-wide text-red-200 shadow-sm shadow-red-500/10"
+            >
+              ADM
+            </span>
+          )}
           <Link href="/meu-perfil" className="flex items-center gap-2">
             <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
               {user.imageUrl ? (
@@ -79,17 +90,6 @@ export async function Header({ title }: HeaderProps) {
               {user.name ?? user.email ?? "Usuário"}
             </span>
           </Link>
-          {user.isAdmin && (
-            <span
-              className="
-              inline-flex items-center rounded-full
-              border border-red-500/30 bg-red-500/10
-              px-2 py-0.5 text-[11px] font-semibold 
-              tracking-wide text-red-200 shadow-sm shadow-red-500/10"
-            >
-              ADM
-            </span>
-          )}
         </div>
       </div>
     </header>
