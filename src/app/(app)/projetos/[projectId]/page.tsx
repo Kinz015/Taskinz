@@ -1,10 +1,8 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
-import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { prisma } from "@/lib/prisma";
 import { TaskDTO } from "@/types/task";
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -19,30 +17,6 @@ type ProjectPageProps = {
     order?: "asc" | "desc";
   }>;
 };
-
-async function getBaseUrl() {
-  const h = await headers();
-  const host = h.get("host");
-  if (!host) throw new Error("Host header ausente");
-
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  return `${protocol}://${host}`;
-}
-
-async function getTasks(sort: string, order: string): Promise<TaskDTO[]> {
-  const baseUrl = await getBaseUrl();
-
-  const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?sort=${sort}&order=${order}`,
-  );
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar todas as tarefas: ${res.status} ${text}`);
-  }
-
-  return res.json();
-}
 
 export default async function Projetos({
   params,
@@ -86,7 +60,21 @@ export default async function Projetos({
   const sort = resolvedSearch.sort ?? "createdAt";
   const order = resolvedSearch.order === "asc" ? "asc" : "desc";
 
-  const tasks = await getTasks(sort, order);
+  const tasksRaw = await prisma.task.findMany({
+    where: { projectId },
+    orderBy: { [sort]: order },
+    include: {
+      author: true,
+      assignee: true,
+    },
+  });
+
+  const tasks: TaskDTO[] = tasksRaw.map((task) => ({
+    ...task,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+    dueAt: task.dueAt ? task.dueAt.toISOString() : null,
+  }));
 
   return (
     <>

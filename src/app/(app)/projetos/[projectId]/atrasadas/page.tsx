@@ -1,74 +1,94 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
-import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { prisma } from "@/lib/prisma";
 import { TaskDTO } from "@/types/task";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-type EmAndamentoProps = {
+type AtrasadasProps = {
+  params: Promise<{
+    projectId: string;
+  }>;
   searchParams: Promise<{
     sort?: "dueAt" | "createdAt" | "updatedAt";
     order?: "asc" | "desc";
   }>;
 };
 
-async function getBaseUrl() {
-  const h = await headers();
-  const host = h.get("host");
-  if (!host) throw new Error("Host header ausente");
-
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  return `${protocol}://${host}`;
-}
-
-async function getIniciadasTasks(
-  sort: string,
-  order: string,
-): Promise<TaskDTO[]> {
-  const baseUrl = await getBaseUrl();
-
-  const res = await fetchWithAuth(
-    `${baseUrl}/api/tasks?status=started&sort=${sort}&order=${order}`,
-  );
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Erro ao buscar tasks iniciadas: ${res.status} ${text}`);
-  }
-
-  return res.json();
-}
-
-export default async function Iniciada({ searchParams }: EmAndamentoProps) {
+export default async function Atrasadas({
+  params,
+  searchParams,
+}: AtrasadasProps) {
   const user = await requireAuth();
 
-  // ✅ continua: UX + evita request desnecessário
   if (!user) {
     redirect("/login");
   }
 
-  const params = await searchParams;
-  const sort = params.sort ?? "createdAt";
-  const order = params.order === "asc" ? "asc" : "desc";
+  const resolvedParams = await params;
+  const projectId = Number(resolvedParams.projectId);
 
-  const tasks = await getIniciadasTasks(sort, order);
+  const project = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      members: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
+    include: {
+      members: {
+        include: {
+          user: true,
+        },
+      },
+      tasks: true,
+    },
+  });
+
+  if (!project) {
+    return notFound();
+  }
+
+  if (isNaN(projectId)) return notFound();
+
+  const resolvedSearch = await searchParams;
+  const sort = resolvedSearch.sort ?? "createdAt";
+  const order = resolvedSearch.order === "asc" ? "asc" : "desc";
+
+  const tasksRaw = await prisma.task.findMany({
+    where: {
+      projectId,
+      status: "overdue",
+    },
+    orderBy: { [sort]: order },
+    include: {
+      author: true,
+      assignee: true,
+    },
+  });
+
+  const tasks: TaskDTO[] = tasksRaw.map((task) => ({
+    ...task,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+    dueAt: task.dueAt ? task.dueAt.toISOString() : null,
+  }));
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas iniciadas" />
-      <main className="flex flex-1 flex-col bg-[#2a2a2a]">
-        <TasksTable
-          tasks={tasks}
-          sort={sort}
-          order={order}
-          user={user}
-          page="started"
-        />
-      </main>
-    </div>
+    <>
+      <Header title={project.title} />
+      <TasksTable
+        tasks={tasks}
+        sort={sort}
+        order={order}
+        user={user}
+        page="overdue"
+      />
+    </>
   );
 }
