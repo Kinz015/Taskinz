@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     const user = await requireAuth(); // 🔐 COOKIE AUTH
 
     const body = await req.json();
-    const { title, description, dueAt, status } = body;
+    const { title, description, dueAt, status, projectId } = body;
 
     if (!title) {
       return NextResponse.json(
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         description,
         dueAt: dueAt ? new Date(dueAt) : null,
         status: validStatus,
-
+        projectId,
         authorId: user.id, // 🔒 dono SEMPRE vem do cookie
         assigneeId: user.id,
       },

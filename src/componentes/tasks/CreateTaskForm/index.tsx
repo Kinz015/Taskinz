@@ -23,6 +23,7 @@ export default function CreateTaskForm({
   const [description, setDescription] = useState("");
   const [dueAt, setDueAt] = useState("");
   const [status, setStatus] = useState("");
+  const [assigneeId, setAssigneeId] = useState<string>(user.id);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,9 +42,10 @@ export default function CreateTaskForm({
       body: JSON.stringify({
         title,
         description,
-        dueAt: dueAt || null,
-        status,
-        // ✅ não envia assigneeId: responsável = author (no backend)
+        dueAt: dueAt ? new Date(dueAt).toISOString() : null,
+        status, // "started" | "completed" | "overdue"
+        projectId, // number
+        assigneeId, // string (id do usuário escolhido)
       }),
     });
 
@@ -60,6 +62,7 @@ export default function CreateTaskForm({
     setDescription("");
     setDueAt("");
     setStatus("overdue");
+    setAssigneeId(user.id);
     setLoading(false);
   }
 
@@ -94,11 +97,14 @@ export default function CreateTaskForm({
           />
         </div>
 
-        {/* Responsável (autor logado) */}
         <div>
           <label className={labelBase}>Responsável</label>
           {projectId ? (
-            <select className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80">
+            <select
+              value={assigneeId}
+              onChange={(e) => setAssigneeId(e.target.value)}
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80"
+            >
               {members?.map((member) => (
                 <option key={member.user.id} className="bg-[#1b1b1f]">
                   {member.user.name}
