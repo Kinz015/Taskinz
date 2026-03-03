@@ -23,7 +23,7 @@ export function projetoInternoMenu(
       icon: ClipboardListIcon,
     },
     {
-      href: "/adicionar-tarefa",
+      href: `/projetos/${projectId}/adicionar-tarefa`,
       label: "Adicionar tarefa",
       icon: ClipboardPlusIcon,
     },

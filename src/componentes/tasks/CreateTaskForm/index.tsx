@@ -5,9 +5,20 @@ import { useState } from "react";
 
 type CreateTaskFormProps = {
   user: AuthUser;
+  projectId?: number;
+  members?: {
+    user: {
+      id: string;
+      name: string;
+    };
+  }[];
 };
 
-export default function CreateTaskForm({ user }: CreateTaskFormProps) {
+export default function CreateTaskForm({
+  user,
+  projectId,
+  members,
+}: CreateTaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueAt, setDueAt] = useState("");
@@ -86,12 +97,24 @@ export default function CreateTaskForm({ user }: CreateTaskFormProps) {
         {/* Responsável (autor logado) */}
         <div>
           <label className={labelBase}>Responsável</label>
-          <div className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80">
-            {user.name}
-          </div>
-          <p className="mt-1 text-xs text-white/40">
-            O responsável desta task será o usuário logado.
-          </p>
+          {projectId ? (
+            <select className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80">
+              {members?.map((member) => (
+                <option key={member.user.id} className="bg-[#1b1b1f]">
+                  {member.user.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <>
+              <div className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80">
+                {user.name}
+              </div>
+              <p className="mt-1 text-xs text-white/40">
+                O responsável desta task será o usuário logado.
+              </p>
+            </>
+          )}
         </div>
 
         <div>
