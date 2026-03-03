@@ -7,6 +7,7 @@ import {
   BookUserIcon,
   FolderKanbanIcon,
   FoldersIcon,
+  ClipboardPlusIcon,
 } from "lucide-react";
 
 import { MenuItem } from "@/types/menus";
@@ -20,6 +21,11 @@ export function projetoInternoMenu(
       href: `/projetos/${projectId}`,
       label: "Todas as tarefas",
       icon: ClipboardListIcon,
+    },
+    {
+      href: "/adicionar-tarefa",
+      label: "Adicionar tarefa",
+      icon: ClipboardPlusIcon,
     },
     {
       href: `/projetos/${projectId}/iniciadas`,

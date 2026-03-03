@@ -62,6 +62,12 @@ export function SideBar({ user, projectRole }: SideBarProps) {
         </Link>
 
         <nav className="flex flex-1 flex-col gap-2 mx-2">
+          {!isPessoal ? (
+            <>
+              <hr className="text-gray-500" />
+              <h2 className="p-2 font-bold">Área de projetos</h2>
+            </>
+          ) : null}
           <SidebarMenu items={menu} user={user} />
         </nav>
       </div>
