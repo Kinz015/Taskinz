@@ -16,7 +16,7 @@ type HomeProps = {
 };
 
 export default async function Home({ searchParams }: HomeProps) {
-  const user = await requireAuth(); // ✅ dentro do request
+  const user = await requireAuth();
 
   if (!user) {
     redirect("/login");
