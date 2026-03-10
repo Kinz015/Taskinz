@@ -18,7 +18,7 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
     redirect("/login");
   }
 
-    const invites = await getUserInvites(user.id, user.email);
+  const invites = await getUserInvites(user.id, user.email);
 
   const { id } = await params;
   const taskId = Number(id);
