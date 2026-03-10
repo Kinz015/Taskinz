@@ -70,15 +70,6 @@ export function Header({ title, user, invites }: HeaderProps) {
           {title}
         </h1>
         <div className="flex items-center gap-2 mr-10">
-          <div className="relative">
-            <BellIcon color="white" />
-            {invites.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
-                {invites.length}
-              </span>
-            )}
-          </div>
-
           {user.isAdmin && (
             <span
               className="
@@ -90,6 +81,14 @@ export function Header({ title, user, invites }: HeaderProps) {
               ADM
             </span>
           )}
+          <div className="relative">
+            <BellIcon color="white" />
+            {invites.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+                {invites.length}
+              </span>
+            )}
+          </div>
           <Link href="/meu-perfil" className="flex items-center gap-2">
             <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
               {user.imageUrl ? (
