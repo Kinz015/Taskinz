@@ -17,9 +17,9 @@ export function Header({ title, user, invites }: HeaderProps) {
   if (!user) redirect("/login");
 
   if (invites.length > 0) {
-    console.log("tem convites");
+    // Tem convite;
   } else {
-    console.log("Não tem convites");
+    // Sem convite;
   }
 
   return (

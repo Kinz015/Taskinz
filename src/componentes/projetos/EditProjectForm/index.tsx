@@ -23,7 +23,7 @@ export default function EditProjectForm({
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault();
 
-    await fetch(`/api/projects/${projectId}`, {
+    const res = await fetch(`/api/projects/${projectId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -33,7 +33,12 @@ export default function EditProjectForm({
       }),
     });
 
-    alert("Projeto atualizado");
+    if (!res.ok) {
+      alert("Erro ao atualizar projeto");
+      return;
+    }
+
+    alert("Projeto atualizado com sucesso");
   }
 
   async function handleInvite(e: React.FormEvent) {
