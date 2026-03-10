@@ -2,6 +2,7 @@ import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { getUserInvites } from "@/lib/invites";
 import { TaskDTO } from "@/types/task";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
@@ -54,9 +55,11 @@ export default async function TodasAsTasks({
 
   const tasks = await getTasks(sort, order);
 
+  const invites = await getUserInvites(user.id, user.email);
+
   return (
     <>
-      <Header title="Todas as tarefas" />
+      <Header title="Todas as tarefas" user={user} invites={invites} />
       <TasksTable
         tasks={tasks}
         sort={sort}

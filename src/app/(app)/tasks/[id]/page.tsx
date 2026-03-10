@@ -1,5 +1,6 @@
 import { Header } from "@/componentes/Header";
 import { requireAuth } from "@/lib/auth";
+import { getUserInvites } from "@/lib/invites";
 import { getTaskForUser } from "@/lib/tasks";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -14,6 +15,8 @@ export default async function TaskPage({ params }: TaskPageProps) {
   const user = await requireAuth();
   if (!user) redirect("/login");
 
+  const invites = await getUserInvites(user.id, user.email);
+
   const { id } = await params;
 
   const task = await getTaskForUser(Number(id), user.id);
@@ -21,7 +24,7 @@ export default async function TaskPage({ params }: TaskPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#1f1f1f]">
-      <Header title={`Task: ${task.title}`} />
+      <Header title={`Task: ${task.title}`} user={user} invites={invites} />
 
       <main className="flex flex-1 items-start justify-center p-6 text-white">
         <div className="w-full max-w-2xl rounded-lg bg-[#2a2a2a] p-6 shadow-lg">

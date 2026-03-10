@@ -1,6 +1,7 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
+import { getUserInvites } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { TaskDTO } from "@/types/task";
 import { redirect } from "next/navigation";
@@ -17,6 +18,7 @@ type CompletedProps = {
 
 export default async function Concluidas({ searchParams }: CompletedProps) {
   const user = await requireAuth();
+  const invites = await getUserInvites(user.id, user.email);
 
   if (!user) redirect("/login");
 
@@ -48,7 +50,7 @@ export default async function Concluidas({ searchParams }: CompletedProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Tarefas concluídas" />
+      <Header title="Tarefas concluídas" user={user} invites={invites} />
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
         <TasksTable
           tasks={tasks}

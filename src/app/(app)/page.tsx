@@ -1,6 +1,7 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
+import { getUserInvites } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { TaskDTO } from "@/types/task";
 import { redirect } from "next/navigation";
@@ -22,6 +23,8 @@ export default async function Home({ searchParams }: HomeProps) {
     redirect("/login");
   }
 
+  const invites = await getUserInvites(user.id, user.email);
+
   const params = await searchParams;
   const sort = params.sort ?? "createdAt";
   const order = params.order === "asc" ? "asc" : "desc";
@@ -40,17 +43,6 @@ export default async function Home({ searchParams }: HomeProps) {
     },
   });
 
-  const invites = await prisma.projectInvite.findMany({
-    where: {
-      status: "PENDING",
-      OR: [{ inviteeId: user.id }, { inviteeEmail: user.email }],
-    },
-    include: {
-      project: true,
-      inviter: true,
-    },
-  });
-
   const tasks: TaskDTO[] = tasksRaw.map((task) => ({
     ...task,
     createdAt: task.createdAt.toISOString(),
@@ -60,7 +52,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <>
-      <Header title="Todas as tarefas" user={user} invites={invites}/>
+      <Header title="Todas as tarefas" user={user} invites={invites} />
       <TasksTable
         tasks={tasks}
         sort={sort}

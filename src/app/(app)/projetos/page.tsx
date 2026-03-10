@@ -1,5 +1,6 @@
 import { Header } from "@/componentes/Header";
 import { requireAuth } from "@/lib/auth";
+import { getUserInvites } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { FolderIcon } from "lucide-react";
 import Image from "next/image";
@@ -24,6 +25,8 @@ export default async function Projetos() {
     redirect("/login");
   }
 
+  const invites = await getUserInvites(user.id, user.email);
+
   const projects = await prisma.project.findMany({
     where: {
       members: {
@@ -41,7 +44,7 @@ export default async function Projetos() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Meus projetos" />
+      <Header title="Meus projetos" user={user} invites={invites}  />
       <main className="min-h-screen bg-[#0f0f12] px-4 py-10 sm:px-8">
         <div className="mx-auto w-full max-w-6xl">
           <header className="mb-8 flex flex-col gap-2">

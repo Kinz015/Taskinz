@@ -2,6 +2,7 @@ import { Header } from "@/componentes/Header";
 import UsersTable from "@/componentes/users/UsersTable";
 import { requireAuth } from "@/lib/auth";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { getUserInvites } from "@/lib/invites";
 import { AdminUserRow } from "@/types/user";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
@@ -55,9 +56,11 @@ export default async function TodosOsUsers({
 
   const users = await getUsers(sort, order);
 
+  const invites = await getUserInvites(user.id, user.email);
+
   return (
     <>
-      <Header title="Todos os usuários" />
+      <Header title="Todos os usuários" user={user} invites={invites} />
       <UsersTable users={users} sort={sort} order={order} />
     </>
   );

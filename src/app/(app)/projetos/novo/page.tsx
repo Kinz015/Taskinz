@@ -1,6 +1,7 @@
 import { Header } from "@/componentes/Header";
 import NovoProjetoForm from "@/componentes/projetos/NovoProjetoForm";
 import { requireAuth } from "@/lib/auth";
+import { getUserInvites } from "@/lib/invites";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -8,6 +9,7 @@ export const revalidate = 0;
 
 export default async function Projetos() {
   const user = await requireAuth();
+  const invites = await getUserInvites(user.id, user.email);
 
   if (!user) {
     redirect("/login");
@@ -15,8 +17,8 @@ export default async function Projetos() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Área de projetos"/>
-      <NovoProjetoForm/>
+      <Header title="Criar projeto" user={user} invites={invites} />
+      <NovoProjetoForm />
     </div>
   );
 }

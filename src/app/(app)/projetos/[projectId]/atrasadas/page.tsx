@@ -1,6 +1,7 @@
 import { Header } from "@/componentes/Header";
 import TasksTable from "@/componentes/tasks/TaskTable";
 import { requireAuth } from "@/lib/auth";
+import { getUserInvites } from "@/lib/invites";
 import { prisma } from "@/lib/prisma";
 import { TaskDTO } from "@/types/task";
 import { notFound, redirect } from "next/navigation";
@@ -23,6 +24,7 @@ export default async function Atrasadas({
   searchParams,
 }: AtrasadasProps) {
   const user = await requireAuth();
+  const invites = await getUserInvites(user.id, user.email);
 
   if (!user) {
     redirect("/login");
@@ -81,7 +83,7 @@ export default async function Atrasadas({
 
   return (
     <>
-      <Header title={project.title} />
+      <Header title={`${project.title}: Atrasadas`} user={user} invites={invites} />
       <TasksTable
         tasks={tasks}
         sort={sort}
