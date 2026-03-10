@@ -1,16 +1,26 @@
-import { CircleUserRoundIcon } from "lucide-react";
+"use client";
+
+import { BellIcon, CircleUserRoundIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MobileHeaderMenu } from "../MobileHeaderMenu";
-import { requireAuth } from "@/lib/auth";
+import { AuthUser } from "@/types/auth";
+import { ProjectInvite } from "@prisma/client";
 
 type HeaderProps = {
   title: string;
+  user: AuthUser;
+  invites: ProjectInvite[];
 };
 
-export async function Header({ title }: HeaderProps) {
-  const user = await requireAuth();
+export function Header({ title, user, invites }: HeaderProps) {
   if (!user) redirect("/login");
+
+  if (invites.length > 0) {
+    console.log("tem convites");
+  } else {
+    console.log("Não tem convites");
+  }
 
   return (
     <header
@@ -60,6 +70,15 @@ export async function Header({ title }: HeaderProps) {
           {title}
         </h1>
         <div className="flex items-center gap-2 mr-10">
+          <div className="relative">
+            <BellIcon color="white" />
+            {invites.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
+                {invites.length}
+              </span>
+            )}
+          </div>
+
           {user.isAdmin && (
             <span
               className="

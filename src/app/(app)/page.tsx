@@ -40,6 +40,17 @@ export default async function Home({ searchParams }: HomeProps) {
     },
   });
 
+  const invites = await prisma.projectInvite.findMany({
+    where: {
+      status: "PENDING",
+      OR: [{ inviteeId: user.id }, { inviteeEmail: user.email }],
+    },
+    include: {
+      project: true,
+      inviter: true,
+    },
+  });
+
   const tasks: TaskDTO[] = tasksRaw.map((task) => ({
     ...task,
     createdAt: task.createdAt.toISOString(),
@@ -49,7 +60,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <>
-      <Header title="Todas as tarefas" />
+      <Header title="Todas as tarefas" user={user} invites={invites}/>
       <TasksTable
         tasks={tasks}
         sort={sort}
