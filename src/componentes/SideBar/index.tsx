@@ -12,6 +12,7 @@ import { MenuItem } from "@/types/menus";
 import { SidebarMenu } from "./SideBarMenu";
 import { projetoInternoMenu } from "./projetoInternoMenu";
 import { ProjectRole } from "@prisma/client";
+import { useEffect, useState } from "react";
 
 type SideBarProps = {
   user: AuthUser;
@@ -31,7 +32,25 @@ export function SideBar({ user, projectRole }: SideBarProps) {
 
   const projectId = isProjetoInterno ? pathname.split("/")[2] : null;
 
-  const isAdm = projectRole === "OWNER" || projectRole === "ADMIN";
+  const [role, setRole] = useState<ProjectRole | null>(projectRole ?? null);
+
+  useEffect(() => {
+    if (!projectId) return;
+
+    async function fetchRole() {
+      try {
+        const res = await fetch(`/api/projects/${projectId}/role`);
+        const data = await res.json();
+        setRole(data.role);
+      } catch (error) {
+        console.error("Erro ao buscar role:", error);
+      }
+    }
+
+    fetchRole();
+  }, [projectId]);
+
+  const isAdm = role === "OWNER" || role === "ADMIN";
 
   let menu: MenuItem[] = [];
 

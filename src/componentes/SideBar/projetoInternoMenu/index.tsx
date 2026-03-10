@@ -5,9 +5,9 @@ import {
   ClipboardClockIcon,
   ClockAlertIcon,
   BookUserIcon,
-  FolderKanbanIcon,
   FoldersIcon,
   ClipboardPlusIcon,
+  FolderCogIcon,
 } from "lucide-react";
 
 import { MenuItem } from "@/types/menus";
@@ -51,7 +51,7 @@ export function projetoInternoMenu(
     {
       href: `/projetos/${projectId}/editar`,
       label: "Editar projeto",
-      icon: FolderKanbanIcon,
+      icon: FolderCogIcon ,
       visible: isAdm,
     },
     {
