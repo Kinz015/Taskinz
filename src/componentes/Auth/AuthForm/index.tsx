@@ -75,10 +75,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
     <form onSubmit={handleSubmit} className="space-y-4">
       {mode === "register" && (
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="name"
+            className="mb-1 block text-sm font-medium text-gray-700"
+          >
             Nome
           </label>
           <input
+            id="name"
             type="text"
             placeholder="Seu nome"
             minLength={2}
@@ -91,24 +95,34 @@ export default function AuthForm({ mode }: AuthFormProps) {
       )}
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="email"
+          className="mb-1 block text-sm font-medium text-gray-700"
+        >
           E-mail
         </label>
+
         <input
+          id="email"
+          placeholder="seuemail@exemplo.com"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-          focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+    focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/20"
         />
       </div>
-
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="password"
+          className="mb-1 block text-sm font-medium text-gray-700"
+        >
           Senha
         </label>
         <div className="relative">
           <input
+            id="password"
+            placeholder="Mínimo 8 caracteres"
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -151,9 +165,19 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
       <div className="text-center text-sm">
         {mode === "login" ? (
-          <Link href="/register">Não tem conta? Criar agora</Link>
+          <Link href="/register">
+            Não tem conta?{" "}
+            <span className="text-blue-500 hover:underline hover:text-blue-600">
+              Criar agora
+            </span>
+          </Link>
         ) : (
-          <Link href="/login">Já possui conta? Entrar</Link>
+          <Link href="/login">
+            Já possui conta?{" "}
+            <span className="text-blue-500 hover:underline hover:text-blue-600">
+              Entrar
+            </span>{" "}
+          </Link>
         )}
       </div>
     </form>
