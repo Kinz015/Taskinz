@@ -356,9 +356,19 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
       <div className="text-center text-sm">
         {mode === "login" ? (
-          <Link href="/register">Criar conta</Link>
+          <Link href="/register">
+            Não tem conta?{" "}
+            <span className="text-blue-500 hover:underline hover:text-blue-600">
+              Criar agora
+            </span>
+          </Link>
         ) : (
-          <Link href="/login">Entrar</Link>
+          <Link href="/login">
+            Já possui conta?{" "}
+            <span className="text-blue-500 hover:underline hover:text-blue-600">
+              Entrar
+            </span>
+          </Link>
         )}
       </div>
     </form>
