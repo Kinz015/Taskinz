@@ -2,31 +2,23 @@
 
 import { BellIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { Prisma } from "@prisma/client";
 
-type Notification = {
-  id: number;
-  title: string;
-  description: string;
+type Invite = Prisma.ProjectInviteGetPayload<{
+  include: {
+    project: true;
+    inviter: true;
+  };
+}>;
+
+type NotificationBellProps = {
+  invites: Invite[];
 };
 
-const mockNotifications: Notification[] = [
-  {
-    id: 1,
-    title: "Novo convite",
-    description: "Você foi convidado para o projeto Taskinz",
-  },
-  {
-    id: 2,
-    title: "Atualização",
-    description: "Um projeto foi atualizado",
-  },
-];
-
-export default function NotificationBell() {
+export default function NotificationBell({ invites }: NotificationBellProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // fecha ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -40,9 +32,20 @@ export default function NotificationBell() {
     };
   }, []);
 
+  // 🔥 ações
+  const handleAccept = async (id: number) => {
+    await fetch(`/api/invites/${id}/accept`, { method: "POST" });
+    location.reload();
+  };
+
+  const handleReject = async (id: number) => {
+    await fetch(`/api/invites/${id}/reject`, { method: "POST" });
+    location.reload();
+  };
+
   return (
-    <div className="flex" ref={ref}>
-      {/* Botão do sino */}
+    <div className="relative flex" ref={ref}>
+      {/* 🔔 BOTÃO */}
       <button
         onClick={() => setOpen(!open)}
         className="relative p-2 rounded-full hover:bg-zinc-800"
@@ -50,29 +53,48 @@ export default function NotificationBell() {
         <div className="relative w-6 h-6">
           <BellIcon color="white" />
 
-          {/* Badge */}
-          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
-            {mockNotifications.length}
-          </span>
+          {/* 🔴 BADGE REAL */}
+          {invites.length > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+              {invites.length}
+            </span>
+          )}
         </div>
       </button>
 
-      {/* Dropdown */}
+      {/* 📥 DROPDOWN */}
       {open && (
-        <div className="absolute right-0 mt-2 w-72 bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg p-3 z-50">
-          <h3 className="font-bold mb-2 text-sm">Notificações</h3>
+        <div className="absolute right-0 mt-2 w-80 bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg p-3 z-50">
+          <h3 className="font-bold mb-2 text-sm">Convites</h3>
 
-          {mockNotifications.length === 0 ? (
-            <p className="text-sm text-gray-400">Sem notificações</p>
+          {invites.length === 0 ? (
+            <p className="text-sm text-gray-400">Sem convites</p>
           ) : (
-            <div className="space-y-2">
-              {mockNotifications.map((n) => (
-                <div
-                  key={n.id}
-                  className="p-2 rounded hover:bg-zinc-800 cursor-pointer"
-                >
-                  <p className="text-sm font-medium">{n.title}</p>
-                  <p className="text-xs text-gray-400">{n.description}</p>
+            <div className="space-y-3">
+              {invites.map((invite) => (
+                <div key={invite.id} className="p-3 rounded-lg bg-zinc-800">
+                  {/* 🔥 MENSAGEM DINÂMICA */}
+                  <p className="text-sm text-gray-200">
+                    <b>{invite.inviter.name}</b> convidou você para o projeto{" "}
+                    <b>{invite.project.title}</b>
+                  </p>
+
+                  {/* 🔘 BOTÕES */}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => handleAccept(invite.id)}
+                      className="bg-green-600 px-2 py-1 text-xs rounded text-white"
+                    >
+                      Aceitar
+                    </button>
+
+                    <button
+                      onClick={() => handleReject(invite.id)}
+                      className="bg-red-600 px-2 py-1 text-xs rounded text-white"
+                    >
+                      Recusar
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

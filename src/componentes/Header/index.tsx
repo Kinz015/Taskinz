@@ -5,23 +5,17 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MobileHeaderMenu } from "../MobileHeaderMenu";
 import { AuthUser } from "@/types/auth";
-import { ProjectInvite } from "@prisma/client";
 import NotificationBell from "../Notifications";
+import { Invite } from "@/types/invite";
 
 type HeaderProps = {
   title: string;
   user: AuthUser;
-  invites: ProjectInvite[];
+  invites: Invite[];
 };
 
 export function Header({ title, user, invites }: HeaderProps) {
   if (!user) redirect("/login");
-
-  if (invites.length > 0) {
-    // Tem convite;
-  } else {
-    // Sem convite;
-  }
 
   return (
     <header
@@ -48,7 +42,7 @@ export function Header({ title, user, invites }: HeaderProps) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <NotificationBell />
+            <NotificationBell invites={invites} />
           )}
         </div>
 
@@ -82,7 +76,7 @@ export function Header({ title, user, invites }: HeaderProps) {
               ADM
             </span>
           )}
-          <NotificationBell />
+          <NotificationBell invites={invites} />
           <Link href="/meu-perfil" className="flex items-center gap-2">
             <div className="h-10 w-10 rounded-full overflow-hidden bg-white/10 border border-white/10 flex items-center justify-center">
               {user.imageUrl ? (

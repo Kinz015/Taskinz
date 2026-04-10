@@ -17,7 +17,7 @@ export default function InviteList({ invites }: Props) {
       {invites.map((invite) => (
         <div key={invite.id} className="border p-4 rounded-lg">
           <p>
-            <b>Projeto:</b> {invite.project.name}
+            <b>Projeto:</b> {invite.project.title}
           </p>
           <p>
             <b>Convidado por:</b> {invite.inviter.name}

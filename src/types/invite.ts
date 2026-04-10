@@ -1,17 +1,8 @@
-export type Invite = {
-  id: number;
-  inviteeEmail: string;
-  status: string;
-  createdAt: string;
+import { Prisma } from "@prisma/client";
 
-  project: {
-    id: number;
-    name: string;
+export type Invite = Prisma.ProjectInviteGetPayload<{
+  include: {
+    project: true;
+    inviter: true;
   };
-
-  inviter: {
-    id: string;
-    name: string | null;
-    email: string | null;
-  };
-};
+}>;
