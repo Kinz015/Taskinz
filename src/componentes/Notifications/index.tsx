@@ -54,7 +54,7 @@ export default function NotificationBell({ invites }: NotificationBellProps) {
 
       {/* 📥 DROPDOWN */}
       {open && (
-        <div className="fixed top-16 right-0 overflow-y-auto bg-zinc-900 border border-zinc-700 rounded-xl p-4 z-[9999]">
+        <div className="fixed top-16 right-0 overflow-y-auto bg-zinc-900 border border-zinc-700 rounded-xl p-4 z-50">
           <div className="flex justify-between items-center mb-2">
             <h3 className="font-bold text-sm text-white">Convites</h3>
           </div>
