@@ -6,7 +6,7 @@ type Props = {
 
 export default function InviteActions({ inviteId }: Props) {
   const handleAccept = async () => {
-    const res = await fetch(`/api/invites/${inviteId}/accept`, {
+    const res = await fetch(`/api/invites/${inviteId}`, {
       method: "POST",
     });
 
@@ -19,7 +19,7 @@ export default function InviteActions({ inviteId }: Props) {
   };
 
   const handleReject = async () => {
-    const res = await fetch(`/api/invites/${inviteId}/reject`, {
+    const res = await fetch(`/api/invites/${inviteId}`, {
       method: "POST",
     });
 

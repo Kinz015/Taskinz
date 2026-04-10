@@ -37,3 +37,18 @@ export async function POST(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ inviteId: string }> },
+) {
+  await requireAuth();
+  const { inviteId } = await params;
+
+  await prisma.projectInvite.update({
+    where: { id: Number(inviteId) },
+    data: { status: "DECLINED" },
+  });
+
+  return NextResponse.json({ ok: true });
+}
