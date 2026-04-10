@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "src/componentes/projetos/invites/inviteActions"  ],
+, "src/componentes/Notifications/invites/inviteActions"  ],
   "exclude": ["node_modules"]
 }
