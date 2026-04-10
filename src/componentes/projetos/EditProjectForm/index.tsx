@@ -41,27 +41,35 @@ export default function EditProjectForm({
     alert("Projeto atualizado com sucesso");
   }
 
-  async function handleInvite(e: React.FormEvent) {
+  const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await fetch(`/api/projects/${projectId}/invite`, {
+    const res = await fetch(`/api/projects/${projectId}/invite`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         email: inviteEmail,
       }),
     });
 
-    setInviteEmail("");
-    alert("Convite enviado");
-  }
+    const data = await res.json();
 
+    if (!res.ok) {
+      alert(data.error || "Erro ao enviar convite");
+      return;
+    }
+
+    alert("Convite enviado com sucesso!");
+    setInviteEmail("");
+  };
   return (
-    <div className="flex flex-col gap-10 max-w-xl">
+    <div className="flex justify-around gap-10">
       {/* EDITAR PROJETO */}
       <form
         onSubmit={handleUpdate}
-        className="bg-zinc-900 p-6 rounded-lg flex flex-col gap-4"
+        className="bg-zinc-900 p-6 rounded-lg flex flex-col gap-4 w-160"
       >
         <h2 className="text-lg font-bold text-gray-300">Editar projeto</h2>
         <label className="mb-1 block text-sm font-medium text-gray-300">
@@ -98,25 +106,26 @@ export default function EditProjectForm({
       </form>
 
       {/* CONVIDAR USUÁRIO */}
-      <form
-        onSubmit={handleInvite}
-        className="bg-zinc-900 p-6 rounded-lg flex flex-col gap-4"
-      >
-        <h2 className="text-lg font-bold text-gray-300">Convidar membro</h2>
-        <label className="mb-1 block text-sm font-medium text-gray-300">
-          Insira o email do usuário que voce desejá convidar
-        </label>
-        <input
-          className="p-2 rounded bg-zinc-800 text-white"
-          value={inviteEmail}
-          onChange={(e) => setInviteEmail(e.target.value)}
-          placeholder="Email do usuário"
-        />
-
-        <button className="bg-blue-600 p-2 rounded text-white">
-          Enviar convite
-        </button>
-      </form>
+      <div className="flex items-start w-160">
+        <form
+          onSubmit={handleInvite}
+          className="bg-zinc-900 p-6 rounded-lg flex flex-col gap-4 w-full"
+        >
+          <h2 className="text-lg font-bold text-gray-300">Convidar membro</h2>
+          <label className="mb-1 block text-sm font-medium text-gray-300">
+            Insira o email do usuário que voce desejá convidar
+          </label>
+          <input
+            className="p-2 rounded bg-zinc-800 text-white"
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
+            placeholder="Email do usuário"
+          />
+          <button className="bg-blue-600 p-2 rounded text-white">
+            Enviar convite
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
