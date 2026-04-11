@@ -29,7 +29,7 @@ export function EmptyProjects() {
         </p>
 
         <Link
-          href="adicionar-tarefa"
+          href="projetos/novo"
           className={clsx(
             "flex items-center rounded-md",
             "bg-green-600 hover:opacity-80",
