@@ -1,8 +1,9 @@
 import { LucideIcon } from "lucide-react";
 
 export type MenuItem = {
-  href: string;
+  href?: string;
   label: string;
   icon: LucideIcon;
   visible?: boolean;
+  action?: "logout" | "leave-project";
 };

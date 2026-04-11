@@ -29,16 +29,48 @@ export function SidebarMenu({ items, user }: Props) {
     });
   }
 
+  async function handleLeaveProject() {
+    const confirmLeave = confirm("Deseja sair do projeto?");
+    if (!confirmLeave) return;
+
+    const projectId = window.location.pathname.split("/")[2];
+
+    const res = await fetch(`/api/projects/${projectId}/leave`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      router.push("/projetos");
+      router.refresh();
+    } else {
+      const data = await res.json();
+      alert(data.error);
+    }
+  }
+
   return (
     <>
       {items
         .filter((item) => item.visible !== false)
-        .map((item) => (
-          <SidebarLink key={item.label} href={item.href}>
-            <item.icon />
-            {item.label}
-          </SidebarLink>
-        ))}
+        .map((item) => {
+          if (item.action === "leave-project") {
+            return (
+              <SidebarLink key={item.label} onClick={handleLeaveProject}>
+                <item.icon />
+                {item.label}
+              </SidebarLink>
+            );
+          }
+          if (item.href) {
+            return (
+              <SidebarLink key={item.label} href={item.href}>
+                <item.icon />
+                {item.label}
+              </SidebarLink>
+            );
+          }
+        })}
+
       <SidebarLink onClick={handleLogout}>
         <LogOutIcon />
         Sair

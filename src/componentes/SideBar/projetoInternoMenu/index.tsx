@@ -8,6 +8,7 @@ import {
   FoldersIcon,
   ClipboardPlusIcon,
   FolderCogIcon,
+  FolderOutputIcon,
 } from "lucide-react";
 
 import { MenuItem } from "@/types/menus";
@@ -51,13 +52,18 @@ export function projetoInternoMenu(
     {
       href: `/projetos/${projectId}/editar`,
       label: "Editar projeto",
-      icon: FolderCogIcon ,
+      icon: FolderCogIcon,
       visible: isAdm,
     },
     {
       href: "/projetos",
       label: "Voltar para projetos",
       icon: FoldersIcon,
+    },
+    {
+      label: "Sair do projeto",
+      icon: FolderOutputIcon,
+      action: "leave-project",
     },
   ];
 }

@@ -4,16 +4,17 @@ import { requireAuth } from "@/lib/auth";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { projectId: string } },
+  { params }: { params: Promise<{ projectId: string }> },
 ) {
   const user = await requireAuth();
-  const projectId = parseInt(params.projectId);
+  const { projectId } = await params;
+  const projectIdInt = parseInt(projectId);
 
   // Verifica se é membro
   const membership = await prisma.projectMember.findFirst({
     where: {
       userId: user.id,
-      projectId,
+      projectId: projectIdInt,
     },
   });
 
