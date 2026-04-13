@@ -67,30 +67,36 @@ export default function CreateTaskForm({
   }
 
   const inputBase =
-    "w-full rounded-lg bg-white/10 border border-white/10 text-white placeholder:text-white/30 px-3 py-2 text-sm outline-none focus:border-white/30 focus:ring-2 focus:ring-white/10";
-  const labelBase = "mb-1 block text-sm font-medium text-white/70";
+    "w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35";
+  const labelBase = "block text-sm font-medium text-white/80";
 
   return (
-    <div className="w-full max-w-xl rounded-2xl bg-white/10 border border-white/10 p-6 shadow-lg m-auto">
-      <h2 className="mb-6 text-center text-2xl font-bold text-white">
-        Criar nova task
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className={labelBase}>Título</label>
+    <div className="w-full max-w-xl p-6 m-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6"
+      >
+        <label className={labelBase}>
+          Título
+        </label>
+        <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 focus-within:border-white/20">
           <input
-            className={inputBase}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            className={inputBase}
+            maxLength={80}
+            autoFocus
             required
           />
         </div>
 
         <div>
-          <label className={labelBase}>Descrição</label>
+          <label className={`mt-5 ${labelBase}`}>Descrição (opcional)</label>
           <textarea
-            className={`${inputBase} resize-y`}
+            className={
+              "mt-2 min-h-27.5 w-full resize-y rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/20"
+            }
+            placeholder="Descreva rapidamente o objetivo da task..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
@@ -98,12 +104,12 @@ export default function CreateTaskForm({
         </div>
 
         <div>
-          <label className={labelBase}>Responsável</label>
+          <label className={`mt-5 ${labelBase}`}>Responsável</label>
           {projectId ? (
             <select
               value={assigneeId}
               onChange={(e) => setAssigneeId(e.target.value)}
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/80"
+              className={inputBase}
             >
               {members?.map((member) => (
                 <option key={member.user.id} className="bg-[#1b1b1f]">
@@ -124,17 +130,19 @@ export default function CreateTaskForm({
         </div>
 
         <div>
-          <label className={labelBase}>Prazo</label>
-          <input
-            type="datetime-local"
-            className={inputBase}
-            value={dueAt}
-            onChange={(e) => setDueAt(e.target.value)}
-          />
+          <label className={`mt-5 ${labelBase}`}>Prazo</label>
+          <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 focus-within:border-white/20">
+            <input
+              type="datetime-local"
+              className={inputBase}
+              value={dueAt}
+              onChange={(e) => setDueAt(e.target.value)}
+            />
+          </div>
         </div>
 
-        <div>
-          <label className={labelBase}>Status</label>
+        <label className={`mt-5 ${labelBase}`}>Status</label>
+        <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 focus-within:border-white/20">
           <select
             className={inputBase}
             value={status}
@@ -155,7 +163,7 @@ export default function CreateTaskForm({
         <button
           type="submit"
           disabled={loading}
-          className={`mt-2 w-full rounded-lg py-2 text-sm font-semibold text-white transition ${
+          className={`mt-5 w-full rounded-lg py-2 text-sm font-semibold text-white transition ${
             loading
               ? "bg-green-500/60 cursor-not-allowed"
               : "bg-green-700 hover:bg-green-800"

@@ -16,7 +16,7 @@ export default async function NewTaskPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Adicionar tarefa" user={user} invites={invites} />
-      <main className="flex flex-1 flex-col bg-[#1f1f1f] p-6 text-white">
+      <main className="flex flex-1 flex-col p-6 text-white">
         <CreateTaskForm user={user} />
       </main>
     </div>

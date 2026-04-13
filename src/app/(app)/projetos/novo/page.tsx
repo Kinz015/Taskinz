@@ -18,7 +18,9 @@ export default async function Projetos() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Criar projeto" user={user} invites={invites} />
-      <NovoProjetoForm />
+      <main className="flex flex-1 flex-col p-6 text-white">
+        <NovoProjetoForm />
+      </main>
     </div>
   );
 }
