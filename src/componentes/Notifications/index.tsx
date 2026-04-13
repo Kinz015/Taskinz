@@ -34,7 +34,7 @@ export default function NotificationBell({ invites }: NotificationBellProps) {
   }, []);
 
   return (
-    <div className="relative bg-amber-300" ref={ref}>
+    <div className="relative" ref={ref}>
       {/* 🔔 BOTÃO */}
       <button
         onClick={() => setOpen(!open)}
