@@ -110,11 +110,21 @@ export default function CreateTaskForm({
                 onChange={(e) => setAssigneeId(e.target.value)}
                 className={inputBase}
               >
-                {members?.map((member) => (
-                  <option key={member.user.id} className="bg-[#1b1b1f]">
-                    {member.user.name}
-                  </option>
-                ))}
+                {[...(members ?? [])]
+                  .sort((a, b) => {
+                    if (a.user.id === user.id) return -1;
+                    if (b.user.id === user.id) return 1;
+                    return (a.user.name ?? "").localeCompare(b.user.name ?? "");
+                  })
+                  .map((member) => (
+                    <option
+                      key={member.user.id}
+                      value={member.user.id}
+                      className="bg-[#1b1b1f]"
+                    >
+                      {member.user.name}
+                    </option>
+                  ))}
               </select>
             </div>
           ) : (
