@@ -1,19 +1,21 @@
 import clsx from "clsx";
-import { CirclePlusIcon, ClipboardCheckIcon, ClipboardClockIcon, ClipboardListIcon, ClockAlertIcon } from "lucide-react";
+import {
+  CirclePlusIcon,
+  ClipboardCheckIcon,
+  ClipboardClockIcon,
+  ClipboardListIcon,
+  ClockAlertIcon,
+} from "lucide-react";
 import Link from "next/link";
 
 type Page = "all" | "overdue" | "started" | "completed";
 
 type Props = {
   page: Page;
-
-  actionLabel?: string;
   actionHref?: string;
-
-  className?: string;
 };
 
-export default function EmptyTasksState({ page }: Props) {
+export default function EmptyTasksState({ page, actionHref }: Props) {
   const pages = {
     all: {
       title: "Você ainda não criou nenhuma tarefa",
@@ -36,6 +38,8 @@ export default function EmptyTasksState({ page }: Props) {
     },
   };
 
+  const href = actionHref ?? "/adicionar-tarefa";
+
   return (
     <div className="pt-10">
       <div className="flex flex-col items-center text-center py-20">
@@ -49,16 +53,16 @@ export default function EmptyTasksState({ page }: Props) {
           )}
         >
           {page === "all" && <ClipboardListIcon />}
-          {page === "completed" &&  <ClipboardCheckIcon />}
-          {page === "started" &&  <ClipboardClockIcon />}
-          {page === "overdue" &&  <ClockAlertIcon />}
+          {page === "completed" && <ClipboardCheckIcon />}
+          {page === "started" && <ClipboardClockIcon />}
+          {page === "overdue" && <ClockAlertIcon />}
         </div>
         <h2 className="text-xl font-bold text-white">{pages[page].title}</h2>
         <p className="mt-2 max-w-lg text-sm text-white/60">
           {pages[page].description}
         </p>
         <Link
-          href="adicionar-tarefa"
+          href={href}
           className={clsx(
             "flex items-center rounded-md",
             "bg-green-600 hover:opacity-80",

@@ -49,7 +49,7 @@ export default async function Projetos() {
       <main className="flex flex-1 flex-col bg-[#2a2a2a]">
         <div className="mx-auto w-full max-w-6xl">
           {projects.length > 0 && (
-            <header className="mb-8 flex flex-col gap-2">
+            <header className="mt-16 mb-8 flex flex-col gap-2">
               <h1 className="text-2xl font-bold text-white sm:text-3xl">
                 Projetos
               </h1>

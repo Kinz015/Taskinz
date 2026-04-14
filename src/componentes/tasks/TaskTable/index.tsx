@@ -12,6 +12,7 @@ type TasksTableProps = {
   order: "asc" | "desc";
   user: AuthUser;
   page: Page;
+  actionHref?: string;
 };
 export default function TasksTable({
   tasks,
@@ -19,12 +20,13 @@ export default function TasksTable({
   order,
   user,
   page,
+  actionHref,
 }: TasksTableProps) {
   return (
     <>
       <HeaderTasksTable sort={sort} order={order} />
       {tasks.length === 0 ? (
-        <EmptyTasksState page={page} />
+        <EmptyTasksState page={page} actionHref={actionHref} />
       ) : (
         <BodyTasksTable tasks={tasks} user={user} />
       )}

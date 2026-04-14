@@ -83,13 +83,18 @@ export default async function Concluidas({
 
   return (
     <>
-      <Header title={`${project.title}: Concluídas`} user={user} invites={invites} />
+      <Header
+        title={`${project.title}: Concluídas`}
+        user={user}
+        invites={invites}
+      />
       <TasksTable
         tasks={tasks}
         sort={sort}
         order={order}
         user={user}
         page="completed"
+        actionHref={`/projetos/${projectId}/adicionar-tarefa`}
       />
     </>
   );

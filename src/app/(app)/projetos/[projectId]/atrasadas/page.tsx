@@ -83,13 +83,18 @@ export default async function Atrasadas({
 
   return (
     <>
-      <Header title={`${project.title}: Atrasadas`} user={user} invites={invites} />
+      <Header
+        title={`${project.title}: Atrasadas`}
+        user={user}
+        invites={invites}
+      />
       <TasksTable
         tasks={tasks}
         sort={sort}
         order={order}
         user={user}
         page="overdue"
+        actionHref={`/projetos/${projectId}/adicionar-tarefa`}
       />
     </>
   );

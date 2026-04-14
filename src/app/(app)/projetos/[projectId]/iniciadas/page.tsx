@@ -83,13 +83,18 @@ export default async function Iniciadas({
 
   return (
     <>
-      <Header title={`${project.title}: Iniciadas`} user={user} invites={invites} />
+      <Header
+        title={`${project.title}: Iniciadas`}
+        user={user}
+        invites={invites}
+      />
       <TasksTable
         tasks={tasks}
         sort={sort}
         order={order}
         user={user}
         page="started"
+        actionHref={`/projetos/${projectId}/adicionar-tarefa`}
       />
     </>
   );
