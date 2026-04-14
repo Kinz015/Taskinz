@@ -44,7 +44,7 @@ export function projetoInternoMenu(
       icon: ClockAlertIcon,
     },
     {
-      href: `/projetos/${projectId}/membros`,
+      href: `/projetos/${projectId}/Admin/membros`,
       label: "Membros",
       icon: BookUserIcon,
       visible: isAdm,
