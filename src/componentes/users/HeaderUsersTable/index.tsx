@@ -72,7 +72,7 @@ export default function HeaderUsersTable({
             <th className="py-4 text-left">Usuário</th>
             <th className="py-4 text-left">Email</th>
             <th className="py-4 text-center">Cargo</th>
-            <th className="py-4 text-center">Tasks</th>
+            <th className="py-4 text-center">Tarefas</th>
             <th className="py-4 text-center">Concluídas</th>
             <th className="py-4 text-center">Iniciadas</th>
             <th className="py-4 text-center">Atrasadas</th>

@@ -57,12 +57,11 @@ export default async function TodosOsUsers({
   if (!user) redirect("/login");
   if (!user.isAdmin) notFound();
 
-  const searchParamsFormated = await searchParams;
-  const projectIdFormated = await params;
+  const query = await searchParams;
+  const { projectId } = await params;
 
-  const sort = searchParamsFormated.sort ?? "createdAt";
-  const order = searchParamsFormated.order === "asc" ? "asc" : "desc";
-  const projectId = projectIdFormated.projectId;
+  const sort = query.sort ?? "createdAt";
+  const order = query.order === "asc" ? "asc" : "desc";
 
   const projectUsers = await getProjectUsers(sort, order, projectId);
 

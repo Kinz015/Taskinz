@@ -11,4 +11,5 @@ export type AdminUserRow = {
   tasksConcluidas: number;
   tasksIniciadas: number;
   tasksAtrasadas: number;
+  scope: "all" | "project";
 };
