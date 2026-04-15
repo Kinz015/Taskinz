@@ -21,6 +21,9 @@ export default async function TaskPage({ params }: TaskPageProps) {
 
   const task = await getTaskForUser(Number(id), user.id);
   if (!task) notFound();
+  if (task.projectId) {
+    redirect(`/projetos/${task.projectId}/tasks/${task.id}`);
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#1f1f1f]">

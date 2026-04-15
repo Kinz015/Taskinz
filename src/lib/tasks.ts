@@ -13,6 +13,7 @@ export async function getTaskForUser(id: number, userId: string) {
       dueAt: true,
       createdAt: true,
       updatedAt: true,
+      projectId: true,
       authorId: true,
       assigneeId: true,
       author: { select: { id: true, name: true, email: true } },

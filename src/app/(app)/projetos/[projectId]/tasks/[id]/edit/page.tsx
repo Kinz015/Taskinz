@@ -31,6 +31,9 @@ export default async function EditTaskProjectPage({
 
   const task = await getTaskForUser(taskId, user.id);
   if (!task) notFound();
+  if (!task.projectId) {
+    redirect(`/tasks/${task.id}/edit`);
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
