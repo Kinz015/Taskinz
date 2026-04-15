@@ -13,8 +13,13 @@ import { RowActionsMenu } from "@/componentes/RowActionsMenu";
 type BodyTasksTableProps = {
   tasks: TaskDTO[];
   user: AuthUser;
+  actionHref?: string;
 };
-export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
+export default function BodyTasksTable({
+  tasks,
+  user,
+  actionHref,
+}: BodyTasksTableProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const router = useRouter();
 
@@ -24,7 +29,16 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
       <div className="md:hidden space-y-3 px-2 my-2">
         {tasks.map((task) => {
           const isAuthor = user.id === task.author.id;
+          const href = actionHref;
+          const hrefOpenTask = href
+            ? `${href}/tasks/${task.id}`
+            : `/tasks/${task.id}`;
+          const hrefOnpenTaskEdit = href
+            ? `${href}/tasks/${task.id}/edit`
+            : `/tasks/${task.id}/edit`;
 
+          console.log(hrefOpenTask);
+          console.log(hrefOnpenTaskEdit);
           return (
             <div
               key={task.id}
@@ -70,7 +84,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                   {openMenuId === task.id && (
                     <div className="absolute right-0 top-full mt-2 z-50 w-40 bg-white rounded-md shadow-lg border">
                       <Link
-                        href={`/tasks/${task.id}`}
+                        href={hrefOpenTask}
                         className="block px-4 py-2 text-sm hover:bg-gray-100"
                       >
                         Abrir tarefa
@@ -86,7 +100,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                             return;
                           }
 
-                          router.push(`/tasks/${task.id}/edit`);
+                          router.push(hrefOnpenTaskEdit);
                         }}
                         className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
                           isAuthor
@@ -122,12 +136,19 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
         <tbody>
           {tasks.map((task, index) => {
             const responsibleLabel =
-              task.assignee?.name?.trim()  ||
+              task.assignee?.name?.trim() ||
               task.assignee?.email ||
               task.author?.name?.trim() ||
               task.author?.email ||
               "Sem responsável";
             const isAuthor = user.id === task.author.id;
+            const href = actionHref;
+            const hrefOpenTask = href
+              ? `${href}/tasks/${task.id}`
+              : `/tasks/${task.id}`;
+            const hrefOnpenTaskEdit = href
+              ? `${href}/tasks/${task.id}/edit`
+              : `/tasks/${task.id}/edit`;
 
             return (
               <tr key={task.id} className="bg-[#E5E5E5]">
@@ -168,7 +189,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                     onClose={() => setOpenMenuId(null)}
                   >
                     <Link
-                      href={`/tasks/${task.id}`}
+                      href={hrefOpenTask}
                       className="block px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-t-md"
                     >
                       Abrir tarefa
@@ -181,7 +202,7 @@ export default function BodyTasksTable({ tasks, user }: BodyTasksTableProps) {
                           setOpenMenuId(null);
                           return;
                         }
-                        router.push(`/tasks/${task.id}/edit`);
+                        router.push(hrefOnpenTaskEdit);
                       }}
                       className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
                         isAuthor

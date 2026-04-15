@@ -91,7 +91,7 @@ export default async function Projetos({
         order={order}
         user={user}
         page="all"
-        actionHref={`/projetos/${projectId}/adicionar-tarefa`}
+        actionHref={`/projetos/${projectId}`}
       />
     </>
   );

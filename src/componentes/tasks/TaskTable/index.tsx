@@ -28,7 +28,7 @@ export default function TasksTable({
       {tasks.length === 0 ? (
         <EmptyTasksState page={page} actionHref={actionHref} />
       ) : (
-        <BodyTasksTable tasks={tasks} user={user} />
+        <BodyTasksTable tasks={tasks} user={user} actionHref={actionHref} />
       )}
     </>
   );
