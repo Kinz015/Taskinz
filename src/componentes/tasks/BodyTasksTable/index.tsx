@@ -37,8 +37,6 @@ export default function BodyTasksTable({
             ? `${href}/tasks/${task.id}/edit`
             : `/tasks/${task.id}/edit`;
 
-          console.log(hrefOpenTask);
-          console.log(hrefOnpenTaskEdit);
           return (
             <div
               key={task.id}
@@ -160,7 +158,7 @@ export default function BodyTasksTable({
                   {task.title}
                 </td>
 
-                <td className="py-4 text-center">
+                <td className="py-2 text-center">
                   <StatusBadge status={task.status} />
                 </td>
 
