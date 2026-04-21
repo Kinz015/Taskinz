@@ -175,7 +175,7 @@ export default function BodyTasksTable({
                   {task.title}
                 </td>
 
-                <td className="py-4 text-center">
+                <td className="py-3 text-center">
                   <StatusBadge
                     status={task.status}
                     onChangeStatus={(newStatus) =>
