@@ -66,7 +66,7 @@ export function StatusBadge({ status, onChangeStatus }: StatusBadgeProps) {
               <button
                 key={s}
                 onClick={() => handleSelect(s)}
-                className="flex w-full items-center gap-2 px-3 py-2 text-sm hover:bg-zinc-800 transition"
+                className="flex w-full rounded-lg items-center gap-2 px-3 py-2 text-sm hover:bg-zinc-800 transition"
               >
                 <span className={`w-2 h-2 rounded-full ${item.className}`} />{" "}
                 {item.label}{" "}

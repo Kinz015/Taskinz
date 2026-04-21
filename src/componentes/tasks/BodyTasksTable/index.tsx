@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { AuthUser } from "@/types/auth";
 import { toastError } from "@/utils/toast";
 import { RowActionsMenu } from "@/componentes/RowActionsMenu";
+import { updateTaskStatus } from "@/app/(app)/actions/update-tasks-status";
 
 type BodyTasksTableProps = {
   tasks: TaskDTO[];
@@ -25,12 +26,13 @@ export default function BodyTasksTable({
 
   const [tasksState, setTasksState] = useState(tasks);
 
-  function handleChangeStatus(taskId: number, newStatus: TaskStatus) {
+  async function handleChangeStatus(taskId: number, newStatus: TaskStatus) {
     setTasksState((prev) =>
       prev.map((task) =>
         task.id === taskId ? { ...task, status: newStatus } : task,
       ),
     );
+    await updateTaskStatus(taskId, newStatus);
   }
 
   return (
@@ -59,7 +61,12 @@ export default function BodyTasksTable({
                   </h3>
 
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-                    <StatusBadge status={task.status} />
+                    <StatusBadge
+                      status={task.status}
+                      onChangeStatus={(newStatus) =>
+                        handleChangeStatus(task.id, newStatus)
+                      }
+                    />
                     <span className="text-gray-600">
                       {task.assignee ? task.assignee.name : "Sem responsável"}
                     </span>
