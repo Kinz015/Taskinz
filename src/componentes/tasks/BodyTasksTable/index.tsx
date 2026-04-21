@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskDTO } from "@/types/task";
+import { TaskDTO, TaskStatus } from "@/types/task";
 import { StatusBadge } from "../StatusBadge";
 import { EllipsisIcon, LockIcon } from "lucide-react";
 import Link from "next/link";
@@ -23,11 +23,21 @@ export default function BodyTasksTable({
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const router = useRouter();
 
+  const [tasksState, setTasksState] = useState(tasks);
+
+  function handleChangeStatus(taskId: number, newStatus: TaskStatus) {
+    setTasksState((prev) =>
+      prev.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task,
+      ),
+    );
+  }
+
   return (
     <div className="max-h-[calc(100vh-164px)] md:max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
       {/* 📱 MOBILE */}
       <div className="md:hidden space-y-3 px-2 my-2">
-        {tasks.map((task) => {
+        {tasksState.map((task) => {
           const isAuthor = user.id === task.author.id;
           const href = actionHref;
           const hrefOpenTask = href
@@ -132,7 +142,7 @@ export default function BodyTasksTable({
         </colgroup>
 
         <tbody>
-          {tasks.map((task, index) => {
+          {tasksState.map((task, index) => {
             const responsibleLabel =
               task.assignee?.name?.trim() ||
               task.assignee?.email ||
@@ -158,8 +168,13 @@ export default function BodyTasksTable({
                   {task.title}
                 </td>
 
-                <td className="py-2 text-center">
-                  <StatusBadge status={task.status} />
+                <td className="py-4 text-center">
+                  <StatusBadge
+                    status={task.status}
+                    onChangeStatus={(newStatus) =>
+                      handleChangeStatus(task.id, newStatus)
+                    }
+                  />
                 </td>
 
                 <td className="py-4 text-center max-[830px]:hidden">
