@@ -1,5 +1,8 @@
+"use client";
+
 import { TaskStatus } from "@/types/task";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { RowActionsMenu } from "@/componentes/RowActionsMenu";
 
 const statusMap: Record<TaskStatus, { label: string; className: string }> = {
   overdue: {
@@ -25,21 +28,8 @@ type StatusBadgeProps = {
 
 export function StatusBadge({ status, onChangeStatus }: StatusBadgeProps) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
 
   const { label, className } = statusMap[status];
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   function handleSelect(newStatus: TaskStatus) {
     onChangeStatus?.(newStatus);
@@ -47,34 +37,37 @@ export function StatusBadge({ status, onChangeStatus }: StatusBadgeProps) {
   }
 
   return (
-    <div className="relative inline-block" ref={ref}>
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className={`${
-          open && "my-3"
-        } rounded-md px-3 border-none py-1 font-medium text-white transition hover:opacity-80 ${className}`}
-      >
-        {label}
-      </button>
-      {/* Dropdown */}{" "}
-      {open && (
-        <div className="absolute z-50 mt-2 w-40 rounded-lg bg-zinc-900 border text-white border-zinc-700 shadow-lg animate-in fade-in zoom-in-95">
-          {" "}
-          {statusOrder.map((s) => {
-            const item = statusMap[s];
-            return (
-              <button
-                key={s}
-                onClick={() => handleSelect(s)}
-                className="flex w-full rounded-lg items-center gap-2 px-3 py-2 text-sm hover:bg-zinc-800 transition"
-              >
-                <span className={`w-2 h-2 rounded-full ${item.className}`} />{" "}
-                {item.label}{" "}
-              </button>
-            );
-          })}{" "}
-        </div>
-      )}
-    </div>
+    <RowActionsMenu
+      open={open}
+      onToggle={() => setOpen((prev) => !prev)}
+      onClose={() => setOpen(false)}
+      trigger={
+        <button
+          className={`${open && "my-2"} rounded-md px-3 py-1 font-medium text-white ${className}`}
+        >
+          {label}
+        </button>
+      }
+    >
+      {statusOrder.map((s) => {
+        const item = statusMap[s];
+        return (
+          <button
+            key={s}
+            onClick={() => handleSelect(s)}
+            className={`${
+              item.label === "Atrasada"
+                ? "hover:rounded-t-lg"
+                : item.label === "Concluída"
+                  ? "hover:rounded-b-lg"
+                  : ""
+            } flex w-full items-center gap-2 px-3 py-2 text-sm hover:cursor-pointer hover:bg-zinc-800`}
+          >
+            <span className={`w-2 h-2 rounded-full ${item.className}`} />
+            {item.label}
+          </button>
+        );
+      })}
+    </RowActionsMenu>
   );
 }

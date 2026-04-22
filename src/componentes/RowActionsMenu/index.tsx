@@ -9,28 +9,52 @@ type Props = {
   onToggle: () => void;
   onClose: () => void;
   children: React.ReactNode;
+  trigger?: React.ReactNode;
 };
 
-export function RowActionsMenu({ open, onToggle, onClose, children }: Props) {
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+export function RowActionsMenu({
+  open,
+  onToggle,
+  onClose,
+  children,
+  trigger,
+}: Props) {
+  const anchorRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const [pos, setPos] = useState<{
-    top: number;
-    left: number;
-    placement: "up" | "down";
-  }>({
+  const [pos, setPos] = useState({
     top: 0,
     left: 0,
-    placement: "down",
+    placement: "down" as "up" | "down",
   });
 
-  const updatePosition = () => {
-    const btn = btnRef.current;
-    const menu = menuRef.current;
-    if (!btn || !menu) return;
+  useEffect(() => {
+    if (!open) return;
 
-    const rect = btn.getBoundingClientRect();
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+
+      if (
+        !menuRef.current?.contains(target) &&
+        !anchorRef.current?.contains(target)
+      ) {
+        onClose();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open, onClose]);
+
+  const updatePosition = () => {
+    const anchor = anchorRef.current;
+    const menu = menuRef.current;
+    if (!anchor || !menu) return;
+
+    const rect = anchor.getBoundingClientRect();
     const menuW = menu.offsetWidth;
     const menuH = menu.offsetHeight;
     const gap = 8;
@@ -38,14 +62,14 @@ export function RowActionsMenu({ open, onToggle, onClose, children }: Props) {
     const spaceBelow = window.innerHeight - rect.bottom;
     const canOpenDown = spaceBelow >= menuH + gap;
 
-    const placement: "up" | "down" = canOpenDown ? "down" : "up";
+    const placement = canOpenDown ? "down" : "up";
 
     const top =
-      placement === "down" ? rect.bottom + gap : rect.top - gap - menuH;
+      placement === "down"
+        ? rect.top + rect.height / 1
+        : rect.top - gap - menuH;
 
-    // alinha à direita do botão
     let left = rect.right - menuW;
-    // garante dentro da tela
     left = Math.max(8, Math.min(left, window.innerWidth - menuW - 8));
 
     setPos({ top, left, placement });
@@ -59,8 +83,8 @@ export function RowActionsMenu({ open, onToggle, onClose, children }: Props) {
   useEffect(() => {
     if (!open) return;
 
-    const handleScroll = () => onClose(); // ✅ fecha no scroll
-    const handleResize = () => onClose(); // opcional: fecha no resize também
+    const handleScroll = () => onClose();
+    const handleResize = () => onClose();
 
     window.addEventListener("scroll", handleScroll, true);
     window.addEventListener("resize", handleResize);
@@ -73,26 +97,30 @@ export function RowActionsMenu({ open, onToggle, onClose, children }: Props) {
 
   return (
     <>
-      <button
-        ref={btnRef}
-        onClick={onToggle}
-        className={`w-full h-full flex justify-center rounded-r-lg hover:bg-gray-300 hover:cursor-pointer ${
-          open ? "py-6" : "p-4"
-        }`}
-      >
-        <EllipsisIcon />
-      </button>
+      {trigger ? (
+        <div ref={anchorRef} onClick={onToggle}>
+          {trigger}
+        </div>
+      ) : (
+        <div
+          ref={anchorRef}
+          onClick={onToggle}
+          className={`${open && "py-6"} w-full h-full flex justify-center rounded-r-lg hover:bg-gray-300 p-4`}
+        >
+          <EllipsisIcon />
+        </div>
+      )}
 
       {open &&
         createPortal(
           <div
             ref={menuRef}
             style={{ top: pos.top, left: pos.left }}
-            className="fixed z-9999 w-40 bg-white rounded-md shadow-lg border"
+            className="fixed z-9999 w-40 bg-zinc-900 text-white border-zinc-600 rounded-lg shadow-lg border"
           >
             {children}
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

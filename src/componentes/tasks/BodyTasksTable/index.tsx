@@ -210,7 +210,7 @@ export default function BodyTasksTable({
                   >
                     <Link
                       href={hrefOpenTask}
-                      className="block px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-t-md"
+                      className="block px-4 py-2 text-sm hover:bg-zinc-800 hover:rounded-t-lg"
                     >
                       Abrir tarefa
                     </Link>
@@ -226,7 +226,7 @@ export default function BodyTasksTable({
                       }}
                       className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
                         isAuthor
-                          ? "hover:bg-gray-100"
+                          ? "hover:bg-zinc-800"
                           : "opacity-50 cursor-not-allowed"
                       }`}
                     >
@@ -236,7 +236,7 @@ export default function BodyTasksTable({
 
                     <button
                       onClick={() => setOpenMenuId(null)}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 hover:rounded-b-md"
+                      className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-zinc-800 hover:rounded-b-lg"
                     >
                       Cancelar
                     </button>
