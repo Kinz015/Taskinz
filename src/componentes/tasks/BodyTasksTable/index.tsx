@@ -175,7 +175,7 @@ export default function BodyTasksTable({
                   {task.title}
                 </td>
 
-                <td className="py-3 text-center">
+                <td className="text-center">
                   <StatusBadge
                     status={task.status}
                     onChangeStatus={(newStatus) =>
@@ -226,7 +226,7 @@ export default function BodyTasksTable({
                       }}
                       className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
                         isAuthor
-                          ? "hover:bg-zinc-800"
+                          ? "hover:bg-zinc-800 cursor-pointer"
                           : "opacity-50 cursor-not-allowed"
                       }`}
                     >
@@ -236,7 +236,7 @@ export default function BodyTasksTable({
 
                     <button
                       onClick={() => setOpenMenuId(null)}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-zinc-800 hover:rounded-b-lg"
+                      className="cursor-pointer flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-zinc-800 hover:rounded-b-lg"
                     >
                       Cancelar
                     </button>

@@ -7,15 +7,15 @@ import { RowActionsMenu } from "@/componentes/RowActionsMenu";
 const statusMap: Record<TaskStatus, { label: string; className: string }> = {
   overdue: {
     label: "Atrasada",
-    className: "bg-[#A12D2F]",
+    className: "bg-[#A12D2F] hover:bg-[#A12D2F]/80",
   },
   started: {
     label: "Iniciada",
-    className: "bg-[#D97706]",
+    className: "bg-[#D97706] hover:bg-[#D97706]/80",
   },
   completed: {
     label: "Concluída",
-    className: "bg-[#2DA135]",
+    className: "bg-[#2DA135] hover:bg-[#2DA135]/80",
   },
 };
 
@@ -43,7 +43,7 @@ export function StatusBadge({ status, onChangeStatus }: StatusBadgeProps) {
       onClose={() => setOpen(false)}
       trigger={
         <button
-          className={`${open && "my-2"} rounded-md px-3 py-1 font-medium text-white ${className}`}
+          className={`rounded-md px-3 py-1 font-medium text-white ${className}`}
         >
           {label}
         </button>
