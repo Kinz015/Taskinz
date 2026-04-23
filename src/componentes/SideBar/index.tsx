@@ -87,22 +87,20 @@ export function SideBar({ user, projectRole }: SideBarProps) {
   return (
     <aside style={{ width }} className="flex h-screen bg-white">
       <div className="h-screen flex flex-col w-full">
-        <div className="h-50">
+        <div className="h-50 flex justify-center items-center">
           <Link href="/" className="justify-center">
             <Image
               src={logoOnly}
               alt="Taskinz"
-              width={71}
-              height={71}
-              className="hidden py-12 px-4 md:py-8 md:px-2 sm:py-4 sm:px-1 max-[1100px]:inline"
+              width={60}
+              className="hidden max-[1100px]:inline"
             />
             <Image
               src={logo}
               alt="Taskinz"
-              width={400}
-              height={100}
+              width={160}
               priority
-              className="hidden min-[1100px]:inline py-14 px-4 xl:py-20 xl:px-4 2xl:p-20"
+              className="hidden min-[1100px]:inline"
             />
           </Link>
         </div>
