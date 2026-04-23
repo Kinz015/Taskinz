@@ -109,7 +109,7 @@ export function RowActionsMenu({
         <div
           ref={anchorRef}
           onClick={onToggle}
-          className={`${open && "py-7"} w-full h-full flex justify-center rounded-r-lg hover:bg-gray-300 p-4`}
+          className={`${open && "py-7"} cursor-pointer w-full h-full flex justify-center rounded-r-lg hover:bg-gray-300 p-4`}
         >
           <EllipsisIcon />
         </div>
