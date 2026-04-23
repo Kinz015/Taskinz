@@ -18,9 +18,8 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -29,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "src/componentes/Notifications/invites/inviteActions"  ],
+    "**/*.mts",
+    "src/componentes/Notifications/invites/inviteActions"
+  ],
   "exclude": ["node_modules"]
 }
