@@ -4,7 +4,7 @@ import logoOnly from "@/assets/TaskinzLogoOnly.png";
 
 export default function RegisterPage() {
   return (
-    <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-md">
+    <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-md">
       <Image
         src={logoOnly}
         alt="Taskinz"
