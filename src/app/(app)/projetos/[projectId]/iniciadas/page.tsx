@@ -84,7 +84,8 @@ export default async function Iniciadas({
   return (
     <>
       <Header
-        title={`${project.title}: Iniciadas`}
+        title={project.title}
+        page="Iniciadas"
         user={user}
         invites={invites}
       />

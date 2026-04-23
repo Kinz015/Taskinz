@@ -84,7 +84,8 @@ export default async function Atrasadas({
   return (
     <>
       <Header
-        title={`${project.title}: Atrasadas`}
+        title={project.title}
+        page="Atrasadas"
         user={user}
         invites={invites}
       />

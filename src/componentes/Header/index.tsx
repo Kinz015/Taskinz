@@ -12,9 +12,10 @@ type HeaderProps = {
   title: string;
   user: AuthUser;
   invites: Invite[];
+  page?: string;
 };
 
-export function Header({ title, user, invites }: HeaderProps) {
+export function Header({ title, user, invites, page }: HeaderProps) {
   if (!user) redirect("/login");
 
   return (
@@ -56,13 +57,9 @@ export function Header({ title, user, invites }: HeaderProps) {
 
       {/* 💻 Desktop */}
       <div className="hidden md:flex justify-between w-full">
-        <h1
-          className="
-            text-white font-bold
-            text-2xl sm:text-3xl lg:text-4xl
-          "
-        >
-          {title}
+        <h1 className="text-3xl font-bold text-white">
+          <span>{title}</span>
+          {page && <span className="text-gray-400 font-medium"> / {page}</span>}
         </h1>
         <div className="flex items-center gap-2 mr-10">
           {user.isAdmin && (

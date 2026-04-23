@@ -81,7 +81,8 @@ export default async function Projetos({
   return (
     <>
       <Header
-        title={`${project.title}: Todas as tarefas`}
+        title={project.title}
+        page="Todas as tarefas"
         user={user}
         invites={invites}
       />

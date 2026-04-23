@@ -35,7 +35,12 @@ export default async function Editar({ params }: EditarPageProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header title="Editar task" user={user} invites={invites} />
+      <Header
+        title={project.title}
+        page="Editar task"
+        user={user}
+        invites={invites}
+      />
       <main className="flex flex-1 flex-col bg-[#1f1f1f] p-6 text-white">
         {/* Passando o user validado */}
         <EditProjectForm

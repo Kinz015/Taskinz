@@ -84,7 +84,8 @@ export default async function Concluidas({
   return (
     <>
       <Header
-        title={`${project.title}: Concluídas`}
+        title={project.title}
+        page="Concluídas"
         user={user}
         invites={invites}
       />
