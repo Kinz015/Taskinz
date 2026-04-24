@@ -12,4 +12,5 @@ export type AdminUserRow = {
   tasksIniciadas: number;
   tasksAtrasadas: number;
   scope: "all" | "project";
+  role: "OWNER" | "ADMIN" | "MEMBER";
 };
