@@ -6,6 +6,7 @@ import { EllipsisIcon } from "lucide-react";
 type BodyUsersTableProps = {
   users: AdminUserRow[];
 };
+
 export default function BodyUsersTable({ users }: BodyUsersTableProps) {
   return (
     <div className="max-h-[calc(100vh-164px)] md:max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
@@ -24,64 +25,85 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
           <col className="min-w-[60] w-[60] max-w-[60]" />
         </colgroup>
         <tbody>
-          {users.map((user, index) => (
-            <tr key={user.id} className="bg-[#E5E5E5]">
-              <td className="rounded-l-lg text-center py-4 font-semibold">
-                {index + 1}
-              </td>
+          {users.map((user, index) => {
+            return (
+              <tr key={user.id} className="bg-[#E5E5E5]">
+                <td className="rounded-l-lg text-center py-4 font-semibold">
+                  {index + 1}
+                </td>
 
-              <td className="py-4 text-left">
-                <div className="flex items-center gap-3">
-                  {user.imageUrl ? (
-                    // Avatar
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={user.imageUrl}
-                      alt={user.name ?? "Usuário"}
-                      className="h-8 w-8 rounded-full object-cover"
-                    />
+                <td className="py-4 text-left">
+                  <div className="flex items-center gap-3">
+                    {user.imageUrl ? (
+                      // Avatar
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={user.imageUrl}
+                        alt={user.name ?? "Usuário"}
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      // Fallback (bolinha com inicial)
+                      <div className="h-8 w-8 rounded-full bg-zinc-300 flex items-center justify-center text-sm font-semibold">
+                        {(
+                          user.name?.[0] ??
+                          user.email?.[0] ??
+                          "?"
+                        ).toUpperCase()}
+                      </div>
+                    )}
+
+                    <span className="max-w-[200] truncate">
+                      {user.name ?? "Sem nome"}
+                    </span>
+                  </div>
+                </td>
+                <td className="py-4 text-left">{user.email}</td>
+
+                <td className="py-4 text-center">
+                  {user.role ? (
+                    <span
+                      className={`
+                        px-2 py-1 rounded-full text-xs font-semibold
+                        ${user.role === "OWNER" && "px-2 py-1 rounded-full text-xs font-semibold bg-purple-600 text-purple-200"}
+                        ${user.role === "ADMIN" && "px-2 py-1 rounded-full text-xs font-semibold bg-red-700 text-red-200"}
+                        ${user.role === "MEMBER" && "px-2 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-200"}
+                      `}
+                    >
+                      {user.role == "OWNER" && "Owner"}
+                      {user.role == "ADMIN" && "Owner"}
+                      {user.role == "MEMBER" && "Member"}
+                    </span>
                   ) : (
-                    // Fallback (bolinha com inicial)
-                    <div className="h-8 w-8 rounded-full bg-zinc-300 flex items-center justify-center text-sm font-semibold">
-                      {(user.name?.[0] ?? user.email?.[0] ?? "?").toUpperCase()}
-                    </div>
+                    <span
+                      className={
+                        user.isAdmin
+                          ? "px-2 py-1 rounded-full text-xs font-semibold bg-red-700 text-red-200"
+                          : "px-2 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-200"
+                      }
+                    >
+                      {user.isAdmin ? "Admin" : "User"}
+                    </span>
                   )}
+                </td>
 
-                  <span className="max-w-[200] truncate">
-                    {user.name ?? "Sem nome"}
-                  </span>
-                </div>
-              </td>
-              <td className="py-4 text-left">{user.email}</td>
+                <td className="py-4 text-center">{user.tasksTotal}</td>
 
-              <td className="py-4 text-center">
-                <span
-                  className={
-                    user.isAdmin
-                      ? "px-2 py-1 rounded-full text-xs font-semibold bg-red-700 text-red-200"
-                      : "px-2 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-200"
-                  }
-                >
-                  {user.isAdmin ? "Admin" : "User"}
-                </span>
-              </td>
+                <td className="py-4 text-center">{user.tasksConcluidas}</td>
+                <td className="py-4 text-center">{user.tasksIniciadas}</td>
 
-              <td className="py-4 text-center">{user.tasksTotal}</td>
+                <td className="py-4 text-center">{user.tasksAtrasadas}</td>
 
-              <td className="py-4 text-center">{user.tasksConcluidas}</td>
-              <td className="py-4 text-center">{user.tasksIniciadas}</td>
+                <td className="py-4 text-center">
+                  {new Date(user.createdAt).toLocaleDateString()}
+                </td>
 
-              <td className="py-4 text-center">{user.tasksAtrasadas}</td>
-
-              <td className="py-4 text-center">
-                {new Date(user.createdAt).toLocaleDateString()}
-              </td>
-
-              <td className="rounded-r-lg">
-                <EllipsisIcon className="m-auto" />
-              </td>
-            </tr>
-          ))}
+                <td className="rounded-r-lg">
+                  <EllipsisIcon className="m-auto" />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

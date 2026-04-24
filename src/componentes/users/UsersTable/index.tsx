@@ -7,6 +7,7 @@ type UsersTableProps = {
   sort: "createdAt";
   order: "asc" | "desc";
 };
+
 export default function UsersTable({ users, sort, order }: UsersTableProps) {
   return (
     <>
