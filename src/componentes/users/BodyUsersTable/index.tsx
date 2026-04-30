@@ -1,13 +1,19 @@
 "use client";
 
 import { AdminUserRow } from "@/types/user";
-import { EllipsisIcon } from "lucide-react";
+import { RowActionsMenu } from "@/componentes/RowActionsMenu";
+import { useState } from "react";
+import { LockIcon } from "lucide-react";
 
 type BodyUsersTableProps = {
   users: AdminUserRow[];
 };
 
 export default function BodyUsersTable({ users }: BodyUsersTableProps) {
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+
+  console.log(openMenuId);
+
   return (
     <div className="max-h-[calc(100vh-164px)] md:max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
       {/* 🖥 DESKTOP */}
@@ -71,7 +77,7 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
                       `}
                     >
                       {user.role == "OWNER" && "Owner"}
-                      {user.role == "ADMIN" && "Owner"}
+                      {user.role == "ADMIN" && "Admin"}
                       {user.role == "MEMBER" && "Member"}
                     </span>
                   ) : (
@@ -99,7 +105,31 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
                 </td>
 
                 <td className="rounded-r-lg">
-                  <EllipsisIcon className="m-auto" />
+                  <RowActionsMenu
+                    open={true}
+                    onToggle={() => {
+                      console.log("abriu");
+                    }}
+                    onClose={() => setOpenMenuId(null)}
+                  >
+                    <button
+                      className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
+                        true
+                          ? "hover:bg-zinc-800 cursor-pointer"
+                          : "opacity-50 cursor-not-allowed"
+                      }`}
+                    >
+                      {user.role === "MEMBER" && <LockIcon size={14} />}
+                      Alterar Cargo
+                    </button>
+
+                    <button
+                      onClick={() => setOpenMenuId(null)}
+                      className="cursor-pointer flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-zinc-800 hover:rounded-b-lg"
+                    >
+                      Cancelar
+                    </button>
+                  </RowActionsMenu>
                 </td>
               </tr>
             );

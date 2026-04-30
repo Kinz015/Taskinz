@@ -8,7 +8,11 @@ type UsersTableProps = {
   order: "asc" | "desc";
 };
 
-export default function UsersTable({ users, sort, order }: UsersTableProps) {
+export default async function UsersTable({
+  users,
+  sort,
+  order,
+}: UsersTableProps) {
   return (
     <>
       <HeaderUsersTable sort={sort} order={order} />
