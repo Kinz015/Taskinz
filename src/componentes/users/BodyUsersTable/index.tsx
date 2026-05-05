@@ -3,16 +3,13 @@
 import { AdminUserRow } from "@/types/user";
 import { RowActionsMenu } from "@/componentes/RowActionsMenu";
 import { useState } from "react";
-import { LockIcon } from "lucide-react";
 
 type BodyUsersTableProps = {
   users: AdminUserRow[];
 };
 
 export default function BodyUsersTable({ users }: BodyUsersTableProps) {
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-
-  console.log(openMenuId);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   return (
     <div className="max-h-[calc(100vh-164px)] md:max-h-[calc(100vh-208px)] xl:max-h-[calc(100vh-256px)] overflow-y-scroll scrollbar-hidden">
@@ -38,7 +35,7 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
                   {index + 1}
                 </td>
 
-                <td className="py-4 text-left">
+                <td className="py-3 text-left">
                   <div className="flex items-center gap-3">
                     {user.imageUrl ? (
                       // Avatar
@@ -106,23 +103,22 @@ export default function BodyUsersTable({ users }: BodyUsersTableProps) {
 
                 <td className="rounded-r-lg">
                   <RowActionsMenu
-                    open={true}
-                    onToggle={() => {
-                      console.log("abriu");
-                    }}
+                    open={openMenuId === user.id}
+                    onToggle={() =>
+                      setOpenMenuId((prev) =>
+                        prev === user.id ? null : user.id,
+                      )
+                    }
                     onClose={() => setOpenMenuId(null)}
                   >
-                    <button
-                      className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left ${
-                        true
-                          ? "hover:bg-zinc-800 cursor-pointer"
-                          : "opacity-50 cursor-not-allowed"
-                      }`}
-                    >
-                      {user.role === "MEMBER" && <LockIcon size={14} />}
-                      Alterar Cargo
+                    <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left hover:bg-zinc-800 cursor-pointer">
+                      Alterar cargo
                     </button>
 
+                    <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left hover:bg-zinc-800 cursor-pointer">
+                      Expulsar do projeto
+                    </button>
+                    
                     <button
                       onClick={() => setOpenMenuId(null)}
                       className="cursor-pointer flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-zinc-800 hover:rounded-b-lg"
